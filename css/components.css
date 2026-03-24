@@ -1,4 +1,5 @@
 /* VARIABLES */
+
 :root {
   --color-primary: #615FFF;
   --color-accent: #9810FA;
@@ -20,6 +21,11 @@
 }
 
 /* BASE */
+.app{
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
 body {
   font-family: var(--font-family);
   background: var(--color-bg);

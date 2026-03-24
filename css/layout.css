@@ -1,14 +1,12 @@
 
 /* HEADER */
-.header {
+header {
   padding: 16px 40px;
-}
-
-.header-wrap {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+
 
 /* LOGO */
 .logo {
