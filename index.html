@@ -4,27 +4,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEXUS - Home Page</title>
+    <meta name="description" content="Nexus - Controla tus finanzas y alcanza tus metas con herramientas inteligentes para estudiantes y trabajadores primerizos.">
+    <meta name="keywords" content="finanzas, ahorro, metas financieras, control financiero, estudiantes, trabajadores">
+    <meta name="author" content="Proyecto UMNG">
+    <title>NEXUS - Controla tus finanzas y alcanza tus metas</title>
+    <link rel="icon" href="assets/icons/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="css/layout.css">
     <link rel="stylesheet" href="css/components.css">
 </head>
 
 <body class="home-page">
+    <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
     <div class="app">
         <header>
             <figure class="logo">
-                <img src="assets/icons/Logo.png" alt="Icono" class="logo-img">
+                <img src="assets/icons/Logo.png" alt="Logo de Nexus - Plataforma financiera inteligente" width="32" height="32" class="logo-img">
                 <figcaption class="logo-name">Nexus</figcaption>
             </figure>
-            <nav class="nav">
+            <nav class="nav" role="navigation" aria-label="Navegación principal">
                 <ul class="nav-list">
-                    <li><button class="btn btn-outline">Iniciar Sesión</button></li>
-                    <li><button class="btn btn-primary">Crear Cuenta</button></li>
+                    <li><a href="#" class="btn btn-outline">Iniciar Sesión</a></li>
+                    <li><a href="#" class="btn btn-primary">Crear Cuenta</a></li>
                 </ul>
             </nav>
         </header>
 
-        <main class="main-content">
+        <main class="main-content" id="main-content">
             <section class="hero-section text-center">
                 <div class="hero-container">
                     <div class="hero-text-group">
@@ -46,17 +51,17 @@
                     </div>
 
 
-                    <div class="hero-stats-bar">
+                    <div class="hero-stats-bar" role="region" aria-label="Estadísticas de Nexus">
                         <div class="hero-stat">
-                            <span class="stat-number">10K+</span>
+                            <span class="stat-number" aria-label="Más de 10 mil usuarios activos">10K+</span>
                             <span class="stat-label">Usuarios activos</span>
                         </div>
                         <div class="hero-stat">
-                            <span class="stat-number">$5M+</span>
+                            <span class="stat-number" aria-label="Más de 5 millones de dólares en ahorros generados">$5M+</span>
                             <span class="stat-label">Ahorros generados</span>
                         </div>
                         <div class="hero-stat">
-                            <span class="stat-number">4.8★</span>
+                            <span class="stat-number" aria-label="Calificación de 4.8 estrellas">4.8★</span>
                             <span class="stat-label">Calificación</span>
                         </div>
                     </div>
@@ -75,42 +80,43 @@
                 </div>
             </section>
 
-            <section class="features-section">
+            <section class="features-section" aria-labelledby="features-title">
                 <div class="section-container">
-                    <div class="features-grid">
+                    <h2 id="features-title" class="sr-only">Características de Nexus</h2>
+                    <div class="features-grid" role="list">
 
-                        <article class="feature-card card-style">
-                            <div class="card-icon placeholder-icon">[ICONO: Control Total]</div>
+                        <article class="feature-card card-style" role="listitem">
+                            <div class="card-icon placeholder-icon" aria-hidden="true">[ICONO: Control Total]</div>
                             <h3 class="card-title">Control Total</h3>
                             <p class="card-desc">Registra y categoriza todos tus ingresos y gastos.</p>
                         </article>
 
-                        <article class="feature-card card-style">
-                            <div class="card-icon placeholder-icon">[ICONO: Metas Inteligentes]</div>
+                        <article class="feature-card card-style" role="listitem">
+                            <div class="card-icon placeholder-icon" aria-hidden="true">[ICONO: Metas Inteligentes]</div>
                             <h3 class="card-title">Metas Inteligentes</h3>
                             <p class="card-desc">Define objetivos y visualiza tu progreso en tiempo real.</p>
                         </article>
 
-                        <article class="feature-card card-style">
-                            <div class="card-icon placeholder-icon">[ICONO: Colaboración]</div>
+                        <article class="feature-card card-style" role="listitem">
+                            <div class="card-icon placeholder-icon" aria-hidden="true">[ICONO: Colaboración]</div>
                             <h3 class="card-title">Ahorro Colaborativo</h3>
                             <p class="card-desc">Crea grupos de ahorro y comparte tus logros.</p>
                         </article>
 
-                        <article class="feature-card card-style">
-                            <div class="card-icon placeholder-icon">[ICONO: Fondo Emergencia]</div>
+                        <article class="feature-card card-style" role="listitem">
+                            <div class="card-icon placeholder-icon" aria-hidden="true">[ICONO: Fondo Emergencia]</div>
                             <h3 class="card-title">Fondo de Emergencia</h3>
                             <p class="card-desc">Construye tu colchón financiero de 3 a 6 meses.</p>
                         </article>
 
-                        <article class="feature-card card-style">
-                            <div class="card-icon placeholder-icon">[ICONO: Gamificación]</div>
+                        <article class="feature-card card-style" role="listitem">
+                            <div class="card-icon placeholder-icon" aria-hidden="true">[ICONO: Gamificación]</div>
                             <h3 class="card-title">Gamificación</h3>
                             <p class="card-desc">Gana XP, sube de nivel y desbloquea logros.</p>
                         </article>
 
-                        <article class="feature-card card-style">
-                            <div class="card-icon"></div>
+                        <article class="feature-card card-style" role="listitem">
+                            <div class="card-icon" aria-hidden="true"></div>
                             <h3 class="card-title">Análisis Profundo</h3>
                             <p class="card-desc">Proyecciones y estadísticas de tus finanzas.</p>
                         </article>
