@@ -56,9 +56,6 @@ header {
 /* HERO */
 .hero-section {
   padding: 80px 20px 60px;
-}
-
-.hero-container {
   max-width: 1000px;
   margin: 0 auto;
 }
@@ -89,7 +86,9 @@ header {
 }
 
 /* SECCIONES */
-.section-container {
+.intro-text-section,
+.features-section,
+.final-cta-section {
   max-width: 1000px;
   margin: 0 auto;
 }
