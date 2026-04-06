@@ -2,18 +2,19 @@
 <html lang="es">
 
 <head>
-
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
- 
-  <title>Dashboard | NEXUS - Tu resumen financiero</title>
-
-  <meta name="description" content="Revisa tu balance mensual, fondo de emergencia y métricas clave en tu dashboard financiero personal de NEXUS.">
+  <!-- Página autenticada: no indexar por motores de búsqueda -->
   <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="Revisa tu balance mensual, fondo de emergencia y métricas clave en tu dashboard financiero personal de NEXUS.">
 
+  <!-- Restricción de permisos del navegador: la app no requiere geolocalización, cámara ni micrófono -->
   <meta http-equiv="Permissions-Policy" content="geolocation=(), camera=(), microphone=()">
 
+  <title>Dashboard | NEXUS - Tu resumen financiero</title>
+
+  <!-- Preconexión a Google Fonts para reducir latencia -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
@@ -26,20 +27,24 @@
 
 <body class="dashboard-page">
 
+  <!-- Enlace de salto para usuarios de teclado y lectores de pantalla -->
   <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
 
+  <!-- Región de anuncios dinámicos para lectores de pantalla (invisible visualmente) -->
   <div id="status-announcer" aria-live="polite" aria-atomic="true" class="sr-only"></div>
 
   <div class="dashboard-layout">
 
-    <!-- ===== SIDEBAR ===== -->
+    <!-- ================================================
+         SIDEBAR — Navegación principal y configuración
+         ================================================ -->
     <nav class="sidebar" aria-label="Navegación principal de NEXUS" id="sidebar">
 
-      <!-- Logo -->
+      <!-- Identidad de marca -->
       <div class="sidebar-logo">
         <img
           src="assets/icons/Logo.png"
-          alt="NEXUS - Plataforma financiera"
+          alt="NEXUS — Plataforma financiera"
           width="36"
           height="36"
           class="sidebar-logo-img"
@@ -48,7 +53,7 @@
         <span class="sidebar-logo-name">Nexus</span>
       </div>
 
-      <!-- Menú principal -->
+      <!-- Menú de navegación — aria-current indica la página activa -->
       <ul class="sidebar-nav-list" role="list">
         <li>
           <a href="dashboard.html" class="sidebar-nav-link sidebar-nav-link--active" aria-current="page">
@@ -101,8 +106,9 @@
         </li>
       </ul>
 
-      <!-- Footer del sidebar -->
+      <!-- Pie del sidebar: selector de moneda y cierre de sesión -->
       <div class="sidebar-footer">
+
         <div class="sidebar-currency">
           <svg class="sidebar-nav-icon" aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="10"/>
@@ -111,8 +117,9 @@
           </svg>
           <div class="sidebar-currency-info">
             <span class="sidebar-currency-label">Moneda</span>
+            <!-- Label oculto visualmente pero disponible para tecnologías asistivas -->
             <label for="currency-select" class="sr-only">Seleccionar moneda</label>
-            <select id="currency-select" class="sidebar-currency-select" aria-label="Moneda seleccionada">
+            <select id="currency-select" class="sidebar-currency-select">
               <option value="COP" selected>COP</option>
               <option value="USD">USD</option>
               <option value="EUR">EUR</option>
@@ -128,36 +135,44 @@
           </svg>
           <span>Cerrar sesión</span>
         </button>
+
       </div>
     </nav>
     <!-- /SIDEBAR -->
 
-    <!-- ===== ÁREA PRINCIPAL ===== -->
+
+    <!-- ================================================
+         ÁREA PRINCIPAL — Header + contenido del dashboard
+         ================================================ -->
     <div class="dashboard-main">
 
-      <!-- Header de página -->
-      <header class="dashboard-header" role="banner">
+      <!-- Cabecera de la vista: título y acceso al perfil del usuario -->
+      <header class="dashboard-header">
         <div class="dashboard-header-title">
           <h1 class="dashboard-title">Dashboard</h1>
           <p class="dashboard-subtitle">Resumen de tu situación financiera</p>
         </div>
 
-        <!-- Perfil de usuario -->
         <div class="dashboard-header-user">
-          <div class="user-avatar" aria-label="Avatar de usuario" role="img">
+          <!-- Avatar generado con iniciales; se reemplaza por imagen de perfil si está disponible -->
+          <div class="user-avatar" role="img" aria-label="Avatar del usuario">
             <span class="user-avatar-initials" aria-hidden="true">NN</span>
           </div>
           <span class="user-name">Nombre Usuario</span>
         </div>
       </header>
 
+      <!-- Contenido principal — id referenciado por el skip link -->
       <main id="main-content" class="dashboard-content">
 
-        <!-- ===== FILA 1: Balance + Gamificación ===== -->
+        <!-- -----------------------------------------------
+             FILA SUPERIOR: Balance mensual + Gamificación
+             ----------------------------------------------- -->
         <div class="dashboard-row dashboard-row--top">
 
-          <!-- Tarjeta Balance Mensual -->
+          <!-- Balance mensual: muestra ingresos, gastos y resultado neto del período -->
           <section class="balance-card" aria-labelledby="balance-heading">
+
             <div class="balance-card-main">
               <p class="balance-card-label">Balance mensual</p>
               <p class="balance-card-amount" id="balance-heading" aria-label="Balance mensual: cero pesos colombianos">
@@ -165,7 +180,7 @@
               </p>
             </div>
 
-            <!-- Sub-estadísticas -->
+            <!-- Desglose de ingresos y gastos del mes actual -->
             <dl class="balance-stats">
               <div class="balance-stat balance-stat--income">
                 <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -184,13 +199,15 @@
                 <dd class="balance-stat-value" aria-label="Gastos: cero pesos colombianos">$0 COP</dd>
               </div>
             </dl>
+
           </section>
 
-          <!-- Widget Gamificación -->
+          <!-- Widget de gamificación: nivel, barra de XP y racha de días activos -->
           <aside class="gamification-card" aria-labelledby="gamification-heading">
+
             <div class="gamification-level-header">
               <div class="gamification-level-icon" aria-hidden="true">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="white" stroke="none">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
                   <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
                 </svg>
               </div>
@@ -200,7 +217,7 @@
               </div>
             </div>
 
-            <!-- Barra de XP -->
+            <!-- Barra de experiencia — valores actualizados dinámicamente por dashboard.js -->
             <div class="gamification-xp">
               <div class="gamification-xp-header">
                 <span class="gamification-xp-label">Experiencia</span>
@@ -217,23 +234,28 @@
               </div>
             </div>
 
-            <!-- Racha -->
+            <!-- Racha: días consecutivos con actividad registrada -->
             <div class="gamification-streak">
               <span role="img" aria-label="fuego">🔥</span>
               <span class="gamification-streak-label">Racha</span>
               <strong class="gamification-streak-value" aria-label="0 días de racha">0</strong>
               <span class="gamification-streak-unit">días</span>
             </div>
+
           </aside>
 
         </div>
-        <!-- /FILA 1 -->
+        <!-- /FILA SUPERIOR -->
 
-        <!-- ===== FILA 2: Fondo de Emergencia + Métricas Clave ===== -->
+
+        <!-- -----------------------------------------------
+             FILA INFERIOR: Fondo de emergencia + Métricas
+             ----------------------------------------------- -->
         <div class="dashboard-row dashboard-row--bottom">
 
-          <!-- Card: Fondo de Emergencia -->
+          <!-- Fondo de emergencia: progreso hacia la meta de 3-6 meses de cobertura -->
           <section class="emergency-card" aria-labelledby="emergency-heading">
+
             <div class="emergency-card-header">
               <div class="emergency-icon" aria-hidden="true">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -242,17 +264,18 @@
               </div>
               <div>
                 <h2 class="emergency-title" id="emergency-heading">Fondo de Emergencia</h2>
-                <p class="emergency-coverage">Cobertura: <span id="emergency-coverage-value">-- meses</span></p>
+                <p class="emergency-coverage">
+                  Cobertura: <span id="emergency-coverage-value">-- meses</span>
+                </p>
               </div>
             </div>
 
-            <!-- Barra de Progreso -->
+            <!-- Barra de progreso hacia la meta del fondo -->
             <div class="emergency-progress-section">
               <p class="emergency-progress-label">
-                Progreso hacia 3-6 meses
+                Progreso hacia 3–6 meses
                 <span class="emergency-progress-pct" aria-hidden="true" id="emergency-pct-label">0%</span>
               </p>
-            
               <div
                 class="emergency-progress-bar"
                 role="progressbar"
@@ -264,7 +287,7 @@
               </div>
             </div>
 
-            <!-- Totales -->
+            <!-- Totales: ahorro acumulado vs. meta definida por el usuario -->
             <dl class="emergency-totals">
               <div class="emergency-total-item">
                 <dt class="emergency-total-label">Ahorro acumulado</dt>
@@ -275,15 +298,17 @@
                 <dd class="emergency-total-value emergency-total-value--meta" aria-label="Meta: cero pesos colombianos">$0 COP</dd>
               </div>
             </dl>
+
           </section>
 
-          <!-- Card: Métricas Clave -->
+          <!-- Métricas clave: indicadores derivados del comportamiento financiero del usuario -->
           <section class="metrics-card" aria-labelledby="metrics-heading">
+
             <h2 class="metrics-title" id="metrics-heading">Métricas Clave</h2>
 
             <dl class="metrics-list">
 
-              <!-- Tasa de ahorro -->
+              <!-- Tasa de ahorro: porcentaje del ingreso destinado al ahorro -->
               <div class="metrics-item metrics-item--highlight">
                 <div class="metrics-item-info">
                   <dt class="metrics-item-label">Tasa de ahorro</dt>
@@ -297,7 +322,7 @@
                 </div>
               </div>
 
-              <!-- Gastos fijos / Ingreso -->
+              <!-- Relación gastos fijos sobre ingreso total del período -->
               <div class="metrics-item">
                 <div class="metrics-item-info">
                   <dt class="metrics-item-label">Gastos fijos / Ingreso</dt>
@@ -305,25 +330,25 @@
                 </div>
               </div>
 
-              <!-- Proyección anual -->
+              <!-- Proyección anual basada en el flujo de caja promedio mensual -->
               <div class="metrics-item">
                 <div class="metrics-item-info">
                   <dt class="metrics-item-label">
                     Proyección anual
                     <span class="metrics-item-sublabel">Flujo de caja estimado</span>
                   </dt>
-                  <dd class="metrics-item-value metrics-item-value--accent" aria-label="Proyección anual de flujo de caja: cero pesos colombianos">$0 COP</dd>
+                  <dd class="metrics-item-value metrics-item-value--accent" aria-label="Proyección anual: cero pesos colombianos">$0 COP</dd>
                 </div>
               </div>
 
             </dl>
+
           </section>
 
         </div>
-        <!-- /FILA 2 -->
+        <!-- /FILA INFERIOR -->
 
       </main>
-      <!-- /MAIN -->
 
     </div>
     <!-- /ÁREA PRINCIPAL -->
@@ -331,6 +356,7 @@
   </div>
   <!-- /DASHBOARD LAYOUT -->
 
+  <!-- Script diferido: no bloquea el renderizado inicial de la página -->
   <script defer src="js/dashboard.js"></script>
 
 </body>
