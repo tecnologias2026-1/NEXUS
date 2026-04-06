@@ -239,3 +239,24 @@ body {
 .auth-form.active {
     display: block;
 }
+
+.register-step {
+    display: none;
+}
+
+.register-step.active {
+    display: block;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}

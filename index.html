@@ -170,28 +170,107 @@
             <!-- Register Form -->
             <div id="register-form" class="auth-form">
                 <div class="modal-header">
-                    <h2 class="modal-title">Crear Cuenta</h2>
-                    <p class="modal-subtitle">Únete a la comunidad financiera de Nexus</p>
+                    <h2 class="modal-title">Crear cuenta en Nexus</h2>
+                    <p class="modal-subtitle">Configura tu perfil en 3 pasos</p>
                 </div>
 
-                <form class="auth-form-content" id="register-form-element" novalidate>
-                    <div class="form-group">
-                        <label for="register-email" class="form-label">Correo electrónico</label>
-                        <input type="email" id="register-email" name="email" class="form-input" required autocomplete="email">
+                <!-- Progress Indicator -->
+                <div class="progress-steps">
+                    <div class="progress-step active" data-step="1">
+                        <div class="step-circle">1</div>
+                        <span class="step-label">Cuenta</span>
+                    </div>
+                    <div class="progress-step" data-step="2">
+                        <div class="step-circle">2</div>
+                        <span class="step-label">Ingresos</span>
+                    </div>
+                    <div class="progress-step" data-step="3">
+                        <div class="step-circle">3</div>
+                        <span class="step-label">Perfil</span>
+                    </div>
+                </div>
+
+                <div class="register-step register-step-1 active">
+                    <div class="step-header">
+                        <h3 class="step-section-title">Información básica</h3>
                     </div>
 
-                    <div class="form-group">
-                        <label for="register-password" class="form-label">Contraseña</label>
-                        <input type="password" id="register-password" name="password" class="form-input" required autocomplete="new-password" minlength="8">
+                    <form class="auth-form-content" id="register-form-element" novalidate>
+                        <div class="form-group">
+                            <label for="register-name" class="form-label">Nombre completo</label>
+                            <input type="text" id="register-name" name="name" class="form-input" placeholder="Juan Pérez" required autocomplete="name">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="register-email" class="form-label">Correo electrónico</label>
+                            <input type="email" id="register-email" name="email" class="form-input" placeholder="tujemail@com" required autocomplete="email">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="register-password" class="form-label">Contraseña</label>
+                            <input type="password" id="register-password" name="password" class="form-input" required autocomplete="new-password" minlength="8">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="register-password-confirm" class="form-label">Confirmar Contraseña</label>
+                            <input type="password" id="register-password-confirm" name="password-confirm" class="form-input" required autocomplete="new-password" minlength="8">
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-primary" id="register-next">Iniciar sesión →</button>
+                        </div>
+
+                        <p class="form-footer">
+                            ¿Ya tienes cuenta?
+                            <button type="button" class="link-btn" data-switch-form="login">Inicia sesión</button>
+                        </p>
+                        <p class="form-footer-secondary">
+                            <button type="button" class="link-btn">+ Volver al inicio</button>
+                        </p>
+                    </form>
+                </div>
+
+                <div class="register-step register-step-2">
+                    <div class="step-header">
+                        <h3 class="step-section-title">Ingresos</h3>
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Crear Cuenta</button>
+                    <form class="auth-form-content" id="register-income-form" novalidate>
+                        <div class="form-group">
+                            <label class="form-label">Frecuencia de ingresos</label>
+                            <div class="income-frequency-group">
+                                <label class="frequency-option">
+                                    <input type="radio" name="frequency" value="monthly" required>
+                                    <span class="frequency-icon">📅</span>
+                                    <span class="frequency-label">Mensual</span>
+                                </label>
+                                <label class="frequency-option">
+                                    <input type="radio" name="frequency" value="biweekly" required>
+                                    <span class="frequency-icon">📅</span>
+                                    <span class="frequency-label">Quincenal</span>
+                                </label>
+                                <label class="frequency-option">
+                                    <input type="radio" name="frequency" value="weekly" required>
+                                    <span class="frequency-icon">📅</span>
+                                    <span class="frequency-label">Semanal</span>
+                                </label>
+                            </div>
+                        </div>
 
-                    <p class="form-footer">
-                        ¿Ya tienes cuenta?
-                        <button type="button" class="link-btn" data-switch-form="login">Inicia sesión aquí</button>
-                    </p>
-                </form>
+                        <div class="form-group">
+                            <label for="register-income" class="form-label">Monto estimado de ingreso base</label>
+                            <div class="currency-input-group">
+                                <span class="currency-symbol">$</span>
+                                <input type="number" id="register-income" name="income" class="form-input currency-input" placeholder="0.00" step="0.01" min="0" required>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-outline" id="register-prev">Atrás</button>
+                            <button type="button" class="btn btn-primary" id="register-next-step2">Siguiente</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
