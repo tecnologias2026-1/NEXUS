@@ -221,3 +221,21 @@ body {
   line-height: 1.6;
   opacity: 0.9;
 }
+
+/* Modal visibility logic */
+.modal {
+    display: none;
+}
+
+.modal.active {
+    display: flex;
+}
+
+/* Form switching logic */
+.auth-form {
+    display: none;
+}
+
+.auth-form.active {
+    display: block;
+}

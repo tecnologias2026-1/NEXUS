@@ -23,8 +23,8 @@
             </figure>
             <nav class="nav" role="navigation" aria-label="Navegación principal">
                 <ul class="nav-list">
-                    <li><a href="#" class="btn btn-outline">Iniciar Sesión</a></li>
-                    <li><a href="#" class="btn btn-primary">Crear Cuenta</a></li>
+                    <li><button type="button" id="btn-login" class="btn btn-outline">Iniciar Sesión</button></li>
+                    <li><button type="button" id="btn-register" class="btn btn-primary">Crear Cuenta</button></li>
                 </ul>
             </nav>
         </header>
@@ -131,6 +131,72 @@
             <p>&copy; 2026 Nexus - Proyecto UMNG</p>
         </footer>
     </div>
+
+    <!-- Modal Dialog for Authentication -->
+    <div id="auth-modal" class="modal" role="dialog" aria-labelledby="modal-title" aria-modal="true" aria-hidden="true">
+        <div class="modal-backdrop" id="modal-backdrop"></div>
+        <div class="modal-content">
+            <button type="button" class="modal-close" id="modal-close" aria-label="Cerrar modal">
+                <span aria-hidden="true">&times;</span>
+            </button>
+
+            <!-- Login Form -->
+            <div id="login-form" class="auth-form active">
+                <div class="modal-header">
+                    <h2 id="modal-title" class="modal-title">Iniciar Sesión</h2>
+                    <p class="modal-subtitle">Bienvenido de vuelta a Nexus</p>
+                </div>
+
+                <form class="auth-form-content" id="login-form-element" novalidate>
+                    <div class="form-group">
+                        <label for="login-email" class="form-label">Correo electrónico</label>
+                        <input type="email" id="login-email" name="email" class="form-input" required autocomplete="email">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="login-password" class="form-label">Contraseña</label>
+                        <input type="password" id="login-password" name="password" class="form-input" required autocomplete="current-password">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+
+                    <p class="form-footer">
+                        ¿No tienes cuenta?
+                        <button type="button" class="link-btn" data-switch-form="register">Regístrate aquí</button>
+                    </p>
+                </form>
+            </div>
+
+            <!-- Register Form -->
+            <div id="register-form" class="auth-form">
+                <div class="modal-header">
+                    <h2 class="modal-title">Crear Cuenta</h2>
+                    <p class="modal-subtitle">Únete a la comunidad financiera de Nexus</p>
+                </div>
+
+                <form class="auth-form-content" id="register-form-element" novalidate>
+                    <div class="form-group">
+                        <label for="register-email" class="form-label">Correo electrónico</label>
+                        <input type="email" id="register-email" name="email" class="form-input" required autocomplete="email">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="register-password" class="form-label">Contraseña</label>
+                        <input type="password" id="register-password" name="password" class="form-input" required autocomplete="new-password" minlength="8">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Crear Cuenta</button>
+
+                    <p class="form-footer">
+                        ¿Ya tienes cuenta?
+                        <button type="button" class="link-btn" data-switch-form="login">Inicia sesión aquí</button>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
 </body>
 
 </html>
