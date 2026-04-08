@@ -9,18 +9,25 @@
     <meta name="author" content="Proyecto UMNG">
     <title>NEXUS - Controla tus finanzas y alcanza tus metas</title>
     <link rel="icon" href="assets/icons/favicon.ico" type="image/x-icon">
+
+    <!-- Estilos generales -->
     <link rel="stylesheet" href="css/layout.css">
     <link rel="stylesheet" href="css/components.css">
+
+    <!-- Estilos de login y registro -->
+    <link rel="stylesheet" href="css/auth.css">
 </head>
 
 <body class="home-page">
     <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+
     <div class="app">
         <header>
             <figure class="logo">
                 <img src="assets/icons/Logo.png" alt="Logo de Nexus - Plataforma financiera inteligente" width="32" height="32" class="logo-img">
                 <figcaption class="logo-name">Nexus</figcaption>
             </figure>
+
             <nav class="nav" role="navigation" aria-label="Navegación principal">
                 <ul class="nav-list">
                     <li><button type="button" id="btn-login" class="btn btn-outline">Iniciar Sesión</button></li>
@@ -35,18 +42,16 @@
                     Controla tus finanzas.<br>
                     <span class="text-gradient">Alcanza tus metas.</span>
                 </h1>
+
                 <p class="hero-subtitle">
                     Nexus es tu compañero financiero inteligente. Aprende, ahorra y crece junto a una comunidad
-                    que
-                    comparte tus objetivos.
+                    que comparte tus objetivos.
                 </p>
 
                 <div class="hero-buttons">
                     <button class="btn btn-primary btn-cta">Comenzar Gratis -></button>
-
                     <button class="btn btn-outline">Ver Demo</button>
                 </div>
-
 
                 <div class="hero-stats-bar" role="region" aria-label="Estadísticas de Nexus">
                     <div class="hero-stat">
@@ -75,8 +80,8 @@
 
             <section class="features-section" aria-labelledby="features-title">
                 <h2 id="features-title" class="sr-only">Características de Nexus</h2>
-                <div class="features-grid" role="list">
 
+                <div class="features-grid" role="list">
                     <article class="feature-card card-style" role="listitem">
                         <div class="card-icon placeholder-icon" aria-hidden="true">[ICONO: Control Total]</div>
                         <h3 class="card-title">Control Total</h3>
@@ -112,7 +117,6 @@
                         <h3 class="card-title">Análisis Profundo</h3>
                         <p class="card-desc">Proyecciones y estadísticas de tus finanzas.</p>
                     </article>
-
                 </div>
             </section>
 
@@ -132,15 +136,16 @@
         </footer>
     </div>
 
-    <!-- Modal Dialog for Authentication -->
+    <!-- Modal de autenticación -->
     <div id="auth-modal" class="modal" role="dialog" aria-labelledby="modal-title" aria-modal="true" aria-hidden="true">
         <div class="modal-backdrop" id="modal-backdrop"></div>
+
         <div class="modal-content">
             <button type="button" class="modal-close" id="modal-close" aria-label="Cerrar modal">
                 <span aria-hidden="true">&times;</span>
             </button>
 
-            <!-- Login Form -->
+            <!-- Login -->
             <div id="login-form" class="auth-form active">
                 <div class="modal-header">
                     <h2 id="modal-title" class="modal-title">Iniciar Sesión</h2>
@@ -167,29 +172,32 @@
                 </form>
             </div>
 
-            <!-- Register Form -->
+            <!-- Registro -->
             <div id="register-form" class="auth-form">
                 <div class="modal-header">
                     <h2 class="modal-title">Crear cuenta en Nexus</h2>
                     <p class="modal-subtitle">Configura tu perfil en 3 pasos</p>
                 </div>
 
-                <!-- Progress Indicator -->
+                <!-- Pasos -->
                 <div class="progress-steps">
                     <div class="progress-step active" data-step="1">
                         <div class="step-circle">1</div>
                         <span class="step-label">Cuenta</span>
                     </div>
+
                     <div class="progress-step" data-step="2">
                         <div class="step-circle">2</div>
                         <span class="step-label">Ingresos</span>
                     </div>
+
                     <div class="progress-step" data-step="3">
                         <div class="step-circle">3</div>
                         <span class="step-label">Perfil</span>
                     </div>
                 </div>
 
+                <!-- Paso 1 -->
                 <div class="register-step register-step-1 active">
                     <div class="step-header">
                         <h3 class="step-section-title">Información básica</h3>
@@ -224,12 +232,14 @@
                             ¿Ya tienes cuenta?
                             <button type="button" class="link-btn" data-switch-form="login">Inicia sesión</button>
                         </p>
+
                         <p class="form-footer-secondary">
                             <button type="button" class="link-btn">+ Volver al inicio</button>
                         </p>
                     </form>
                 </div>
 
+                <!-- Paso 2 -->
                 <div class="register-step register-step-2">
                     <div class="step-header">
                         <h3 class="step-section-title">Ingresos</h3>
@@ -238,17 +248,20 @@
                     <form class="auth-form-content" id="register-income-form" novalidate>
                         <div class="form-group">
                             <label class="form-label">Frecuencia de ingresos</label>
+
                             <div class="income-frequency-group">
                                 <label class="frequency-option">
                                     <input type="radio" name="frequency" value="monthly" required>
                                     <span class="frequency-icon">📅</span>
                                     <span class="frequency-label">Mensual</span>
                                 </label>
+
                                 <label class="frequency-option">
                                     <input type="radio" name="frequency" value="biweekly" required>
                                     <span class="frequency-icon">📅</span>
                                     <span class="frequency-label">Quincenal</span>
                                 </label>
+
                                 <label class="frequency-option">
                                     <input type="radio" name="frequency" value="weekly" required>
                                     <span class="frequency-icon">📅</span>
@@ -259,6 +272,7 @@
 
                         <div class="form-group">
                             <label for="register-income" class="form-label">Monto estimado de ingreso base</label>
+
                             <div class="currency-input-group">
                                 <span class="currency-symbol">$</span>
                                 <input type="number" id="register-income" name="income" class="form-input currency-input" placeholder="0.00" step="0.01" min="0" required>
@@ -275,6 +289,7 @@
         </div>
     </div>
 
+    <!-- Script de autenticación -->
     <script src="js/auth.js"></script>
 </body>
 

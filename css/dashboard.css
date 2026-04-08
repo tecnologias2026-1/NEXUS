@@ -1,0 +1,621 @@
+/* Base general */
+.dashboard-page {
+  margin: 0;
+  background: #f5f5f7;
+  color: #111827;
+}
+
+/* Estructura principal */
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Barra lateral */
+.sidebar {
+  width: 165px;
+  background: #ffffff;
+  border-right: 1px solid #ececf2;
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+/* Logo de la empresa */
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.sidebar-logo-img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  display: block;
+}
+
+.sidebar-logo-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1;
+}
+
+/* Menu lateral */
+.sidebar-nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sidebar-nav-list li {
+  margin-bottom: 6px;
+}
+
+.sidebar-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: #6b7280;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 10px 12px;
+  border-radius: 10px;
+  transition: 0.2s ease;
+}
+
+.sidebar-nav-link:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.sidebar-nav-link--active {
+  background: #f5edff;
+  color: #7c3aed;
+}
+
+.sidebar-nav-icon {
+  flex-shrink: 0;
+}
+
+/* Parte inferior del sidebar */
+.sidebar-footer {
+  margin-top: 24px;
+}
+
+.sidebar-currency {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid #ececf2;
+  border-radius: 12px;
+  background: #fafafa;
+  margin-bottom: 14px;
+}
+
+.sidebar-currency-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+.sidebar-currency-label {
+  font-size: 11px;
+  color: #6b7280;
+}
+
+.sidebar-currency-select {
+  border: none;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 600;
+  color: #111827;
+  padding: 0;
+  outline: none;
+  width: 100%;
+}
+
+.sidebar-logout-btn {
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: #6b7280;
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.sidebar-logout-btn:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+/* Contenido principal */
+.dashboard-main {
+  flex: 1;
+  padding: 22px 20px 22px 10px;
+  box-sizing: border-box;
+}
+
+/* Encabezado */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.dashboard-header-title {
+  margin-left: -4px;
+  padding-left: 0;
+}
+
+.dashboard-title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.1;
+}
+
+.dashboard-subtitle {
+  margin: 6px 0 0;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* Usuario */
+.dashboard-header-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7c3aed, #ec4899);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-avatar-initials {
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.user-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* Contenido interno */
+.dashboard-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.dashboard-row {
+  display: grid;
+  gap: 24px;
+}
+
+.dashboard-row--top {
+  grid-template-columns: 2.1fr 1fr;
+  align-items: stretch;
+}
+
+.dashboard-row--bottom {
+  grid-template-columns: 1.35fr 1fr;
+  align-items: stretch;
+}
+
+/* Tarjetas generales */
+.balance-card,
+.gamification-card,
+.emergency-card,
+.metrics-card {
+  box-sizing: border-box;
+}
+
+/* Tarjeta de balance */
+.balance-card {
+  background: linear-gradient(90deg, #7b3ff2 0%, #b15cff 100%);
+  color: #ffffff;
+  padding: 18px 20px;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 18px;
+}
+
+.balance-card-label {
+  margin: 0 0 10px;
+  font-size: 13px;
+  font-weight: 500;
+  opacity: 0.95;
+}
+
+.balance-card-amount {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.balance-currency {
+  font-size: 11px;
+  font-weight: 500;
+  opacity: 0.95;
+}
+
+.balance-stats {
+  display: flex;
+  gap: 46px;
+  margin: 26px 0 0;
+}
+
+.balance-stat {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.balance-stat-label {
+  font-size: 11px;
+  margin: 0;
+  opacity: 0.9;
+  text-transform: uppercase;
+}
+
+.balance-stat-value {
+  font-size: 12px;
+  margin: 0;
+  font-weight: 700;
+}
+
+.balance-stat--income svg,
+.balance-stat--expense svg {
+  width: 15px;
+  height: 15px;
+}
+
+/* Tarjeta de nivel */
+.gamification-card {
+  background: #ffffff;
+  border: 1px solid #ececf2;
+  padding: 16px 16px 14px;
+  min-height: 180px;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+  border-radius: 16px;
+}
+
+.gamification-level-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.gamification-level-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #ff9800, #ff5a36);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gamification-level-label {
+  margin: 0 0 4px;
+  font-size: 11px;
+  color: #6b7280;
+}
+
+.gamification-level-name {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.gamification-xp {
+  margin-bottom: 18px;
+}
+
+.gamification-xp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.gamification-xp-label,
+.gamification-xp-value {
+  font-size: 11px;
+  color: #6b7280;
+}
+
+.gamification-xp-bar {
+  width: 100%;
+  height: 7px;
+  background: #ececf2;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.gamification-xp-fill {
+  height: 100%;
+  background: #f59e0b;
+  border-radius: 999px;
+}
+
+.gamification-streak {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #111827;
+}
+
+.gamification-streak-label {
+  color: #6b7280;
+}
+
+.gamification-streak-value {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.gamification-streak-unit {
+  color: #6b7280;
+}
+
+/* Fondo de emergencia */
+.emergency-card {
+  background: #ffffff;
+  border: 1px solid #ececf2;
+  padding: 18px 18px 16px;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+  border-radius: 16px;
+  min-height: 250px;
+}
+
+.emergency-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.emergency-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emergency-title {
+  margin: 0 0 4px;
+  font-size: 17px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.emergency-coverage {
+  margin: 0;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.emergency-progress-section {
+  margin-bottom: 18px;
+}
+
+.emergency-progress-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 0 8px;
+  font-size: 12px;
+  color: #111827;
+  font-weight: 500;
+}
+
+.emergency-progress-pct {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.emergency-progress-bar {
+  width: 100%;
+  height: 7px;
+  border-radius: 999px;
+  background: #ececf2;
+  overflow: hidden;
+}
+
+.emergency-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+  border-radius: 999px;
+}
+
+.emergency-totals {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  margin: 0;
+  padding-top: 8px;
+}
+
+.emergency-total-item {
+  flex: 1;
+}
+
+.emergency-total-label {
+  font-size: 11px;
+  color: #6b7280;
+  margin-bottom: 6px;
+}
+
+.emergency-total-value {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.emergency-total-value--meta {
+  color: #a855f7;
+}
+
+/* Tarjeta de metricas */
+.metrics-card {
+  background: #ffffff;
+  border: 1px solid #ececf2;
+  padding: 18px;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+  border-radius: 16px;
+  min-height: 250px;
+}
+
+.metrics-title {
+  margin: 0 0 16px;
+  font-size: 17px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.metrics-list {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.metrics-item {
+  border: 1px solid #ececf2;
+  border-radius: 14px;
+  padding: 16px 18px;
+  background: #fafafa;
+}
+
+.metrics-item--highlight {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #eef5ff;
+  border-color: #d8e7ff;
+}
+
+.metrics-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.metrics-item-label {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.metrics-item-sublabel {
+  display: block;
+  margin-top: 2px;
+  font-size: 10px;
+  font-weight: 400;
+  color: #6b7280;
+}
+
+.metrics-item-value {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.metrics-item-value--highlight {
+  color: #2563eb;
+}
+
+.metrics-item-value--accent {
+  color: #a855f7;
+}
+
+.metrics-item-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: #dbeafe;
+  color: #2563eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Responsive */
+@media (max-width: 1100px) {
+  .dashboard-row--top,
+  .dashboard-row--bottom {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-layout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #ececf2;
+  }
+
+  .dashboard-main {
+     flex: 1;
+    padding: 22px 20px 22px 0;
+    box-sizing: border-box;
+}
+
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .balance-stats {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .emergency-totals {
+    flex-direction: column;
+  }
+}

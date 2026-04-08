@@ -1,0 +1,405 @@
+
+/* Modal */
+.modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal.active {
+  display: flex;
+}
+
+/* Fondo */
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.22);
+  backdrop-filter: blur(3px);
+}
+
+/* Caja principal */
+.modal-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 620px;
+  margin: 24px;
+  padding: 26px 34px 26px;
+  background: #f8f8fa;
+  border-radius: 28px;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.14);
+}
+
+/* Cerrar */
+.modal-close {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  width: 40px;
+  height: 40px;
+  border: 1px solid #d7d9df;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #111827;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+/* Header */
+.modal-header {
+  text-align: center;
+  margin-bottom: 22px;
+  padding-top: 8px;
+}
+
+.modal-title {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.modal-subtitle {
+  margin: 12px 0 0;
+  font-size: 15px;
+  color: #374151;
+}
+
+/* Formularios */
+.auth-form {
+  display: none;
+}
+
+.auth-form.active {
+  display: block;
+}
+
+/* Login */
+#login-form .auth-form-content {
+  max-width: 540px;
+  margin: 0 auto;
+}
+
+#login-form .form-group {
+  margin-bottom: 18px;
+}
+
+#login-form .btn.btn-primary {
+  display: block;
+  width: 170px;
+  height: 50px;
+  margin: 18px auto 0;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #615fff, #9810fa);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  box-shadow: 0 10px 24px rgba(97, 95, 255, 0.25);
+}
+
+/* Registro */
+#register-form {
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+/* Pasos */
+.progress-steps {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0;
+  margin: 10px 0 24px;
+}
+
+.progress-step {
+  flex: 1;
+  position: relative;
+  text-align: center;
+}
+
+.progress-step::before {
+  content: "";
+  position: absolute;
+  top: 11px;
+  left: -50%;
+  width: 100%;
+  height: 2px;
+  background: #e5e7eb;
+  z-index: 0;
+}
+
+.progress-step:first-child::before {
+  display: none;
+}
+
+.progress-step.active::before {
+  background: #111827;
+}
+
+.step-circle {
+  position: relative;
+  z-index: 1;
+  width: 22px;
+  height: 22px;
+  margin: 0 auto 6px;
+  border-radius: 50%;
+  background: #e5e7eb;
+  color: #6b7280;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.progress-step.active .step-circle {
+  background: #000000;
+  color: #ffffff;
+}
+
+.step-label {
+  display: block;
+  font-size: 10px;
+  color: #9ca3af;
+  line-height: 1.2;
+}
+
+.progress-step.active .step-label {
+  color: #111827;
+}
+
+/* Contenido de cada paso */
+.register-step {
+  display: none;
+}
+
+.register-step.active {
+  display: block;
+}
+
+.step-header {
+  margin-bottom: 14px;
+}
+
+.step-section-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #111827;
+}
+
+/* Tarjeta interna */
+.register-step .auth-form-content {
+  padding: 22px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+  text-align: left;
+}
+
+/* Grupos */
+.form-group {
+  margin-bottom: 16px;
+}
+
+/* Labels */
+.form-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #374151;
+  text-align: left;
+}
+
+/* Inputs */
+.form-input {
+  width: 100%;
+  height: 42px;
+  padding: 0 14px;
+  border: 1px solid #dfe3ea;
+  border-radius: 10px;
+  background: #ffffff;
+  font-size: 13px;
+  color: #111827;
+  box-sizing: border-box;
+}
+
+.form-input::placeholder {
+  color: #9ca3af;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #c4b5fd;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
+}
+
+/* Footer */
+.form-footer {
+  margin: 16px 0 0;
+  text-align: center;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.form-footer-secondary {
+  margin: 10px 0 0;
+  text-align: center;
+  font-size: 11px;
+}
+
+/* Links */
+.link-btn {
+  border: none;
+  background: transparent;
+  padding: 0;
+  color: #111827;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* Acciones */
+.form-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+/* Boton principal negro del registro */
+#register-next,
+#register-next-step2 {
+  min-width: 112px;
+  height: 34px;
+  padding: 0 18px;
+  border: none;
+  border-radius: 18px;
+  background: #000000;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Boton atras */
+#register-prev {
+  min-width: 90px;
+  height: 34px;
+  padding: 0 18px;
+  border: 1px solid #111827;
+  border-radius: 18px;
+  background: #ffffff;
+  color: #111827;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Paso 1: boton ancho */
+.register-step-1 #register-next {
+  width: 100%;
+  height: 46px;
+  border-radius: 10px;
+  font-size: 13px;
+}
+
+/* Paso 2: frecuencia */
+.income-frequency-group {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.frequency-option {
+  position: relative;
+  height: 64px;
+  border: 1px solid #dfe3ea;
+  border-radius: 10px;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.frequency-option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.frequency-option:has(input:checked) {
+  border-color: #111827;
+  background: #f9fafb;
+}
+
+.frequency-icon {
+  font-size: 12px;
+  line-height: 1;
+}
+
+.frequency-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* Monto */
+.currency-input-group {
+  position: relative;
+}
+
+.currency-symbol {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.currency-input {
+  padding-left: 28px;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .modal-content {
+    max-width: 100%;
+    margin: 12px;
+    padding: 22px 18px 20px;
+    border-radius: 22px;
+  }
+
+  .modal-title {
+    font-size: 24px;
+  }
+
+  .income-frequency-group {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  #register-prev,
+  #register-next,
+  #register-next-step2,
+  #login-form .btn.btn-primary {
+    width: 100%;
+  }
+}
