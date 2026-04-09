@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<!--
+  ============================================================
+  NEXUS — Plataforma de Educación y Gestión Financiera
+  ============================================================
+  Archivo  : metas.html
+  Módulo   : Metas Financieras (Dashboard)
+  Versión  : 1.1.0
+  Autores  : David Avila · Juan Lagos · David Alvarado — UMNG
+
+  Descripción
+  ───────────
+  Vista autenticada del módulo de metas. Muestra metas
+  personales y colaborativas del usuario, con barras de
+  progreso en tiempo real y modal de creación.
+
+  Hojas de estilo (orden intencional — no usar @import)
+  ───────────────────────────────────────────────────────
+  1. layout.css     → Grid de dos columnas: sidebar + contenido
+  2. components.css → Variables CSS, botones, inputs, modals
+  3. dashboard.css  → Sidebar, tarjetas de meta, progress bars
+
+  JavaScript
+  ──────────
+  js/metas.js  → Focus trap del modal, actualización de ARIA
+                 en barras de progreso, menús de opciones,
+                 cambio de moneda y cierre de sesión.
+
+  Accesibilidad: WCAG 2.2 — Nivel AA
+  ────────────────────────────────────
+  · Landmarks semánticos completos
+  · Skip link para navegación por teclado (WCAG 2.4.1)
+  · role="progressbar" con aria-valuenow/min/max/valuetext
+  · aria-current="page" en enlace activo del sidebar (WCAG 2.4.3)
+  · aria-live="polite" para notificaciones dinámicas (WCAG 4.1.3)
+  · Focus trap implementado en js/metas.js
+  · Contenedores de error accesibles con role="alert" (WCAG 3.3.1)
+
+  Seguridad
+  ─────────
+  · CSP via meta tag (reforzar con cabecera HTTP en producción,
+    que tiene prioridad sobre el meta tag)
+  · Página autenticada: noindex, nofollow
+  · Permissions-Policy restringe APIs de hardware innecesarias
+  · Script cargado con defer — no bloquea el parser HTML
+  ============================================================
+-->
+<html lang="es">
+
+<head>
+  <!-- charset debe ser el primer elemento del <head> -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!--
+    Content Security Policy
+    Restringe las fuentes de contenido permitidas a mismo origen.
+    Reforzar con la cabecera HTTP equivalente en el servidor,
+    ya que tiene prioridad sobre este meta tag.
+  -->
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self';
+             script-src 'self';
+             style-src 'self';
+             img-src 'self' data:;
+             connect-src 'self';
+             frame-ancestors 'none';
+             form-action 'self';">
+
+  <!--
+    Deshabilita APIs de hardware que esta página no necesita.
+    Reduce la superficie de ataque ante scripts comprometidos.
+  -->
+  <meta http-equiv="Permissions-Policy"
+    content="geolocation=(), camera=(), microphone=(), payment=()">
+
+  <!-- Página detrás de autenticación: nunca indexar ni seguir enlaces -->
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="author" content="Proyecto NEXUS — UMNG">
+  <meta name="description"
+    content="Gestiona tus metas de ahorro personales y colaborativas en NEXUS.">
+
+  <title>Metas Financieras — NEXUS</title>
+
+  <link rel="icon" href="assets/icons/favicon.ico" type="image/x-icon">
+
+  <!-- Estilos en cascada: base → layout → módulo específico -->
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+
+<body class="dashboard-page">
+
+  <!--
+    Skip link — visible solo al recibir foco (:focus en components.css).
+    Permite a usuarios de teclado/lector de pantalla saltar el sidebar
+    y llegar directamente al contenido (WCAG 2.4.1).
+  -->
+  <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+
+  <!-- Grid de dos columnas definido en dashboard.css -->
+  <div class="dashboard-layout">
+
+    <!-- ================================================================
+      SIDEBAR
+      <aside> con role="complementary" y aria-label explícito porque
+      una misma página puede tener múltiples landmarks <aside>.
+      El contenido de navegación es complementario, no principal.
+    ================================================================ -->
+    <aside class="sidebar" role="complementary" aria-label="Menú de navegación del dashboard">
+
+      <!-- Marca visible; el div del ícono es decorativo (aria-hidden) -->
+      <div class="sidebar-brand">
+        <div class="sidebar-logo-icon" aria-hidden="true">N</div>
+        <span class="sidebar-brand-name">Nexus</span>
+      </div>
+
+      <!--
+        aria-label diferencia esta <nav> de otras posibles en la página.
+        role="list" en el <ul> restaura la semántica de lista en Safari/VoiceOver
+        cuando list-style está en none (bug conocido de iOS).
+      -->
+      <nav class="sidebar-nav" aria-label="Navegación principal del dashboard">
+        <ul class="sidebar-nav-list" role="list">
+
+          <li class="sidebar-nav-item">
+            <a href="dashboard.html" class="sidebar-nav-link">
+              <!-- SVG inline: escala sin petición HTTP y hereda color con currentColor -->
+              <svg class="sidebar-nav-icon" aria-hidden="true" width="20" height="20"
+                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                <polyline points="9 22 9 12 15 12 15 22" />
+              </svg>
+              <span>Inicio</span>
+            </a>
+          </li>
+
+          <li class="sidebar-nav-item">
+            <a href="transacciones.html" class="sidebar-nav-link">
+              <svg class="sidebar-nav-icon" aria-hidden="true" width="20" height="20"
+                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="5" width="20" height="14" rx="2" />
+                <line x1="2" y1="10" x2="22" y2="10" />
+              </svg>
+              <span>Transacciones</span>
+            </a>
+          </li>
+
+          <!--
+            aria-current="page" informa al lector de pantalla cuál es la
+            sección activa. La clase "active" solo maneja el estilo visual.
+          -->
+          <li class="sidebar-nav-item">
+            <a href="metas.html" class="sidebar-nav-link active" aria-current="page">
+              <svg class="sidebar-nav-icon" aria-hidden="true" width="20" height="20"
+                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <circle cx="12" cy="12" r="6" />
+                <circle cx="12" cy="12" r="2" />
+              </svg>
+              <span>Metas</span>
+            </a>
+          </li>
+
+          <li class="sidebar-nav-item">
+            <a href="social.html" class="sidebar-nav-link">
+              <svg class="sidebar-nav-icon" aria-hidden="true" width="20" height="20"
+                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+              <span>Social</span>
+            </a>
+          </li>
+
+          <li class="sidebar-nav-item">
+            <a href="analisis.html" class="sidebar-nav-link">
+              <svg class="sidebar-nav-icon" aria-hidden="true" width="20" height="20"
+                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="20" x2="18" y2="10" />
+                <line x1="12" y1="20" x2="12" y2="4" />
+                <line x1="6" y1="20" x2="6" y2="14" />
+              </svg>
+              <span>Análisis</span>
+            </a>
+          </li>
+
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+
+        <div class="sidebar-currency">
+          <svg class="sidebar-nav-icon" aria-hidden="true" width="16" height="16"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="2" y1="12" x2="22" y2="12" />
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+          </svg>
+          <div class="sidebar-currency-info">
+            <span class="sidebar-currency-label">Moneda</span>
+            <!--
+              aria-label completo porque el texto "COP" solo tiene
+              suficiente contexto para usuarios con visión.
+            -->
+            <button type="button" class="sidebar-currency-value"
+              aria-label="Cambiar moneda. Moneda actual: COP">COP</button>
+          </div>
+        </div>
+
+        <hr class="sidebar-divider" aria-hidden="true">
+
+        <button type="button" class="sidebar-logout-btn" aria-label="Cerrar sesión de Nexus">
+          <svg class="sidebar-nav-icon" aria-hidden="true" width="20" height="20"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+          <span>Cerrar sesión</span>
+        </button>
+
+      </div>
+    </aside>
+    <!-- /sidebar -->
+
+
+    <!-- ================================================================
+      CONTENIDO PRINCIPAL
+      tabindex="-1" permite recibir foco desde el skip link sin
+      incluir el <main> en el orden de tabulación natural.
+    ================================================================ -->
+    <main class="dashboard-main" id="main-content" tabindex="-1">
+
+      <header class="page-header">
+        <h1 class="page-title">Metas Financieras</h1>
+        <p class="page-subtitle">Comparte metas y compite sanamente</p>
+      </header>
+
+      <!--
+        Región de anuncios dinámicos para lectores de pantalla.
+        Permanece vacío en el HTML; js/metas.js inyecta mensajes
+        de éxito/error aquí. aria-atomic="true" hace que el lector
+        anuncie el mensaje completo, no solo la parte que cambió.
+      -->
+      <div id="metas-status-region" role="status" aria-live="polite"
+        aria-atomic="true" class="sr-only"></div>
+
+      <!--
+        aria-haspopup="dialog" advierte al usuario de teclado que
+        el botón abrirá un diálogo antes de que lo active.
+      -->
+      <div class="metas-actions-bar">
+        <button type="button" class="btn-agregar-meta" id="btn-agregar-meta"
+          aria-haspopup="dialog" aria-controls="modal-agregar-meta">
+          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+          Agregar nueva meta
+        </button>
+      </div>
+
+
+      <!-- ============================================================
+        SECCIÓN: METAS PERSONALES
+        aria-labelledby une el <h2> con la sección para que los
+        lectores anuncien "Metas Personales, región" al navegar.
+      ============================================================ -->
+      <section class="metas-seccion" aria-labelledby="titulo-metas-personales">
+
+        <h2 class="metas-seccion-titulo" id="titulo-metas-personales">
+          <svg class="metas-seccion-icono" aria-hidden="true" width="20" height="20"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" />
+            <circle cx="12" cy="12" r="6" />
+            <circle cx="12" cy="12" r="2" />
+          </svg>
+          Metas Personales
+        </h2>
+
+        <ul class="metas-lista" role="list" aria-label="Lista de metas personales">
+
+          <!-- ── TARJETA DE META PERSONAL ─────────────────────────────
+            <article> porque cada tarjeta es contenido autocontenido
+            con sentido propio fuera del contexto de la lista.
+            aria-labelledby nombra el artículo completo usando el <h3>
+            interno, mejorando la navegación por landmarks.
+          ──────────────────────────────────────────────────────────── -->
+          <li class="meta-item">
+            <article class="meta-card meta-card--personal"
+              aria-labelledby="meta-personal-1-titulo">
+
+              <header class="meta-card-header">
+                <!--
+                  Ícono de categoría — placeholder hasta que la BD
+                  provea la imagen real. Si es un <img>, añadir
+                  alt="Categoría: [nombre]".
+                -->
+                <div class="meta-card-icono" aria-hidden="true">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                    <line x1="8" y1="21" x2="16" y2="21" />
+                    <line x1="12" y1="17" x2="12" y2="21" />
+                  </svg>
+                </div>
+
+                <div class="meta-card-header-info">
+                  <h3 class="meta-card-titulo" id="meta-personal-1-titulo">Meta X</h3>
+                  <!--
+                    data-meta-dias → js/metas.js reemplaza el placeholder
+                    con el valor real de la BD y actualiza aria-label.
+                  -->
+                  <p class="meta-card-dias" aria-label="Días restantes: cargando">
+                    <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24"
+                      fill="none" stroke="currentColor" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                      <line x1="16" y1="2" x2="16" y2="6" />
+                      <line x1="8" y1="2" x2="8" y2="6" />
+                      <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>
+                    <span data-meta-dias>X días restantes</span>
+                  </p>
+                </div>
+
+                <!--
+                  aria-expanded="false" refleja el estado inicial cerrado.
+                  js/metas.js lo toglea a "true" al abrir el menú.
+                -->
+                <div class="meta-card-acciones">
+                  <button type="button" class="btn-meta-opciones"
+                    aria-label="Opciones para Meta X"
+                    aria-haspopup="menu"
+                    aria-expanded="false"
+                    data-meta-id="1">
+                    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24"
+                      fill="none" stroke="currentColor" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="5" r="1" />
+                      <circle cx="12" cy="12" r="1" />
+                      <circle cx="12" cy="19" r="1" />
+                    </svg>
+                  </button>
+                </div>
+              </header>
+
+              <!--
+                role="progressbar" con aria-valuenow/min/max es el patrón
+                correcto para barras de progreso (WCAG 4.1.2).
+                aria-valuetext provee una cadena legible: "45% completado"
+                en lugar del número crudo "45".
+                js/metas.js actualiza aria-valuenow, aria-valuetext y
+                el width del relleno al recibir datos de la BD.
+              -->
+              <div class="meta-progreso-wrapper">
+                <div class="meta-progreso-labels">
+                  <span class="meta-progreso-label">Progreso</span>
+                  <span class="meta-progreso-porcentaje" data-meta-porcentaje
+                    aria-hidden="true">#%</span>
+                </div>
+                <div class="meta-progreso-barra"
+                  role="progressbar"
+                  aria-label="Progreso de Meta X"
+                  aria-valuenow="0"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                  aria-valuetext="0% completado"
+                  data-meta-progreso>
+                  <div class="meta-progreso-relleno" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <!--
+                data-meta-ahorrado / data-meta-objetivo son selectores
+                para que js/metas.js actualice solo los valores numéricos
+                sin reescribir el DOM completo.
+              -->
+              <div class="meta-montos">
+                <div class="meta-monto-grupo">
+                  <span class="meta-monto-etiqueta">Ahorrado</span>
+                  <p class="meta-monto-valor meta-monto-ahorrado"
+                    data-meta-ahorrado
+                    aria-label="Monto ahorrado: cargando">$### COP</p>
+                </div>
+                <div class="meta-monto-grupo meta-monto-grupo--derecha">
+                  <span class="meta-monto-etiqueta">Meta</span>
+                  <p class="meta-monto-valor meta-monto-objetivo"
+                    data-meta-objetivo
+                    aria-label="Monto objetivo: cargando">$### COP</p>
+                </div>
+              </div>
+
+            </article>
+          </li>
+          <!-- /meta-personal-1 -->
+
+
+          <li class="meta-item">
+            <article class="meta-card meta-card--personal"
+              aria-labelledby="meta-personal-2-titulo">
+
+              <header class="meta-card-header">
+                <div class="meta-card-icono meta-card-icono--emergencia" aria-hidden="true">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                  </svg>
+                </div>
+
+                <div class="meta-card-header-info">
+                  <h3 class="meta-card-titulo" id="meta-personal-2-titulo">Fondo emergencia</h3>
+                  <p class="meta-card-dias" aria-label="Días restantes: cargando">
+                    <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24"
+                      fill="none" stroke="currentColor" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                      <line x1="16" y1="2" x2="16" y2="6" />
+                      <line x1="8" y1="2" x2="8" y2="6" />
+                      <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>
+                    <span data-meta-dias>X días restantes</span>
+                  </p>
+                </div>
+
+                <div class="meta-card-acciones">
+                  <button type="button" class="btn-meta-opciones"
+                    aria-label="Opciones para Fondo emergencia"
+                    aria-haspopup="menu"
+                    aria-expanded="false"
+                    data-meta-id="2">
+                    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24"
+                      fill="none" stroke="currentColor" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="5" r="1" />
+                      <circle cx="12" cy="12" r="1" />
+                      <circle cx="12" cy="19" r="1" />
+                    </svg>
+                  </button>
+                </div>
+              </header>
+
+              <div class="meta-progreso-wrapper">
+                <div class="meta-progreso-labels">
+                  <span class="meta-progreso-label">Progreso</span>
+                  <span class="meta-progreso-porcentaje" data-meta-porcentaje
+                    aria-hidden="true">#%</span>
+                </div>
+                <div class="meta-progreso-barra"
+                  role="progressbar"
+                  aria-label="Progreso de Fondo emergencia"
+                  aria-valuenow="0"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                  aria-valuetext="0% completado"
+                  data-meta-progreso>
+                  <div class="meta-progreso-relleno" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <div class="meta-montos">
+                <div class="meta-monto-grupo">
+                  <span class="meta-monto-etiqueta">Ahorrado</span>
+                  <p class="meta-monto-valor meta-monto-ahorrado"
+                    data-meta-ahorrado
+                    aria-label="Monto ahorrado: cargando">$### COP</p>
+                </div>
+                <div class="meta-monto-grupo meta-monto-grupo--derecha">
+                  <span class="meta-monto-etiqueta">Meta</span>
+                  <p class="meta-monto-valor meta-monto-objetivo"
+                    data-meta-objetivo
+                    aria-label="Monto objetivo: cargando">$### COP</p>
+                </div>
+              </div>
+
+            </article>
+          </li>
+          <!-- /meta-personal-2 -->
+
+        </ul>
+
+      </section>
+      <!-- /metas-personales -->
+
+
+      <!-- ============================================================
+        SECCIÓN: METAS COLABORATIVAS
+        Los montos individuales están ocultos por política de privacidad
+        (RNF-06): cada participante solo ve sus propios montos reales;
+        el resto del grupo solo ve porcentajes de contribución.
+      ============================================================ -->
+      <section class="metas-seccion metas-seccion--colaborativas"
+        aria-labelledby="titulo-metas-colaborativas">
+
+        <h2 class="metas-seccion-titulo" id="titulo-metas-colaborativas">
+          <svg class="metas-seccion-icono" aria-hidden="true" width="20" height="20"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
+          Metas Colaborativas
+        </h2>
+
+        <ul class="metas-lista" role="list" aria-label="Lista de metas colaborativas">
+
+          <!-- ── TARJETA DE META COLABORATIVA ─────────────────────────
+            Misma estructura base que las tarjetas personales, más la
+            sub-sección de contribuciones individuales por participante.
+            IDs únicos por tarjeta para cumplir WCAG 4.1.2.
+          ──────────────────────────────────────────────────────────── -->
+          <li class="meta-item">
+            <article class="meta-card meta-card--colaborativa"
+              aria-labelledby="meta-colab-1-titulo">
+
+              <header class="meta-card-header">
+                <!--
+                  Avatar del grupo. Si el grupo tiene imagen propia,
+                  reemplazar el <div> por:
+                  <img src="..." alt="Foto del grupo Meta Colab" width="40" height="40">
+                -->
+                <div class="meta-card-avatar-grupo" aria-hidden="true">
+                  <span class="meta-card-avatar-inicial">M</span>
+                </div>
+
+                <div class="meta-card-header-info">
+                  <h3 class="meta-card-titulo" id="meta-colab-1-titulo">Meta Colab</h3>
+                  <div class="meta-card-meta-grupo">
+                    <span class="meta-card-meta-item"
+                      aria-label="Número de participantes: cargando">
+                      <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                      </svg>
+                      <span data-colab-personas># personas</span>
+                    </span>
+                    <span class="meta-card-meta-item"
+                      aria-label="Días restantes: cargando">
+                      <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                        <line x1="16" y1="2" x2="16" y2="6" />
+                        <line x1="8" y1="2" x2="8" y2="6" />
+                        <line x1="3" y1="10" x2="21" y2="10" />
+                      </svg>
+                      <span data-colab-dias>#d</span>
+                    </span>
+                  </div>
+                </div>
+
+                <div class="meta-card-acciones">
+                  <button type="button" class="btn-meta-opciones"
+                    aria-label="Opciones para Meta Colab 1"
+                    aria-haspopup="menu"
+                    aria-expanded="false"
+                    data-meta-id="colab-1">
+                    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24"
+                      fill="none" stroke="currentColor" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="5" r="1" />
+                      <circle cx="12" cy="12" r="1" />
+                      <circle cx="12" cy="19" r="1" />
+                    </svg>
+                  </button>
+                </div>
+              </header>
+
+              <!-- Barra de progreso del grupo completo -->
+              <div class="meta-progreso-wrapper">
+                <div class="meta-progreso-labels">
+                  <span class="meta-progreso-label">Progreso</span>
+                  <span class="meta-progreso-porcentaje" data-meta-porcentaje
+                    aria-hidden="true">#%</span>
+                </div>
+                <div class="meta-progreso-barra"
+                  role="progressbar"
+                  aria-label="Progreso grupal de Meta Colab 1"
+                  aria-valuenow="0"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                  aria-valuetext="0% completado"
+                  data-meta-progreso>
+                  <div class="meta-progreso-relleno" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <!-- ── Contribuciones por participante ─────────────────
+                Cada fila tiene su propio progressbar con aria-label
+                personalizado para que el lector anuncie de quién es.
+                Los colores de avatar se definen con data-avatar-color
+                para que dashboard.css los mapee sin estilos inline,
+                manteniendo la separación de responsabilidades.
+              ──────────────────────────────────────────────────────── -->
+              <div class="meta-contribuciones">
+                <h4 class="meta-contribuciones-titulo">Contribución Individual</h4>
+
+                <ul class="meta-contribuciones-lista" role="list"
+                  aria-label="Contribuciones individuales de Meta Colab 1">
+
+                  <!-- El usuario autenticado siempre aparece primero -->
+                  <li class="meta-contribucion-item">
+                    <div class="meta-contribucion-avatar meta-contribucion-avatar--tu"
+                      aria-hidden="true">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                      </svg>
+                    </div>
+                    <span class="meta-contribucion-nombre">Tú</span>
+                    <div class="meta-contribucion-barra-wrapper">
+                      <div class="meta-contribucion-barra"
+                        role="progressbar"
+                        aria-label="Tu contribución"
+                        aria-valuenow="0" aria-valuemin="0"
+                        aria-valuemax="100" aria-valuetext="0%"
+                        data-contribucion-progreso>
+                        <div class="meta-contribucion-relleno" style="width: 0%"></div>
+                      </div>
+                    </div>
+                    <span class="meta-contribucion-porcentaje"
+                      data-contribucion-valor aria-hidden="true">x#%</span>
+                  </li>
+
+                  <li class="meta-contribucion-item">
+                    <div class="meta-contribucion-avatar" aria-hidden="true"
+                      data-avatar-color="amber">N</div>
+                    <span class="meta-contribucion-nombre">Name</span>
+                    <div class="meta-contribucion-barra-wrapper">
+                      <div class="meta-contribucion-barra"
+                        role="progressbar"
+                        aria-label="Contribución de participante 2"
+                        aria-valuenow="0" aria-valuemin="0"
+                        aria-valuemax="100" aria-valuetext="0%"
+                        data-contribucion-progreso>
+                        <div class="meta-contribucion-relleno" style="width: 0%"></div>
+                      </div>
+                    </div>
+                    <span class="meta-contribucion-porcentaje"
+                      data-contribucion-valor aria-hidden="true">x#%</span>
+                  </li>
+
+                  <li class="meta-contribucion-item">
+                    <div class="meta-contribucion-avatar" aria-hidden="true"
+                      data-avatar-color="emerald">N</div>
+                    <span class="meta-contribucion-nombre">Name</span>
+                    <div class="meta-contribucion-barra-wrapper">
+                      <div class="meta-contribucion-barra"
+                        role="progressbar"
+                        aria-label="Contribución de participante 3"
+                        aria-valuenow="0" aria-valuemin="0"
+                        aria-valuemax="100" aria-valuetext="0%"
+                        data-contribucion-progreso>
+                        <div class="meta-contribucion-relleno" style="width: 0%"></div>
+                      </div>
+                    </div>
+                    <span class="meta-contribucion-porcentaje"
+                      data-contribucion-valor aria-hidden="true">x#%</span>
+                  </li>
+
+                  <li class="meta-contribucion-item">
+                    <div class="meta-contribucion-avatar" aria-hidden="true"
+                      data-avatar-color="rose">N</div>
+                    <span class="meta-contribucion-nombre">Name</span>
+                    <div class="meta-contribucion-barra-wrapper">
+                      <div class="meta-contribucion-barra"
+                        role="progressbar"
+                        aria-label="Contribución de participante 4"
+                        aria-valuenow="0" aria-valuemin="0"
+                        aria-valuemax="100" aria-valuetext="0%"
+                        data-contribucion-progreso>
+                        <div class="meta-contribucion-relleno" style="width: 0%"></div>
+                      </div>
+                    </div>
+                    <span class="meta-contribucion-porcentaje"
+                      data-contribucion-valor aria-hidden="true">x#%</span>
+                  </li>
+
+                </ul>
+
+                <!--
+                  <p role="note"> en lugar de <aside> dentro de <article>:
+                  un <aside> anidado en <article> crearía un landmark
+                  "complementary" inesperado que fragmenta la navegación
+                  por landmarks de los lectores de pantalla.
+                -->
+                <p class="meta-privacidad-nota" role="note">
+                  <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                  </svg>
+                  Los montos individuales están ocultos
+                </p>
+
+              </div>
+              <!-- /meta-contribuciones -->
+
+            </article>
+          </li>
+          <!-- /meta-colab-1 -->
+
+
+          <li class="meta-item">
+            <article class="meta-card meta-card--colaborativa"
+              aria-labelledby="meta-colab-2-titulo">
+
+              <header class="meta-card-header">
+                <div class="meta-card-avatar-grupo" aria-hidden="true">
+                  <span class="meta-card-avatar-inicial">M</span>
+                </div>
+
+                <div class="meta-card-header-info">
+                  <h3 class="meta-card-titulo" id="meta-colab-2-titulo">Meta Colab</h3>
+                  <div class="meta-card-meta-grupo">
+                    <span class="meta-card-meta-item"
+                      aria-label="Número de participantes: cargando">
+                      <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                      </svg>
+                      <span data-colab-personas># personas</span>
+                    </span>
+                    <span class="meta-card-meta-item"
+                      aria-label="Días restantes: cargando">
+                      <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                        <line x1="16" y1="2" x2="16" y2="6" />
+                        <line x1="8" y1="2" x2="8" y2="6" />
+                        <line x1="3" y1="10" x2="21" y2="10" />
+                      </svg>
+                      <span data-colab-dias>#d</span>
+                    </span>
+                  </div>
+                </div>
+
+                <div class="meta-card-acciones">
+                  <button type="button" class="btn-meta-opciones"
+                    aria-label="Opciones para Meta Colab 2"
+                    aria-haspopup="menu"
+                    aria-expanded="false"
+                    data-meta-id="colab-2">
+                    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24"
+                      fill="none" stroke="currentColor" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="5" r="1" />
+                      <circle cx="12" cy="12" r="1" />
+                      <circle cx="12" cy="19" r="1" />
+                    </svg>
+                  </button>
+                </div>
+              </header>
+
+              <div class="meta-progreso-wrapper">
+                <div class="meta-progreso-labels">
+                  <span class="meta-progreso-label">Progreso</span>
+                  <span class="meta-progreso-porcentaje" data-meta-porcentaje
+                    aria-hidden="true">#%</span>
+                </div>
+                <div class="meta-progreso-barra"
+                  role="progressbar"
+                  aria-label="Progreso grupal de Meta Colab 2"
+                  aria-valuenow="0"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                  aria-valuetext="0% completado"
+                  data-meta-progreso>
+                  <div class="meta-progreso-relleno" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <div class="meta-contribuciones">
+                <h4 class="meta-contribuciones-titulo">Contribución Individual</h4>
+
+                <ul class="meta-contribuciones-lista" role="list"
+                  aria-label="Contribuciones individuales de Meta Colab 2">
+
+                  <li class="meta-contribucion-item">
+                    <div class="meta-contribucion-avatar meta-contribucion-avatar--tu"
+                      aria-hidden="true">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                      </svg>
+                    </div>
+                    <span class="meta-contribucion-nombre">Tú</span>
+                    <div class="meta-contribucion-barra-wrapper">
+                      <div class="meta-contribucion-barra"
+                        role="progressbar"
+                        aria-label="Tu contribución"
+                        aria-valuenow="0" aria-valuemin="0"
+                        aria-valuemax="100" aria-valuetext="0%"
+                        data-contribucion-progreso>
+                        <div class="meta-contribucion-relleno" style="width: 0%"></div>
+                      </div>
+                    </div>
+                    <span class="meta-contribucion-porcentaje"
+                      data-contribucion-valor aria-hidden="true">x#%</span>
+                  </li>
+
+                  <li class="meta-contribucion-item">
+                    <div class="meta-contribucion-avatar" aria-hidden="true"
+                      data-avatar-color="amber">N</div>
+                    <span class="meta-contribucion-nombre">Name</span>
+                    <div class="meta-contribucion-barra-wrapper">
+                      <div class="meta-contribucion-barra"
+                        role="progressbar"
+                        aria-label="Contribución de participante 2"
+                        aria-valuenow="0" aria-valuemin="0"
+                        aria-valuemax="100" aria-valuetext="0%"
+                        data-contribucion-progreso>
+                        <div class="meta-contribucion-relleno" style="width: 0%"></div>
+                      </div>
+                    </div>
+                    <span class="meta-contribucion-porcentaje"
+                      data-contribucion-valor aria-hidden="true">x#%</span>
+                  </li>
+
+                  <li class="meta-contribucion-item">
+                    <div class="meta-contribucion-avatar" aria-hidden="true"
+                      data-avatar-color="emerald">N</div>
+                    <span class="meta-contribucion-nombre">Name</span>
+                    <div class="meta-contribucion-barra-wrapper">
+                      <div class="meta-contribucion-barra"
+                        role="progressbar"
+                        aria-label="Contribución de participante 3"
+                        aria-valuenow="0" aria-valuemin="0"
+                        aria-valuemax="100" aria-valuetext="0%"
+                        data-contribucion-progreso>
+                        <div class="meta-contribucion-relleno" style="width: 0%"></div>
+                      </div>
+                    </div>
+                    <span class="meta-contribucion-porcentaje"
+                      data-contribucion-valor aria-hidden="true">x#%</span>
+                  </li>
+
+                  <li class="meta-contribucion-item">
+                    <div class="meta-contribucion-avatar" aria-hidden="true"
+                      data-avatar-color="rose">N</div>
+                    <span class="meta-contribucion-nombre">Name</span>
+                    <div class="meta-contribucion-barra-wrapper">
+                      <div class="meta-contribucion-barra"
+                        role="progressbar"
+                        aria-label="Contribución de participante 4"
+                        aria-valuenow="0" aria-valuemin="0"
+                        aria-valuemax="100" aria-valuetext="0%"
+                        data-contribucion-progreso>
+                        <div class="meta-contribucion-relleno" style="width: 0%"></div>
+                      </div>
+                    </div>
+                    <span class="meta-contribucion-porcentaje"
+                      data-contribucion-valor aria-hidden="true">x#%</span>
+                  </li>
+
+                </ul>
+
+                <p class="meta-privacidad-nota" role="note">
+                  <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                  </svg>
+                  Los montos individuales están ocultos
+                </p>
+
+              </div>
+
+            </article>
+          </li>
+          <!-- /meta-colab-2 -->
+
+        </ul>
+
+        <!--
+          Nota de privacidad global a nivel de sección (RNF-06).
+          Se ubica en <aside> dentro de <section>, no dentro de <article>,
+          para evitar crear landmarks "complementary" anidados que
+          fragmenten la navegación por landmarks del lector de pantalla.
+        -->
+        <aside class="metas-privacidad-global" role="note"
+          aria-label="Política de privacidad en metas colaborativas">
+          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+          <p>
+            <strong>Privacidad:</strong> En las metas colaborativas, solo tú puedes
+            ver tus montos reales. Los demás participantes solo ven porcentajes de contribución.
+          </p>
+        </aside>
+
+      </section>
+      <!-- /metas-colaborativas -->
+
+    </main>
+    <!-- /dashboard-main -->
+
+  </div>
+  <!-- /dashboard-layout -->
+
+
+  <!-- ================================================================
+    MODAL: AGREGAR NUEVA META
+    ──────────────────────────────────────────────────────────────────
+    Estado inicial: aria-hidden="true" — invisible para lectores.
+    Al abrir: js/metas.js establece aria-hidden="false", mueve el
+    foco al primer elemento interactivo y activa el focus trap.
+    Al cerrar: foco retorna al botón que disparó la apertura.
+  ================================================================ -->
+  <div id="modal-agregar-meta"
+    class="modal"
+    role="dialog"
+    aria-labelledby="modal-meta-titulo"
+    aria-modal="true"
+    aria-hidden="true">
+
+    <!-- Cierra el modal al hacer clic fuera del panel (js/metas.js) -->
+    <div class="modal-backdrop" id="modal-meta-backdrop" aria-hidden="true"></div>
+
+    <div class="modal-content modal-content--meta">
+
+      <button type="button" class="modal-close" id="modal-meta-close"
+        aria-label="Cerrar diálogo de nueva meta">
+        <span aria-hidden="true">&times;</span>
+      </button>
+
+      <div class="modal-header">
+        <h2 id="modal-meta-titulo" class="modal-title">Nueva Meta de Ahorro</h2>
+        <p class="modal-subtitle">Define tu objetivo y empieza a ahorrar</p>
+      </div>
+
+      <!--
+        <fieldset> + <legend> es el patrón correcto para agrupar
+        controles relacionados (WCAG 1.3.1).
+        La selección Personal/Colaborativa puede mostrar campos
+        adicionales (ej. invitar participantes) vía js/metas.js.
+      -->
+      <fieldset class="modal-tipo-meta">
+        <legend class="modal-tipo-meta-legend">Tipo de meta</legend>
+        <div class="modal-tipo-opciones">
+
+          <label class="modal-tipo-opcion">
+            <input type="radio" name="tipo-meta" value="personal" checked>
+            <span class="modal-tipo-opcion-texto">
+              <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <circle cx="12" cy="12" r="6" />
+                <circle cx="12" cy="12" r="2" />
+              </svg>
+              Personal
+            </span>
+          </label>
+
+          <label class="modal-tipo-opcion">
+            <input type="radio" name="tipo-meta" value="colaborativa">
+            <span class="modal-tipo-opcion-texto">
+              <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+              Colaborativa
+            </span>
+          </label>
+
+        </div>
+      </fieldset>
+
+      <!--
+        novalidate delega la validación a js/metas.js para mostrar
+        mensajes de error accesibles con aria-describedby + aria-invalid,
+        en lugar de los tooltips nativos del browser (WCAG 3.3.1).
+        Los contenedores de error usan role="alert" para que el lector
+        los anuncie inmediatamente al aparecer (WCAG 4.1.3).
+      -->
+      <form id="form-nueva-meta" class="meta-form" novalidate>
+
+        <div class="form-group">
+          <label for="meta-nombre" class="form-label">Nombre de la meta</label>
+          <input type="text"
+            id="meta-nombre"
+            name="nombre"
+            class="form-input"
+            placeholder="Ej. Laptop nueva, Viaje a México..."
+            required
+            maxlength="60"
+            autocomplete="off"
+            aria-describedby="meta-nombre-hint meta-nombre-error">
+          <p id="meta-nombre-hint" class="form-hint">Máximo 60 caracteres.</p>
+          <p id="meta-nombre-error" class="form-error" role="alert" hidden></p>
+        </div>
+
+        <div class="form-group">
+          <label for="meta-monto" class="form-label">Monto objetivo (COP)</label>
+          <div class="currency-input-group">
+            <span class="currency-symbol" aria-hidden="true">$</span>
+            <input type="number"
+              id="meta-monto"
+              name="monto"
+              class="form-input currency-input"
+              placeholder="0"
+              step="1000"
+              min="1"
+              required
+              aria-describedby="meta-monto-hint meta-monto-error">
+          </div>
+          <p id="meta-monto-hint" class="form-hint">Valor en pesos colombianos.</p>
+          <p id="meta-monto-error" class="form-error" role="alert" hidden></p>
+        </div>
+
+        <div class="form-group">
+          <label for="meta-fecha" class="form-label">Fecha límite</label>
+          <input type="date"
+            id="meta-fecha"
+            name="fecha"
+            class="form-input"
+            required
+            aria-describedby="meta-fecha-hint meta-fecha-error">
+          <p id="meta-fecha-hint" class="form-hint">¿Cuándo quieres alcanzar esta meta?</p>
+          <p id="meta-fecha-error" class="form-error" role="alert" hidden></p>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-outline" id="modal-meta-cancelar">
+            Cancelar
+          </button>
+          <button type="submit" class="btn btn-primary">
+            Crear Meta
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+    <!-- /modal-content -->
+
+  </div>
+  <!-- /modal-agregar-meta -->
+
+
+  <!--
+    defer garantiza que el DOM está completamente construido antes de
+    ejecutar el script. Es equivalente a escuchar DOMContentLoaded
+    pero sin bloquear la descarga paralela del archivo.
+  -->
+  <script src="js/metas.js" defer></script>
+
+</body>
+
+</html>
