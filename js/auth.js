@@ -23,6 +23,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Botones en el header para abrir el modal
     const loginBtn = document.getElementById('btn-login');         // Botón "Iniciar Sesión"
     const registerBtn = document.getElementById('btn-register');   // Botón "Crear Cuenta"
+
+    // Formularios dentro del modal
+    const loginForm = document.getElementById('login-form');       // Contenedor del formulario de login
+    const registerForm = document.getElementById('register-form'); // Contenedor del formulario de registro
     
     // Botones para cerrar el modal
     const closeBtn = document.getElementById('modal-close');  // Botón X para cerrar
@@ -33,20 +37,44 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
 
     /**
+     * Muestra el formulario de autenticación correcto y actualiza los estados
+     * @param {'login' | 'register'} formType
+     */
+    function showAuthForm(formType) {
+        if (!loginForm || !registerForm) {
+            return;
+        }
+
+        if (formType === 'login') {
+            loginForm.classList.add('active');
+            registerForm.classList.remove('active');
+        } else {
+            registerForm.classList.add('active');
+            loginForm.classList.remove('active');
+        }
+    }
+
+    /**
      * Evento: Click en botón "Iniciar Sesión"
      * Acción: Abre el modal y muestra el formulario de login
      */
-    loginBtn.addEventListener('click', () => {
-        modal.classList.add('active');              // Mostrar modal
-    });
+    if (loginBtn) {
+        loginBtn.addEventListener('click', () => {
+            modal.classList.add('active');              // Mostrar modal
+            showAuthForm('login');                      // Forzar login
+        });
+    }
 
     /**
      * Evento: Click en botón "Crear Cuenta"
      * Acción: Abre el modal y muestra el formulario de registro
      */
-    registerBtn.addEventListener('click', () => {
-        modal.classList.add('active');              // Mostrar modal
-    });
+    if (registerBtn) {
+        registerBtn.addEventListener('click', () => {
+            modal.classList.add('active');              // Mostrar modal
+            showAuthForm('register');                   // Forzar registro
+        });
+    }
 
     /**
      * Evento: Click en botón de cerrar (X)

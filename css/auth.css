@@ -89,18 +89,97 @@
   margin-bottom: 18px;
 }
 
+#login-form .auth-form-content {
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+#login-form .form-group {
+  margin-bottom: 18px;
+}
+
+#login-form .form-input {
+  height: 52px;
+  border-radius: 14px;
+  padding: 0 16px;
+  font-size: 14px;
+}
+
 #login-form .btn.btn-primary {
   display: block;
-  width: 170px;
-  height: 50px;
-  margin: 18px auto 0;
+  width: 100%;
+  min-width: auto;
+  height: 54px;
+  margin: 20px 0 0;
   border: none;
-  border-radius: 999px;
-  background: linear-gradient(90deg, #615fff, #9810fa);
+  border-radius: 14px;
+  background: #000000;
   color: #ffffff;
   font-size: 15px;
+  font-weight: 700;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.12);
+}
+
+#login-form .btn.btn-outline {
+  display: block;
+  width: 100%;
+  min-width: auto;
+  height: 50px;
+  margin: 18px 0 0;
+  border-radius: 14px;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #111827;
+  font-size: 14px;
   font-weight: 600;
-  box-shadow: 0 10px 24px rgba(97, 95, 255, 0.25);
+}
+
+#login-form .auth-top-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 18px;
+  border-radius: 18px;
+  background: #111827;
+}
+
+#login-form .auth-top-icon__symbol {
+  color: #ffffff;
+  font-size: 20px;
+  line-height: 1;
+}
+
+#login-form .form-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 18px 0 0;
+}
+
+#login-form .divider-line {
+  flex: 1;
+  height: 1px;
+  background: #d1d5db;
+}
+
+#login-form .divider-text {
+  font-size: 13px;
+  font-weight: 500;
+  color: #6b7280;
+  white-space: nowrap;
+}
+
+#login-form .form-footer {
+  margin: 14px 0 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+#login-form .form-footer .link-btn {
+  margin-left: 4px;
+  font-weight: 700;
 }
 
 /* Registro */

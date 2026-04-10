@@ -49,6 +49,17 @@ document.addEventListener('DOMContentLoaded', () => {
     if (currencySelect) {
         initializeCurrencyChange();
     }
+
+    // ==========================================
+    // 3. INICIALIZACIÓN DE LOGOUT EN SIDEBAR
+    // ==========================================
+
+    const logoutButtons = document.querySelectorAll('.sidebar-logout-btn');
+    logoutButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+    });
 });
 
 // ==========================================
@@ -82,6 +93,15 @@ function initializeAuthNavigation() {
 
     // Indicadores visuales de progreso
     const progressSteps = document.querySelectorAll('.progress-step');
+
+    // ==========================================
+    // BOTONES DE LA PÁGINA PRINCIPAL (INDEX.HTML)
+    // ==========================================
+
+    // Botones de acción en la página principal
+    const startFreeBtn = document.getElementById('btn-start-free');           // Primer botón "Comenzar Gratis"
+    const startFreeBottomBtn = document.getElementById('btn-start-free-bottom'); // Segundo botón "Comenzar Gratis"
+    const viewDemoBtn = document.getElementById('btn-view-demo');             // Botón "Ver Demo"
 
     // ==========================================
     // FUNCIONES AUXILIARES
@@ -149,17 +169,69 @@ function initializeAuthNavigation() {
         }
     });
 
+    // ==========================================
+    // EVENTOS DE BOTONES DE LA PÁGINA PRINCIPAL
+    // ==========================================
+    // CAMBIO IMPLEMENTADO: Los botones "Comenzar Gratis" ahora abren directamente
+    // el modal de registro, mientras que "Ver Demo" lleva al dashboard sin registro.
+    // Esto mejora la experiencia del usuario al simplificar el flujo de onboarding.
+
+    /**
+     * Evento: Click en botones "Comenzar Gratis"
+     * Acción: Abre el modal y muestra el formulario de registro
+     */
+    if (startFreeBtn) {
+        startFreeBtn.addEventListener('click', () => {
+            // Abrir modal
+            const modal = document.getElementById('auth-modal');
+            modal.classList.add('active');
+
+            // Mostrar formulario de registro
+            loginForm.classList.remove('active');
+            registerForm.classList.add('active');
+            registerStep1?.classList.add('active');
+            registerStep2?.classList.remove('active');
+            updateProgressStep(1);
+        });
+    }
+
+    if (startFreeBottomBtn) {
+        startFreeBottomBtn.addEventListener('click', () => {
+            // Abrir modal
+            const modal = document.getElementById('auth-modal');
+            modal.classList.add('active');
+
+            // Mostrar formulario de registro
+            loginForm.classList.remove('active');
+            registerForm.classList.add('active');
+            registerStep1?.classList.add('active');
+            registerStep2?.classList.remove('active');
+            updateProgressStep(1);
+        });
+    }
+
+    /**
+     * Evento: Click en botón "Ver Demo"
+     * Acción: Redirige directamente al dashboard sin abrir el modal
+     */
+    if (viewDemoBtn) {
+        viewDemoBtn.addEventListener('click', () => {
+            window.location.href = 'dashboard.html';
+        });
+    }
+
     /**
      * Evento: Click en "Atrás" del paso 2
      * Acción: Regresa al paso 1
      */
-    registerPrev.addEventListener('click', () => {
-        registerStep2?.classList.remove('active');
-        registerStep1?.classList.add('active');
-        updateProgressStep(1);
-    });
+    if (registerPrev) {
+        registerPrev.addEventListener('click', () => {
+            registerStep2?.classList.remove('active');
+            registerStep1?.classList.add('active');
+            updateProgressStep(1);
+        });
+    }
 }
-
 // ==========================================
 // FUNCIONES DE CAMBIO DE MONEDA
 // ==========================================

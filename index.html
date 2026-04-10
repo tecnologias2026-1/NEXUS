@@ -84,13 +84,16 @@
                     que comparte tus objetivos.
                 </p>
 
-                <!-- BOTONES DE ACCIÓN: Incentivan al usuario a registrarse o ver demo -->
+                <!-- BOTONES DE ACCIÓN: Incentivan al usuario a registrarse o ver demo
+                     CAMBIO: Se agregaron IDs únicos para manejar eventos con JavaScript.
+                     - btn-start-free: Abre modal de registro
+                     - btn-view-demo: Redirige al dashboard (demo) -->
                 <div class="hero-buttons">
                     <!-- Botón lleno (primario): Llama a acción principal -->
-                    <button class="btn btn-primary btn-cta">Comenzar Gratis -></button>
+                    <button id="btn-start-free" class="btn btn-primary btn-cta">Comenzar Gratis -></button>
                     
                     <!-- Botón vacío (secundario): Opción alternativa para ver demo -->
-                    <button class="btn btn-outline">Ver Demo</button>
+                    <button id="btn-view-demo" class="btn btn-outline">Ver Demo</button>
                 </div>
 
                 <!-- BARRA DE ESTADÍSTICAS: Muestra números impresionantes para generar confianza -->
@@ -180,27 +183,6 @@
                     </article>
                 </div>
             </section>
-                    </article>
-
-                    <article class="feature-card card-style" role="listitem">
-                        <div class="card-icon placeholder-icon" aria-hidden="true">[ICONO: Fondo Emergencia]</div>
-                        <h3 class="card-title">Fondo de Emergencia</h3>
-                        <p class="card-desc">Construye tu colchón financiero de 3 a 6 meses.</p>
-                    </article>
-
-                    <article class="feature-card card-style" role="listitem">
-                        <div class="card-icon placeholder-icon" aria-hidden="true">[ICONO: Gamificación]</div>
-                        <h3 class="card-title">Gamificación</h3>
-                        <p class="card-desc">Gana XP, sube de nivel y desbloquea logros.</p>
-                    </article>
-
-                    <article class="feature-card card-style" role="listitem">
-                        <div class="card-icon" aria-hidden="true"></div>
-                        <h3 class="card-title">Análisis Profundo</h3>
-                        <p class="card-desc">Proyecciones y estadísticas de tus finanzas.</p>
-                    </article>
-                </div>
-            </section>
 
             <!-- SECCIÓN DE LLAMADA A ACCIÓN FINAL: Último incentivo para que se registren -->
             <section class="final-cta-section text-center">
@@ -212,8 +194,10 @@
                     <p class="banner-desc">
                         Únete a miles de jóvenes que ya están tomando control de su futuro financiero con Nexus.
                     </p>
-                    <!-- Botón de registro final -->
-                    <button class="btn btn-primary btn-cta">Comenzar Gratis -></button>
+                    <!-- Botón de registro final
+                         CAMBIO: Se agregó ID btn-start-free-bottom para manejar el mismo evento
+                         que el botón principal (abrir modal de registro) -->
+                    <button id="btn-start-free-bottom" class="btn btn-primary btn-cta">Comenzar Gratis -></button>
                 </div>
             </section>
         </main>
@@ -242,10 +226,15 @@
             <!-- FORMULARIO 1: LOGIN (INICIAR SESIÓN) -->
             <!-- ============================================ -->
             <div id="login-form" class="auth-form active">
+                <!-- Icono principal del login -->
+                <div class="auth-top-icon" aria-hidden="true">
+                    <span class="auth-top-icon__symbol">→</span>
+                </div>
+
                 <!-- Encabezado del formulario -->
                 <div class="modal-header">
-                    <h2 id="modal-title" class="modal-title">Iniciar Sesión</h2>
-                    <p class="modal-subtitle">Bienvenido de vuelta a Nexus</p>
+                    <h2 id="modal-title" class="modal-title">Bienvenido a Nexus</h2>
+                    <p class="modal-subtitle">Inicia sesión para continuar</p>
                 </div>
 
                 <!-- Formulario de login -->
@@ -253,23 +242,27 @@
                     <!-- Campo 1: Email -->
                     <div class="form-group">
                         <label for="login-email" class="form-label">Correo electrónico</label>
-                        <input type="email" id="login-email" name="email" class="form-input" required autocomplete="email">
+                        <input type="email" id="login-email" name="email" class="form-input" placeholder="tu@email.com" required autocomplete="email">
                     </div>
 
                     <!-- Campo 2: Contraseña -->
                     <div class="form-group">
                         <label for="login-password" class="form-label">Contraseña</label>
-                        <input type="password" id="login-password" name="password" class="form-input" required autocomplete="current-password">
+                        <input type="password" id="login-password" name="password" class="form-input" placeholder="••••••••" required autocomplete="current-password">
                     </div>
 
                     <!-- Botón de envío del formulario -->
-                    <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+                    <button type="submit" class="btn btn-primary">Iniciar sesión →</button>
 
-                    <!-- Enlace para cambiar a formulario de registro -->
-                    <p class="form-footer">
-                        ¿No tienes cuenta?
-                        <button type="button" class="link-btn" data-switch-form="register">Regístrate aquí</button>
-                    </p>
+                    <!-- Separador con texto y líneas horizontales -->
+                    <div class="form-divider" aria-hidden="true">
+                        <span class="divider-line"></span>
+                        <span class="divider-text">¿No tienes cuenta?</span>
+                        <span class="divider-line"></span>
+                    </div>
+
+                    <!-- Botón para cambiar a registro -->
+                    <button type="button" class="btn btn-outline" data-switch-form="register">Crear cuenta nueva</button>
                 </form>
             </div>
 
