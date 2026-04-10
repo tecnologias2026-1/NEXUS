@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<!--
+  ============================================================
+  NEXUS — Plataforma de Educación y Gestión Financiera
+  ------------------------------------------------------------
+  Archivo  : social.html
+  Módulo   : Círculo Social
+  Versión  : 1.0.0
+  Autores  : David Esteban Avila Rojas    · 1202775
+             Juan Nicolás Lagos Fuquen    · 1202737
+             David Felipe Alvarado Romero · 1202727
+  Proyecto : UMNG · 2026
+  ------------------------------------------------------------
+  Descripción:
+    Vista principal del módulo Social de NEXUS.
+    Permite al usuario consultar el ranking semanal de su
+    círculo, gestionar amigos y participar en metas de
+    ahorro colaborativas con privacidad de montos reales
+    (RNF-06: solo se muestran porcentajes de avance).
+
+  Dependencias de estilos:
+    · css/layout.css    → Sistema de grid y espaciado
+    · css/components.css → Tokens de diseño y componentes UI
+    · css/social.css    → Estilos exclusivos de este módulo
+
+  Accesibilidad:
+    · Conforme con WCAG 2.2 nivel AA
+    · Landmarks semánticos: <header>, <nav>, <main>, <footer>
+    · Skip link para navegación por teclado (2.4.1)
+    · Roles ARIA en regiones dinámicas
+    · Contraste mínimo 4.5:1 en texto normal (1.4.3)
+    · Focus visible en todos los elementos interactivos (2.4.7)
+    · Textos alternativos en todos los íconos funcionales (1.1.1)
+
+  Performance:
+    · Recursos CSS cargados con <link> (sin @import)
+    · Sin scripts bloqueantes en <head>
+    · Scripts diferidos con atributo defer
+    · Imágenes de avatar con width/height explícitos (CLS)
+    · Sin contenido renderizado exclusivamente por JS (LCP)
+  ============================================================
+-->
+<html lang="es">
+
+<head>
+  <!-- ─── META ESENCIALES ─── -->
+  <!-- charset debe ser el primer elemento del head (Best Practices) -->
+  <meta charset="UTF-8">
+
+  <!-- Viewport responsivo: requerido para mobile SEO y usabilidad (RNF-03) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ─── SEO ON-PAGE ─── -->
+  <meta name="description"
+    content="Círculo Social de Nexus — Comparte metas de ahorro, compite sanamente con amigos y alcanza tus objetivos financieros en comunidad.">
+  <meta name="keywords"
+    content="finanzas colaborativas, ahorro grupal, metas de ahorro, ranking financiero, Nexus">
+  <meta name="author" content="Proyecto UMNG">
+
+  <!-- robots: indexable pero sin seguir links internos del dashboard -->
+  <meta name="robots" content="noindex, nofollow">
+
+  <!-- ─── FAVICON ─── -->
+  <link rel="icon" href="assets/icons/favicon.ico" type="image/x-icon">
+
+  <!-- ─── TÍTULO DE PÁGINA ─── -->
+  <!-- Formato: Sección · Marca (SEO best practice: keyword + brand) -->
+  <title>Círculo Social · NEXUS</title>
+
+  <!-- ─── HOJAS DE ESTILO ─── -->
+  <!--
+    Carga paralela mediante <link> independientes.
+    Se evita @import para no bloquear el render (Performance skill).
+    Orden: base global → componentes → módulo específico.
+  -->
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/social.css">
+</head>
+
+<body class="dashboard-page">
+
+  <!-- ─────────────────────────────────────────────────────────────
+       SKIP LINK
+       Permite a usuarios de teclado saltar la navegación lateral
+       y acceder directamente al contenido principal.
+       WCAG 2.4.1 (Bypass Blocks) — Nivel A
+  ───────────────────────────────────────────────────────────── -->
+  <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+
+  <!-- ─────────────────────────────────────────────────────────────
+       CONTENEDOR RAÍZ DE LA APLICACIÓN
+       .app-shell define el layout de dos columnas:
+       sidebar fijo + área de contenido principal.
+  ───────────────────────────────────────────────────────────── -->
+  <div class="app-shell">
+
+    <!-- ═══════════════════════════════════════════════════════════
+         BARRA LATERAL DE NAVEGACIÓN (SIDEBAR)
+         role="navigation" + aria-label: distingue esta nav de
+         otras posibles regiones de navegación en la página.
+         WCAG 1.3.1, 2.4.1
+    ═══════════════════════════════════════════════════════════ -->
+    <aside class="sidebar" aria-label="Navegación del panel de control">
+
+      <!-- ── IDENTIDAD DE MARCA EN SIDEBAR ── -->
+      <a href="index.html" class="sidebar-brand" aria-label="Nexus — ir al inicio">
+        <!-- Avatar de marca con gradiente de producto -->
+        <div class="sidebar-brand-avatar" aria-hidden="true">N</div>
+        <span class="sidebar-brand-name">Nexus</span>
+      </a>
+
+      <!-- ── NAVEGACIÓN PRINCIPAL DEL DASHBOARD ── -->
+      <!--
+        Uso de <nav> + aria-label para diferenciar esta región
+        de navegación del resto. aria-current="page" marca la
+        página activa para lectores de pantalla (WCAG 2.4.3).
+      -->
+      <nav class="sidebar-nav" aria-label="Secciones del panel">
+        <ul class="sidebar-nav-list" role="list">
+
+          <li>
+            <a href="dashboard.html" class="sidebar-nav-item">
+              <!-- Ícono decorativo: aria-hidden porque el texto del enlace es suficiente -->
+              <svg class="nav-icon" aria-hidden="true" focusable="false"
+                   width="18" height="18" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                <polyline points="9 22 9 12 15 12 15 22"/>
+              </svg>
+              Inicio
+            </a>
+          </li>
+
+          <li>
+            <a href="transacciones.html" class="sidebar-nav-item">
+              <svg class="nav-icon" aria-hidden="true" focusable="false"
+                   width="18" height="18" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="5" width="20" height="14" rx="2"/>
+                <line x1="2" y1="10" x2="22" y2="10"/>
+              </svg>
+              Transacciones
+            </a>
+          </li>
+
+          <li>
+            <a href="metas.html" class="sidebar-nav-item">
+              <svg class="nav-icon" aria-hidden="true" focusable="false"
+                   width="18" height="18" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <circle cx="12" cy="12" r="6"/>
+                <circle cx="12" cy="12" r="2"/>
+              </svg>
+              Metas
+            </a>
+          </li>
+
+          <!-- aria-current="page": indica la sección actualmente visible -->
+          <li>
+            <a href="social.html" class="sidebar-nav-item sidebar-nav-item--active"
+               aria-current="page">
+              <svg class="nav-icon" aria-hidden="true" focusable="false"
+                   width="18" height="18" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+              Social
+            </a>
+          </li>
+
+          <li>
+            <a href="analisis.html" class="sidebar-nav-item">
+              <svg class="nav-icon" aria-hidden="true" focusable="false"
+                   width="18" height="18" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="20" x2="18" y2="10"/>
+                <line x1="12" y1="20" x2="12" y2="4"/>
+                <line x1="6"  y1="20" x2="6"  y2="14"/>
+              </svg>
+              Análisis
+            </a>
+          </li>
+
+        </ul>
+      </nav>
+
+      <!-- ── PIE DEL SIDEBAR: MONEDA Y SESIÓN ── -->
+      <div class="sidebar-footer">
+        <!-- Selector de moneda: accesible como botón con estado descriptivo -->
+        <button type="button" class="sidebar-currency-btn"
+                aria-label="Moneda activa: Peso colombiano COP. Haz clic para cambiar">
+          <svg class="nav-icon" aria-hidden="true" focusable="false"
+               width="16" height="16" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="2" y1="12" x2="22" y2="12"/>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+          </svg>
+          <span class="sidebar-currency-label">
+            <small>Moneda</small>
+            <strong>COP</strong>
+          </span>
+        </button>
+
+        <!-- Cerrar sesión: botón con rol explícito y confirmación implícita -->
+        <button type="button" class="sidebar-logout-btn"
+                aria-label="Cerrar sesión de Nexus">
+          <svg class="nav-icon" aria-hidden="true" focusable="false"
+               width="16" height="16" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+          Cerrar sesión
+        </button>
+      </div>
+
+    </aside>
+    <!-- /aside.sidebar -->
+
+
+    <!-- ═══════════════════════════════════════════════════════════
+         ÁREA PRINCIPAL DE CONTENIDO
+         id="main-content": destino del skip link (WCAG 2.4.1)
+         tabindex="-1": permite recibir foco programático sin
+         incluirlo en el orden de tabulación natural.
+    ═══════════════════════════════════════════════════════════ -->
+    <main class="main-area" id="main-content" tabindex="-1">
+
+      <!-- ── CABECERA DE SECCIÓN ── -->
+      <!--
+        Estructura de encabezado coherente con el resto del dashboard.
+        h1 identifica claramente la sección activa (WCAG 2.4.6).
+      -->
+      <header class="page-header">
+        <div class="page-header-text">
+          <h1 class="page-title">Círculo Social</h1>
+          <p class="page-subtitle">Comparte metas y compite sanamente</p>
+        </div>
+      </header>
+
+
+      <!-- ── ACCIÓN PRINCIPAL: AGREGAR AMIGO ── -->
+      <!--
+        El botón de agregar amigo es la acción primaria de esta vista.
+        Se posiciona antes del ranking para una jerarquía visual lógica.
+        type="button" evita envío accidental de formulario.
+      -->
+      <section class="add-friend-section" aria-label="Agregar nuevo amigo">
+        <button type="button" class="btn-add-friend" aria-haspopup="dialog"
+                aria-controls="add-friend-modal">
+          <!-- Ícono + semántico: decorativo, el texto es suficiente -->
+          <svg aria-hidden="true" focusable="false"
+               width="16" height="16" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5"
+               stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5"  y1="12" x2="19" y2="12"/>
+          </svg>
+          Agregar amigo
+        </button>
+      </section>
+
+
+      <!-- ── RANKING SEMANAL ── -->
+      <!--
+        Región semántica con aria-labelledby apuntando al h2
+        interior. Esto crea un landmark de sección correctamente
+        nombrado para lectores de pantalla (WCAG 1.3.1).
+
+        El ranking es una lista ordenada (<ol>) porque el orden
+        importa semánticamente; la posición transmite información.
+      -->
+      <section class="ranking-section" aria-labelledby="ranking-title">
+
+        <h2 id="ranking-title" class="section-title">
+          <!-- Ícono de trofeo: decorativo respecto al título ya presente -->
+          <svg aria-hidden="true" focusable="false"
+               width="20" height="20" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="8 22 12 17 16 22"/>
+            <path d="M12 17V3"/>
+            <path d="M7 3H5a2 2 0 0 0-2 2v3a6 6 0 0 0 12 0V5a2 2 0 0 0-2-2h-2"/>
+            <path d="M17 3h2a2 2 0 0 1 2 2v3a6 6 0 0 1-12 0V5a2 2 0 0 1 2-2h2"/>
+          </svg>
+          Ranking Semanal
+        </h2>
+
+        <!--
+          <ol> con role="list" explícito para lectores de pantalla
+          que eliminan semántica de lista con CSS.
+          Cada <li> contiene un article con datos del usuario.
+        -->
+        <ol class="ranking-list" role="list" aria-label="Clasificación semanal de tu círculo">
+
+          <!-- ── POSICIÓN 1 ── -->
+          <li class="ranking-item" role="listitem">
+            <article class="ranking-card" aria-label="Posición 1: Sofía Martínez">
+              <!-- Número de posición: oculto visualmente pero accesible -->
+              <span class="ranking-pos" aria-label="Posición 1">1</span>
+
+              <!-- Avatar de usuario: img con alt descriptivo (WCAG 1.1.1) -->
+              <img src="assets/avatars/avatar-1.png"
+                   alt="Avatar de Sofía Martínez"
+                   width="36" height="36"
+                   class="ranking-avatar ranking-avatar--gold"
+                   loading="lazy"
+                   onerror="this.src='assets/icons/avatar-default.svg'">
+
+              <!-- Datos del usuario -->
+              <div class="ranking-user-info">
+                <span class="ranking-username">Sofía Martínez</span>
+                <div class="ranking-meta" aria-label="Nivel 7, racha de 14 días">
+                  <span class="ranking-level">Nivel 7</span>
+                  <!-- Ícono de llama: decorativo -->
+                  <svg class="icon-streak" aria-hidden="true" focusable="false"
+                       width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2c0 0-5 5-5 11a5 5 0 0 0 10 0C17 7 12 2 12 2z"/>
+                  </svg>
+                  <span class="ranking-streak">14d</span>
+                </div>
+              </div>
+
+              <!-- Puntuación con cambio de tendencia -->
+              <div class="ranking-score-block">
+                <!-- Flecha de tendencia: aria-label explica el cambio (WCAG 1.4.1) -->
+                <svg class="icon-trend icon-trend--up" aria-label="Subió posiciones"
+                     focusable="false" width="14" height="14" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2.5"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="18 15 12 9 6 15"/>
+                </svg>
+                <span class="ranking-pts" aria-label="2480 puntos">2480</span>
+                <span class="ranking-pts-label" aria-hidden="true">pts</span>
+              </div>
+            </article>
+          </li>
+
+          <!-- ── POSICIÓN 2 ── -->
+          <li class="ranking-item" role="listitem">
+            <article class="ranking-card" aria-label="Posición 2: Carlos Rueda">
+              <span class="ranking-pos" aria-label="Posición 2">2</span>
+              <img src="assets/avatars/avatar-2.png"
+                   alt="Avatar de Carlos Rueda"
+                   width="36" height="36"
+                   class="ranking-avatar ranking-avatar--silver"
+                   loading="lazy"
+                   onerror="this.src='assets/icons/avatar-default.svg'">
+              <div class="ranking-user-info">
+                <span class="ranking-username">Carlos Rueda</span>
+                <div class="ranking-meta" aria-label="Nivel 6, racha de 9 días">
+                  <span class="ranking-level">Nivel 6</span>
+                  <svg class="icon-streak" aria-hidden="true" focusable="false"
+                       width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2c0 0-5 5-5 11a5 5 0 0 0 10 0C17 7 12 2 12 2z"/>
+                  </svg>
+                  <span class="ranking-streak">9d</span>
+                </div>
+              </div>
+              <div class="ranking-score-block">
+                <svg class="icon-trend icon-trend--up" aria-label="Subió posiciones"
+                     focusable="false" width="14" height="14" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2.5"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="18 15 12 9 6 15"/>
+                </svg>
+                <span class="ranking-pts" aria-label="2210 puntos">2210</span>
+                <span class="ranking-pts-label" aria-hidden="true">pts</span>
+              </div>
+            </article>
+          </li>
+
+          <!-- ── POSICIÓN 3 ── -->
+          <li class="ranking-item" role="listitem">
+            <article class="ranking-card" aria-label="Posición 3: Laura Pineda">
+              <span class="ranking-pos" aria-label="Posición 3">3</span>
+              <img src="assets/avatars/avatar-3.png"
+                   alt="Avatar de Laura Pineda"
+                   width="36" height="36"
+                   class="ranking-avatar ranking-avatar--bronze"
+                   loading="lazy"
+                   onerror="this.src='assets/icons/avatar-default.svg'">
+              <div class="ranking-user-info">
+                <span class="ranking-username">Laura Pineda</span>
+                <div class="ranking-meta" aria-label="Nivel 6, racha de 7 días">
+                  <span class="ranking-level">Nivel 6</span>
+                  <svg class="icon-streak" aria-hidden="true" focusable="false"
+                       width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2c0 0-5 5-5 11a5 5 0 0 0 10 0C17 7 12 2 12 2z"/>
+                  </svg>
+                  <span class="ranking-streak">7d</span>
+                </div>
+              </div>
+              <div class="ranking-score-block">
+                <svg class="icon-trend icon-trend--neutral" aria-label="Sin cambio de posición"
+                     focusable="false" width="14" height="14" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2.5"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+                <span class="ranking-pts" aria-label="1980 puntos">1980</span>
+                <span class="ranking-pts-label" aria-hidden="true">pts</span>
+              </div>
+            </article>
+          </li>
+
+          <!-- ── POSICIÓN 4 — EL USUARIO ACTUAL ──
+               La fila propia recibe la clase --self para destacarse
+               visualmente. aria-label confirma que es "tu posición".
+          -->
+          <li class="ranking-item ranking-item--self" role="listitem">
+            <article class="ranking-card ranking-card--self"
+                     aria-label="Tu posición: Puesto 4, Tú">
+              <span class="ranking-pos" aria-label="Posición 4">4</span>
+              <!--
+                Imagen de avatar propio. La alternativa "Tu avatar"
+                identifica al usuario sin repetir el nombre visualmente.
+              -->
+              <img src="assets/avatars/avatar-self.png"
+                   alt="Tu avatar"
+                   width="36" height="36"
+                   class="ranking-avatar ranking-avatar--self"
+                   loading="eager"
+                   onerror="this.src='assets/icons/avatar-default.svg'">
+              <div class="ranking-user-info">
+                <!-- "Yo" es la etiqueta canónica del usuario en el sistema -->
+                <span class="ranking-username ranking-username--self">Yo</span>
+                <div class="ranking-meta" aria-label="Nivel 5, racha de 5 días">
+                  <span class="ranking-level">Nivel 5</span>
+                  <svg class="icon-streak" aria-hidden="true" focusable="false"
+                       width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2c0 0-5 5-5 11a5 5 0 0 0 10 0C17 7 12 2 12 2z"/>
+                  </svg>
+                  <span class="ranking-streak">5d</span>
+                </div>
+              </div>
+              <div class="ranking-score-block">
+                <svg class="icon-trend icon-trend--up" aria-label="Subiste posiciones"
+                     focusable="false" width="14" height="14" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2.5"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="18 15 12 9 6 15"/>
+                </svg>
+                <span class="ranking-pts" aria-label="1750 puntos">1750</span>
+                <span class="ranking-pts-label" aria-hidden="true">pts</span>
+              </div>
+            </article>
+          </li>
+
+          <!-- ── POSICIÓN 5 ── -->
+          <li class="ranking-item" role="listitem">
+            <article class="ranking-card" aria-label="Posición 5: Andrés Torres">
+              <span class="ranking-pos" aria-label="Posición 5">5</span>
+              <img src="assets/avatars/avatar-4.png"
+                   alt="Avatar de Andrés Torres"
+                   width="36" height="36"
+                   class="ranking-avatar"
+                   loading="lazy"
+                   onerror="this.src='assets/icons/avatar-default.svg'">
+              <div class="ranking-user-info">
+                <span class="ranking-username">Andrés Torres</span>
+                <div class="ranking-meta" aria-label="Nivel 5, racha de 3 días">
+                  <span class="ranking-level">Nivel 5</span>
+                  <svg class="icon-streak" aria-hidden="true" focusable="false"
+                       width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2c0 0-5 5-5 11a5 5 0 0 0 10 0C17 7 12 2 12 2z"/>
+                  </svg>
+                  <span class="ranking-streak">3d</span>
+                </div>
+              </div>
+              <div class="ranking-score-block">
+                <svg class="icon-trend icon-trend--down" aria-label="Bajó posiciones"
+                     focusable="false" width="14" height="14" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2.5"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"/>
+                </svg>
+                <span class="ranking-pts" aria-label="1520 puntos">1520</span>
+                <span class="ranking-pts-label" aria-hidden="true">pts</span>
+              </div>
+            </article>
+          </li>
+
+          <!-- ── POSICIÓN 6 ── -->
+          <li class="ranking-item" role="listitem">
+            <article class="ranking-card" aria-label="Posición 6: Valentina Cruz">
+              <span class="ranking-pos" aria-label="Posición 6">6</span>
+              <img src="assets/avatars/avatar-5.png"
+                   alt="Avatar de Valentina Cruz"
+                   width="36" height="36"
+                   class="ranking-avatar"
+                   loading="lazy"
+                   onerror="this.src='assets/icons/avatar-default.svg'">
+              <div class="ranking-user-info">
+                <span class="ranking-username">Valentina Cruz</span>
+                <div class="ranking-meta" aria-label="Nivel 4, racha de 1 día">
+                  <span class="ranking-level">Nivel 4</span>
+                  <svg class="icon-streak" aria-hidden="true" focusable="false"
+                       width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2c0 0-5 5-5 11a5 5 0 0 0 10 0C17 7 12 2 12 2z"/>
+                  </svg>
+                  <span class="ranking-streak">1d</span>
+                </div>
+              </div>
+              <div class="ranking-score-block">
+                <svg class="icon-trend icon-trend--down" aria-label="Bajó posiciones"
+                     focusable="false" width="14" height="14" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2.5"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"/>
+                </svg>
+                <span class="ranking-pts" aria-label="1240 puntos">1240</span>
+                <span class="ranking-pts-label" aria-hidden="true">pts</span>
+              </div>
+            </article>
+          </li>
+
+        </ol>
+        <!-- /ol.ranking-list -->
+
+      </section>
+      <!-- /section.ranking-section -->
+
+
+      <!-- ── METAS COLABORATIVAS ── -->
+      <!--
+        RF-14 al RF-20: Componente social que permite crear metas
+        de ahorro colaborativas y participar en retos de tiempo limitado.
+
+        RNF-06: Privacidad social — solo se muestran porcentajes de
+        avance. Los montos reales son ocultos.
+
+        Cada meta es un <article> independiente (semánticamente
+        auto-contenido) dentro de una <section> etiquetada.
+      -->
+      <section class="collab-goals-section" aria-labelledby="collab-goals-title">
+
+        <!-- Encabezado de sección con ícono de personas -->
+        <h2 id="collab-goals-title" class="section-title">
+          <svg aria-hidden="true" focusable="false"
+               width="20" height="20" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+          Metas Colaborativas
+        </h2>
+
+        <!-- Lista de metas colaborativas -->
+        <div class="collab-goals-list" role="list"
+             aria-label="Tus metas de ahorro colaborativas activas">
+
+
+          <!-- ════════════════════════════════════════════════
+               META COLABORATIVA #1: Viaje a Cartagena
+          ════════════════════════════════════════════════ -->
+          <article class="collab-goal-card" role="listitem"
+                   aria-label="Meta colaborativa: Viaje a Cartagena, 78% completado">
+
+            <!-- Cabecera de la meta -->
+            <header class="goal-card-header">
+              <div class="goal-card-title-block">
+                <!-- Emoji decorativo de la meta (aria-hidden porque el nombre ya describe) -->
+                <span class="goal-emoji" aria-hidden="true">✈️</span>
+                <h3 class="goal-card-title">Viaje a Cartagena</h3>
+              </div>
+
+              <!-- Metadatos de la meta: participantes y fecha límite -->
+              <div class="goal-card-meta">
+                <!-- Ícono de personas: decorativo -->
+                <svg aria-hidden="true" focusable="false"
+                     width="13" height="13" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                  <circle cx="9" cy="7" r="4"/>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+                <!-- aria-label con información legible para screen readers -->
+                <span aria-label="4 participantes">4 personas</span>
+
+                <!-- Separador decorativo -->
+                <span aria-hidden="true" class="meta-separator">·</span>
+
+                <!-- Ícono de calendario: decorativo -->
+                <svg aria-hidden="true" focusable="false"
+                     width="13" height="13" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                  <line x1="16" y1="2" x2="16" y2="6"/>
+                  <line x1="8"  y1="2" x2="8"  y2="6"/>
+                  <line x1="3"  y1="10" x2="21" y2="10"/>
+                </svg>
+                <!-- Fecha con elemento <time> para semántica máquina-legible -->
+                <time datetime="2026-07-15" aria-label="Fecha límite: 15 de julio de 2026">
+                  15d
+                </time>
+              </div>
+            </header>
+
+            <!-- Barra de progreso total del grupo -->
+            <div class="goal-progress-block">
+              <div class="goal-progress-header">
+                <span class="goal-progress-label">Progreso</span>
+                <!-- El porcentaje es la única cifra visible (RNF-06) -->
+                <span class="goal-progress-pct" aria-label="78 por ciento completado">78%</span>
+              </div>
+              <!--
+                role="progressbar" con aria-valuenow, aria-valuemin y aria-valuemax
+                permite que los lectores de pantalla anuncien el progreso.
+                WCAG 4.1.2 (Name, Role, Value)
+              -->
+              <div class="goal-progressbar" role="progressbar"
+                   aria-valuenow="78" aria-valuemin="0" aria-valuemax="100"
+                   aria-label="78% del objetivo alcanzado">
+                <div class="goal-progressbar-fill" style="width: 78%"></div>
+              </div>
+            </div>
+
+            <!-- Contribuciones individuales (RNF-06: sin montos reales) -->
+            <div class="goal-contributions">
+              <h4 class="contributions-title">Contribución individual</h4>
+
+              <ul class="contributions-list" role="list"
+                  aria-label="Progreso individual de cada participante">
+
+                <!-- ── TU CONTRIBUCIÓN ── -->
+                <li class="contribution-item">
+                  <img src="assets/avatars/avatar-self.png"
+                       alt="Tu avatar"
+                       width="28" height="28"
+                       class="contribution-avatar contribution-avatar--self"
+                       loading="lazy"
+                       onerror="this.src='assets/icons/avatar-default.svg'">
+                  <span class="contribution-name contribution-name--self">Tú</span>
+                  <!-- Barra mini de contribución individual -->
+                  <div class="contribution-bar-wrap" role="presentation">
+                    <div class="contribution-bar" aria-hidden="true">
+                      <div class="contribution-bar-fill contribution-bar-fill--self"
+                           style="width: 28%"></div>
+                    </div>
+                  </div>
+                  <span class="contribution-pct" aria-label="Tu contribución: 28%">28%</span>
+                </li>
+
+                <!-- ── CONTRIBUCIÓN: SOFÍA ── -->
+                <li class="contribution-item">
+                  <img src="assets/avatars/avatar-1.png"
+                       alt="Avatar de Sofía"
+                       width="28" height="28"
+                       class="contribution-avatar"
+                       loading="lazy"
+                       onerror="this.src='assets/icons/avatar-default.svg'">
+                  <span class="contribution-name">Sofía</span>
+                  <div class="contribution-bar-wrap" role="presentation">
+                    <div class="contribution-bar" aria-hidden="true">
+                      <div class="contribution-bar-fill" style="width: 22%"></div>
+                    </div>
+                  </div>
+                  <span class="contribution-pct" aria-label="Contribución de Sofía: 22%">22%</span>
+                </li>
+
+                <!-- ── CONTRIBUCIÓN: CARLOS ── -->
+                <li class="contribution-item">
+                  <img src="assets/avatars/avatar-2.png"
+                       alt="Avatar de Carlos"
+                       width="28" height="28"
+                       class="contribution-avatar"
+                       loading="lazy"
+                       onerror="this.src='assets/icons/avatar-default.svg'">
+                  <span class="contribution-name">Carlos</span>
+                  <div class="contribution-bar-wrap" role="presentation">
+                    <div class="contribution-bar" aria-hidden="true">
+                      <div class="contribution-bar-fill" style="width: 17%"></div>
+                    </div>
+                  </div>
+                  <span class="contribution-pct" aria-label="Contribución de Carlos: 17%">17%</span>
+                </li>
+
+                <!-- ── CONTRIBUCIÓN: LAURA ── -->
+                <li class="contribution-item">
+                  <img src="assets/avatars/avatar-3.png"
+                       alt="Avatar de Laura"
+                       width="28" height="28"
+                       class="contribution-avatar"
+                       loading="lazy"
+                       onerror="this.src='assets/icons/avatar-default.svg'">
+                  <span class="contribution-name">Laura</span>
+                  <div class="contribution-bar-wrap" role="presentation">
+                    <div class="contribution-bar" aria-hidden="true">
+                      <div class="contribution-bar-fill" style="width: 11%"></div>
+                    </div>
+                  </div>
+                  <span class="contribution-pct" aria-label="Contribución de Laura: 11%">11%</span>
+                </li>
+
+              </ul>
+            </div>
+
+            <!-- Aviso de privacidad (RNF-06) -->
+            <!--
+              role="note" + aria-label: comunica al usuario que los
+              montos están ocultos intencionalmente. No es un error.
+              WCAG 4.1.3 (Status Messages)
+            -->
+            <footer class="goal-card-footer" role="note"
+                    aria-label="Nota de privacidad financiera">
+              <svg aria-hidden="true" focusable="false"
+                   width="13" height="13" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              Los montos individuales están ocultos
+            </footer>
+
+          </article>
+          <!-- /article.collab-goal-card (Meta 1) -->
+
+
+          <!-- ════════════════════════════════════════════════
+               META COLABORATIVA #2: Fondo de Emergencia Grupal
+          ════════════════════════════════════════════════ -->
+          <article class="collab-goal-card" role="listitem"
+                   aria-label="Meta colaborativa: Fondo de Emergencia Grupal, 45% completado">
+
+            <header class="goal-card-header">
+              <div class="goal-card-title-block">
+                <span class="goal-emoji" aria-hidden="true">🛡️</span>
+                <h3 class="goal-card-title">Fondo de Emergencia Grupal</h3>
+              </div>
+              <div class="goal-card-meta">
+                <svg aria-hidden="true" focusable="false"
+                     width="13" height="13" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                  <circle cx="9" cy="7" r="4"/>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+                <span aria-label="3 participantes">3 personas</span>
+
+                <span aria-hidden="true" class="meta-separator">·</span>
+
+                <svg aria-hidden="true" focusable="false"
+                     width="13" height="13" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                  <line x1="16" y1="2" x2="16" y2="6"/>
+                  <line x1="8"  y1="2" x2="8"  y2="6"/>
+                  <line x1="3"  y1="10" x2="21" y2="10"/>
+                </svg>
+                <time datetime="2026-12-31" aria-label="Fecha límite: 31 de diciembre de 2026">
+                  90d
+                </time>
+              </div>
+            </header>
+
+            <div class="goal-progress-block">
+              <div class="goal-progress-header">
+                <span class="goal-progress-label">Progreso</span>
+                <span class="goal-progress-pct" aria-label="45 por ciento completado">45%</span>
+              </div>
+              <div class="goal-progressbar" role="progressbar"
+                   aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"
+                   aria-label="45% del objetivo alcanzado">
+                <div class="goal-progressbar-fill" style="width: 45%"></div>
+              </div>
+            </div>
+
+            <div class="goal-contributions">
+              <h4 class="contributions-title">Contribución individual</h4>
+
+              <ul class="contributions-list" role="list"
+                  aria-label="Progreso individual de cada participante">
+
+                <li class="contribution-item">
+                  <img src="assets/avatars/avatar-self.png"
+                       alt="Tu avatar"
+                       width="28" height="28"
+                       class="contribution-avatar contribution-avatar--self"
+                       loading="lazy"
+                       onerror="this.src='assets/icons/avatar-default.svg'">
+                  <span class="contribution-name contribution-name--self">Tú</span>
+                  <div class="contribution-bar-wrap" role="presentation">
+                    <div class="contribution-bar" aria-hidden="true">
+                      <div class="contribution-bar-fill contribution-bar-fill--self"
+                           style="width: 20%"></div>
+                    </div>
+                  </div>
+                  <span class="contribution-pct" aria-label="Tu contribución: 20%">20%</span>
+                </li>
+
+                <li class="contribution-item">
+                  <img src="assets/avatars/avatar-4.png"
+                       alt="Avatar de Andrés"
+                       width="28" height="28"
+                       class="contribution-avatar"
+                       loading="lazy"
+                       onerror="this.src='assets/icons/avatar-default.svg'">
+                  <span class="contribution-name">Andrés</span>
+                  <div class="contribution-bar-wrap" role="presentation">
+                    <div class="contribution-bar" aria-hidden="true">
+                      <div class="contribution-bar-fill" style="width: 15%"></div>
+                    </div>
+                  </div>
+                  <span class="contribution-pct" aria-label="Contribución de Andrés: 15%">15%</span>
+                </li>
+
+                <li class="contribution-item">
+                  <img src="assets/avatars/avatar-5.png"
+                       alt="Avatar de Valentina"
+                       width="28" height="28"
+                       class="contribution-avatar"
+                       loading="lazy"
+                       onerror="this.src='assets/icons/avatar-default.svg'">
+                  <span class="contribution-name">Valentina</span>
+                  <div class="contribution-bar-wrap" role="presentation">
+                    <div class="contribution-bar" aria-hidden="true">
+                      <div class="contribution-bar-fill" style="width: 10%"></div>
+                    </div>
+                  </div>
+                  <span class="contribution-pct" aria-label="Contribución de Valentina: 10%">10%</span>
+                </li>
+
+              </ul>
+            </div>
+
+            <footer class="goal-card-footer" role="note"
+                    aria-label="Nota de privacidad financiera">
+              <svg aria-hidden="true" focusable="false"
+                   width="13" height="13" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              Los montos individuales están ocultos
+            </footer>
+
+          </article>
+          <!-- /article.collab-goal-card (Meta 2) -->
+
+        </div>
+        <!-- /div.collab-goals-list -->
+
+      </section>
+      <!-- /section.collab-goals-section -->
+
+
+      <!-- ── NOTA LEGAL / AVISO DE PRIVACIDAD ──
+           Requerimiento explícito del diseño Figma (RNF-06).
+           role="contentinfo" dentro de <main> no es válido;
+           usamos <aside> + aria-label para comunicar que es
+           información complementaria sobre la política de privacidad.
+      -->
+      <aside class="privacy-notice" aria-label="Nota sobre privacidad en metas colaborativas">
+        <svg aria-hidden="true" focusable="false"
+             width="14" height="14" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <p>
+          <strong>Nota:</strong> En las metas colaborativas solo se muestran porcentajes de
+          contribución. Los montos reales permanecen privados para proteger la información
+          financiera de cada participante.
+        </p>
+      </aside>
+
+    </main>
+    <!-- /main#main-content -->
+
+  </div>
+  <!-- /div.app-shell -->
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       MODAL: AGREGAR AMIGO
+       Implementa el patrón WAI-ARIA de diálogo modal con:
+       · role="dialog" + aria-modal="true"
+       · aria-labelledby apuntando al h2 interior
+       · Trampa de foco gestionada por auth.js (o social.js)
+       · Cierre con Escape (gestionado por JS)
+       · aria-hidden="true" cuando está cerrado
+       WCAG 2.1.2 (No Keyboard Trap), 1.3.1, 4.1.2
+  ═══════════════════════════════════════════════════════════ -->
+  <div id="add-friend-modal" class="modal" role="dialog"
+       aria-labelledby="add-friend-modal-title"
+       aria-modal="true"
+       aria-hidden="true">
+
+    <!-- Fondo semitransparente: cierra el modal al hacer clic fuera -->
+    <div class="modal-backdrop" id="add-friend-backdrop"></div>
+
+    <div class="modal-content">
+
+      <!-- Botón de cierre con aria-label descriptivo (WCAG 1.1.1) -->
+      <button type="button" class="modal-close" id="add-friend-close"
+              aria-label="Cerrar modal de agregar amigo">
+        <span aria-hidden="true">&times;</span>
+      </button>
+
+      <div class="modal-header">
+        <!-- id referenciado por aria-labelledby del dialog -->
+        <h2 id="add-friend-modal-title" class="modal-title">Agregar amigo</h2>
+        <p class="modal-subtitle">Busca a un usuario por nombre o correo</p>
+      </div>
+
+      <!--
+        novalidate: la validación la gestiona JS para dar mensajes
+        de error accesibles con aria-describedby (WCAG 3.3.1).
+      -->
+      <form class="auth-form-content" id="add-friend-form" novalidate>
+
+        <div class="form-group">
+          <!--
+            El <label> está programáticamente asociado al input
+            mediante for/id. (WCAG 1.3.1, 3.3.2)
+          -->
+          <label for="friend-search" class="form-label">
+            Nombre o correo electrónico
+          </label>
+          <input type="search"
+                 id="friend-search"
+                 name="friend-search"
+                 class="form-input"
+                 placeholder="ej. sofía@correo.com"
+                 autocomplete="off"
+                 autocorrect="off"
+                 spellcheck="false"
+                 aria-describedby="friend-search-hint"
+                 required>
+          <!-- Sugerencia de uso, referenciada por aria-describedby -->
+          <p id="friend-search-hint" class="form-hint">
+            Escribe al menos 3 caracteres para buscar.
+          </p>
+        </div>
+
+        <!-- Contenedor de resultados de búsqueda: aria-live="polite"
+             anuncia resultados a lectores de pantalla sin interrumpir (WCAG 4.1.3) -->
+        <div id="friend-search-results"
+             class="search-results"
+             role="listbox"
+             aria-label="Resultados de búsqueda de amigos"
+             aria-live="polite"
+             aria-atomic="false">
+          <!-- Los resultados se inyectan aquí vía JS -->
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-outline" id="add-friend-cancel">
+            Cancelar
+          </button>
+          <button type="submit" class="btn btn-primary">
+            Enviar solicitud
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+    <!-- /div.modal-content -->
+
+  </div>
+  <!-- /div#add-friend-modal -->
+
+
+  <!-- ─────────────────────────────────────────────────────────────
+       SCRIPTS
+       Cargados al final del body para no bloquear el render.
+       defer garantiza ejecución posterior al parseo del DOM.
+       Performance skill: scripts no bloqueantes (defer).
+  ───────────────────────────────────────────────────────────── -->
+
+  <!-- Módulo de autenticación compartido (gestión de modales, sesión) -->
+  <script defer src="js/auth.js"></script>
+
+  <!-- Módulo específico del círculo social (ranking, metas, modal amigos) -->
+  <script defer src="js/social.js"></script>
+
+</body>
+
+</html>
