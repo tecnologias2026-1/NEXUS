@@ -1,67 +1,113 @@
+<!-- Declaración del tipo de documento: Indica que este es un archivo HTML5 -->
 <!DOCTYPE html>
+
+<!-- Etiqueta html con idioma español: Identifica que el contenido está en español -->
 <html lang="es">
 
 <head>
+    <!-- Especifica el conjunto de caracteres (UTF-8) para soportar mayuscula, minúsculas, acentos, etc. -->
     <meta charset="UTF-8">
+    
+    <!-- Viewport: Hace que el sitio se adapte correctamente a celulares, tablets y escritorio -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Descripción: Texto que aparece en los buscadores (Google, Bing, etc.) -->
     <meta name="description" content="Nexus - Controla tus finanzas y alcanza tus metas con herramientas inteligentes para estudiantes y trabajadores primerizos.">
+    
+    <!-- Palabras clave: Términos importantes para los buscadores (SEO) -->
     <meta name="keywords" content="finanzas, ahorro, metas financieras, control financiero, estudiantes, trabajadores">
+    
+    <!-- Autor: Crédito de quién hizo el sitio -->
     <meta name="author" content="Proyecto UMNG">
+    
+    <!-- Título de la página: Aparece en la pestaña del navegador -->
     <title>NEXUS - Controla tus finanzas y alcanza tus metas</title>
+    
+    <!-- Favicon: El icono pequeño que aparece en la pestaña del navegador -->
     <link rel="icon" href="assets/icons/favicon.ico" type="image/x-icon">
 
-    <!-- Estilos generales -->
+    <!-- SECCIÓN DE ESTILOS CSS -->
+    
+    <!-- Estilos para el layout general (estructura, grid, flexbox) -->
     <link rel="stylesheet" href="css/layout.css">
+    
+    <!-- Estilos para componentes reutilizables (botones, tarjetas, formularios) -->
     <link rel="stylesheet" href="css/components.css">
 
-    <!-- Estilos de login y registro -->
+    <!-- Estilos específicos para login y registro de usuarios -->
     <link rel="stylesheet" href="css/auth.css">
 </head>
 
 <body class="home-page">
+    <!-- Link de accesibilidad: Permite a usuarios con discapacidades saltar al contenido principal (invisible) -->
     <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
 
+    <!-- Contenedor principal de la aplicación -->
     <div class="app">
+        <!-- ENCABEZADO (HEADER) -->
         <header>
+            <!-- Logo y nombre de la aplicación -->
             <figure class="logo">
+                <!-- Imagen del logo con dimensiones definidas para evitar problemas de carga -->
                 <img src="assets/icons/Logo.png" alt="Logo de Nexus - Plataforma financiera inteligente" width="32" height="32" class="logo-img">
+                <!-- Descripción del logo (accesibilidad) -->
                 <figcaption class="logo-name">Nexus</figcaption>
             </figure>
 
+            <!-- BARRA DE NAVEGACIÓN -->
             <nav class="nav" role="navigation" aria-label="Navegación principal">
+                <!-- Lista de enlaces de navegación -->
                 <ul class="nav-list">
+                    <!-- Botón para iniciar sesión (usuarios registrados) -->
                     <li><button type="button" id="btn-login" class="btn btn-outline">Iniciar Sesión</button></li>
+                    
+                    <!-- Botón para crear una nueva cuenta (usuarios nuevos) -->
                     <li><button type="button" id="btn-register" class="btn btn-primary">Crear Cuenta</button></li>
                 </ul>
             </nav>
         </header>
 
+        <!-- CONTENIDO PRINCIPAL -->
         <main class="main-content" id="main-content">
+            <!-- SECCIÓN HÉROE: Primera sección con mensaje principal y llamada a acción -->
             <section class="hero-section text-center">
+                <!-- Título principal: El mensaje más importante de la página -->
                 <h1 class="hero-main-title">
                     Controla tus finanzas.<br>
+                    <!-- Parte destacada del título con estilo especial (gradiente de color) -->
                     <span class="text-gradient">Alcanza tus metas.</span>
                 </h1>
 
+                <!-- Subtítulo: Descripción breve de qué es Nexus y para quién es -->
                 <p class="hero-subtitle">
                     Nexus es tu compañero financiero inteligente. Aprende, ahorra y crece junto a una comunidad
                     que comparte tus objetivos.
                 </p>
 
+                <!-- BOTONES DE ACCIÓN: Incentivan al usuario a registrarse o ver demo -->
                 <div class="hero-buttons">
+                    <!-- Botón lleno (primario): Llama a acción principal -->
                     <button class="btn btn-primary btn-cta">Comenzar Gratis -></button>
+                    
+                    <!-- Botón vacío (secundario): Opción alternativa para ver demo -->
                     <button class="btn btn-outline">Ver Demo</button>
                 </div>
 
+                <!-- BARRA DE ESTADÍSTICAS: Muestra números impresionantes para generar confianza -->
                 <div class="hero-stats-bar" role="region" aria-label="Estadísticas de Nexus">
+                    <!-- Estadística 1: Cantidad de usuarios -->
                     <div class="hero-stat">
                         <span class="stat-number" aria-label="Más de 10 mil usuarios activos">10K+</span>
                         <span class="stat-label">Usuarios activos</span>
                     </div>
+                    
+                    <!-- Estadística 2: Total de ahorros -->
                     <div class="hero-stat">
                         <span class="stat-number" aria-label="Más de 5 millones de dólares en ahorros generados">$5M+</span>
                         <span class="stat-label">Ahorros generados</span>
                     </div>
+                    
+                    <!-- Estadística 3: Calificación del sitio -->
                     <div class="hero-stat">
                         <span class="stat-number" aria-label="Calificación de 4.8 estrellas">4.8★</span>
                         <span class="stat-label">Calificación</span>
@@ -69,35 +115,71 @@
                 </div>
             </section>
 
+            <!-- SECCIÓN DE INTRODUCCIÓN: Transición de héroe a características -->
             <section class="intro-text-section text-center">
+                <!-- Título secundario que resume qué ofrece Nexus -->
                 <h2 class="intro-title">
                     Todo lo que necesitas para <span class="text-gradient">crecer financieramente</span>
                 </h2>
+                <!-- Descripción breve del valor que proporciona Nexus -->
                 <p class="intro-desc">
                     Herramientas poderosas diseñadas específicamente para estudiantes y trabajadores primerizos.
                 </p>
             </section>
 
+            <!-- SECCIÓN DE CARACTERÍSTICAS: Grid de tarjetas mostrando funciones principales -->
             <section class="features-section" aria-labelledby="features-title">
+                <!-- Título invisible para accesibilidad (se usa mediante aria-labelledby) -->
                 <h2 id="features-title" class="sr-only">Características de Nexus</h2>
 
+                <!-- Grid de características (contenedor que se adapta con Grid/Flexbox) -->
                 <div class="features-grid" role="list">
+                    <!-- TARJETA 1: Control Total -->
                     <article class="feature-card card-style" role="listitem">
+                        <!-- Icono de la característica (placeholder visual) -->
                         <div class="card-icon placeholder-icon" aria-hidden="true">[ICONO: Control Total]</div>
+                        <!-- Título de la característica -->
                         <h3 class="card-title">Control Total</h3>
+                        <!-- Descripción breve de qué hace esta característica -->
                         <p class="card-desc">Registra y categoriza todos tus ingresos y gastos.</p>
                     </article>
 
+                    <!-- TARJETA 2: Metas Inteligentes -->
                     <article class="feature-card card-style" role="listitem">
                         <div class="card-icon placeholder-icon" aria-hidden="true">[ICONO: Metas Inteligentes]</div>
                         <h3 class="card-title">Metas Inteligentes</h3>
                         <p class="card-desc">Define objetivos y visualiza tu progreso en tiempo real.</p>
                     </article>
 
+                    <!-- TARJETA 3: Ahorro Colaborativo -->
                     <article class="feature-card card-style" role="listitem">
                         <div class="card-icon placeholder-icon" aria-hidden="true">[ICONO: Colaboración]</div>
                         <h3 class="card-title">Ahorro Colaborativo</h3>
                         <p class="card-desc">Crea grupos de ahorro y comparte tus logros.</p>
+                    </article>
+
+                    <!-- TARJETA 4: Fondo de Emergencia -->
+                    <article class="feature-card card-style" role="listitem">
+                        <div class="card-icon placeholder-icon" aria-hidden="true">[ICONO: Fondo Emergencia]</div>
+                        <h3 class="card-title">Fondo de Emergencia</h3>
+                        <p class="card-desc">Construye tu colchón financiero de 3 a 6 meses.</p>
+                    </article>
+
+                    <!-- TARJETA 5: Gamificación -->
+                    <article class="feature-card card-style" role="listitem">
+                        <div class="card-icon placeholder-icon" aria-hidden="true">[ICONO: Gamificación]</div>
+                        <h3 class="card-title">Gamificación</h3>
+                        <p class="card-desc">Gana XP, sube de nivel y desbloquea logros.</p>
+                    </article>
+
+                    <!-- TARJETA 6: Análisis Profundo -->
+                    <article class="feature-card card-style" role="listitem">
+                        <div class="card-icon" aria-hidden="true"></div>
+                        <h3 class="card-title">Análisis Profundo</h3>
+                        <p class="card-desc">Proyecciones y estadísticas de tus finanzas.</p>
+                    </article>
+                </div>
+            </section>
                     </article>
 
                     <article class="feature-card card-style" role="listitem">
@@ -120,51 +202,70 @@
                 </div>
             </section>
 
+            <!-- SECCIÓN DE LLAMADA A ACCIÓN FINAL: Último incentivo para que se registren -->
             <section class="final-cta-section text-center">
+                <!-- Banner con gradiente visual que destaca -->
                 <div class="gradient-banner">
+                    <!-- Título: Refuerza el mensaje de acción -->
                     <h3 class="banner-title">Comienza tu viaje financiero hoy</h3>
+                    <!-- Descripción: Crea urgencia y apoyo comunitario -->
                     <p class="banner-desc">
                         Únete a miles de jóvenes que ya están tomando control de su futuro financiero con Nexus.
                     </p>
+                    <!-- Botón de registro final -->
                     <button class="btn btn-primary btn-cta">Comenzar Gratis -></button>
                 </div>
             </section>
         </main>
 
+        <!-- PIE DE PÁGINA (FOOTER) -->
         <footer class="footer">
+            <!-- Información de derechos de autor -->
             <p>&copy; 2026 Nexus - Proyecto UMNG</p>
         </footer>
     </div>
 
-    <!-- Modal de autenticación -->
+    <!-- MODAL DE AUTENTICACIÓN: Ventana emergente para login y registro -->
     <div id="auth-modal" class="modal" role="dialog" aria-labelledby="modal-title" aria-modal="true" aria-hidden="true">
+        <!-- Fondo oscuro detrás del modal (permite cerrar al hacer click) -->
         <div class="modal-backdrop" id="modal-backdrop"></div>
 
+        <!-- CONTENEDOR PRINCIPAL DEL MODAL -->
         <div class="modal-content">
+            <!-- Botón para cerrar el modal -->
             <button type="button" class="modal-close" id="modal-close" aria-label="Cerrar modal">
+                <!-- Símbolo 'X' para cerrar -->
                 <span aria-hidden="true">&times;</span>
             </button>
 
-            <!-- Login -->
+            <!-- ============================================ -->
+            <!-- FORMULARIO 1: LOGIN (INICIAR SESIÓN) -->
+            <!-- ============================================ -->
             <div id="login-form" class="auth-form active">
+                <!-- Encabezado del formulario -->
                 <div class="modal-header">
                     <h2 id="modal-title" class="modal-title">Iniciar Sesión</h2>
                     <p class="modal-subtitle">Bienvenido de vuelta a Nexus</p>
                 </div>
 
+                <!-- Formulario de login -->
                 <form class="auth-form-content" id="login-form-element" novalidate>
+                    <!-- Campo 1: Email -->
                     <div class="form-group">
                         <label for="login-email" class="form-label">Correo electrónico</label>
                         <input type="email" id="login-email" name="email" class="form-input" required autocomplete="email">
                     </div>
 
+                    <!-- Campo 2: Contraseña -->
                     <div class="form-group">
                         <label for="login-password" class="form-label">Contraseña</label>
                         <input type="password" id="login-password" name="password" class="form-input" required autocomplete="current-password">
                     </div>
 
+                    <!-- Botón de envío del formulario -->
                     <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
 
+                    <!-- Enlace para cambiar a formulario de registro -->
                     <p class="form-footer">
                         ¿No tienes cuenta?
                         <button type="button" class="link-btn" data-switch-form="register">Regístrate aquí</button>
@@ -172,96 +273,115 @@
                 </form>
             </div>
 
-            <!-- Registro -->
+            <!-- ============================================ -->
+            <!-- FORMULARIO 2: REGISTRO (CREAR CUENTA) -->
+            <!-- ============================================ -->
             <div id="register-form" class="auth-form">
+                <!-- Encabezado del formulario -->
                 <div class="modal-header">
                     <h2 class="modal-title">Crear cuenta en Nexus</h2>
                     <p class="modal-subtitle">Configura tu perfil en 3 pasos</p>
                 </div>
 
-                <!-- Pasos -->
+                <!-- INDICADOR DE PASOS: Muestra el progreso del registro (1/2/3) -->
                 <div class="progress-steps">
+                    <!-- Paso 1: Información de cuenta (inicio - activo por defecto) -->
                     <div class="progress-step active" data-step="1">
                         <div class="step-circle">1</div>
                         <span class="step-label">Cuenta</span>
                     </div>
 
+                    <!-- Paso 2: Ingresos -->
                     <div class="progress-step" data-step="2">
                         <div class="step-circle">2</div>
                         <span class="step-label">Ingresos</span>
                     </div>
 
+                    <!-- Paso 3: Perfil -->
                     <div class="progress-step" data-step="3">
                         <div class="step-circle">3</div>
                         <span class="step-label">Perfil</span>
                     </div>
                 </div>
-
-                <!-- Paso 1 -->
+                <!-- ============ PASO 1: INFORMACIÓN BÁSICA ============ -->
                 <div class="register-step register-step-1 active">
                     <div class="step-header">
                         <h3 class="step-section-title">Información básica</h3>
                     </div>
 
+                    <!-- Formulario del paso 1 -->
                     <form class="auth-form-content" id="register-form-element" novalidate>
+                        <!-- Campo: Nombre completo -->
                         <div class="form-group">
                             <label for="register-name" class="form-label">Nombre completo</label>
                             <input type="text" id="register-name" name="name" class="form-input" placeholder="Juan Pérez" required autocomplete="name">
                         </div>
 
+                        <!-- Campo: Email para registro -->
                         <div class="form-group">
                             <label for="register-email" class="form-label">Correo electrónico</label>
                             <input type="email" id="register-email" name="email" class="form-input" placeholder="tujemail@com" required autocomplete="email">
                         </div>
 
+                        <!-- Campo: Contraseña (mín. 8 caracteres) -->
                         <div class="form-group">
                             <label for="register-password" class="form-label">Contraseña</label>
                             <input type="password" id="register-password" name="password" class="form-input" required autocomplete="new-password" minlength="8">
                         </div>
 
+                        <!-- Campo: Confirmación de contraseña -->
                         <div class="form-group">
                             <label for="register-password-confirm" class="form-label">Confirmar Contraseña</label>
                             <input type="password" id="register-password-confirm" name="password-confirm" class="form-input" required autocomplete="new-password" minlength="8">
                         </div>
 
+                        <!-- Botones de acción: Siguiente o volver -->
                         <div class="form-actions">
                             <button type="button" class="btn btn-primary" id="register-next">Iniciar sesión →</button>
                         </div>
 
+                        <!-- Enlace para cambiar a login -->
                         <p class="form-footer">
                             ¿Ya tienes cuenta?
                             <button type="button" class="link-btn" data-switch-form="login">Inicia sesión</button>
                         </p>
 
+                        <!-- Enlace para volver al inicio -->
                         <p class="form-footer-secondary">
                             <button type="button" class="link-btn">+ Volver al inicio</button>
                         </p>
                     </form>
                 </div>
 
-                <!-- Paso 2 -->
+                <!-- ============ PASO 2: INGRESOS ============ -->
                 <div class="register-step register-step-2">
                     <div class="step-header">
                         <h3 class="step-section-title">Ingresos</h3>
                     </div>
 
+                    <!-- Formulario del paso 2 -->
                     <form class="auth-form-content" id="register-income-form" novalidate>
+                        <!-- Campo: Frecuencia de ingresos (radio buttons) -->
                         <div class="form-group">
                             <label class="form-label">Frecuencia de ingresos</label>
 
+                            <!-- Grupo de opciones de ingreso -->
                             <div class="income-frequency-group">
+                                <!-- Opción 1: Ingresos mensuales -->
                                 <label class="frequency-option">
                                     <input type="radio" name="frequency" value="monthly" required>
                                     <span class="frequency-icon">📅</span>
                                     <span class="frequency-label">Mensual</span>
                                 </label>
 
+                                <!-- Opción 2: Ingresos quincenales (cada 15 días) -->
                                 <label class="frequency-option">
                                     <input type="radio" name="frequency" value="biweekly" required>
                                     <span class="frequency-icon">📅</span>
                                     <span class="frequency-label">Quincenal</span>
                                 </label>
 
+                                <!-- Opción 3: Ingresos semanales -->
                                 <label class="frequency-option">
                                     <input type="radio" name="frequency" value="weekly" required>
                                     <span class="frequency-icon">📅</span>
@@ -270,15 +390,18 @@
                             </div>
                         </div>
 
+                        <!-- Campo: Monto de ingreso estimado -->
                         <div class="form-group">
                             <label for="register-income" class="form-label">Monto estimado de ingreso base</label>
 
+                            <!-- Grupo de entrada con símbolo de moneda -->
                             <div class="currency-input-group">
                                 <span class="currency-symbol">$</span>
                                 <input type="number" id="register-income" name="income" class="form-input currency-input" placeholder="0.00" step="0.01" min="0" required>
                             </div>
                         </div>
 
+                        <!-- Botones de acción: Atrás o Siguiente -->
                         <div class="form-actions">
                             <button type="button" class="btn btn-outline" id="register-prev">Atrás</button>
                             <button type="button" class="btn btn-primary" id="register-next-step2">Siguiente</button>
@@ -289,7 +412,9 @@
         </div>
     </div>
 
-    <!-- Script de autenticación -->
+    <!-- SCRIPTS JAVASCRIPT -->
+    
+    <!-- Script de autenticación: Maneja el login, registro y funcionalidad del modal -->
     <script src="js/auth.js"></script>
 </body>
 
