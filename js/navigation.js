@@ -255,70 +255,11 @@ function initializeCurrencyChange() {
  * @param {string} targetCurrency - Moneda objetivo (COP, USD, EUR)
  */
 function updateAllMonetaryValues(targetCurrency) {
-    // Actualizar métricas en análisis
-    updateMetricValues(targetCurrency);
+    const monetaryElements = document.querySelectorAll(
+        '.metric-value, .balance-card-amount, .balance-stat-value, .health-value, .projection-value, .limit-category-balance, .limit-remaining, .transaction-amount'
+    );
 
-    // Actualizar límites de gasto en transacciones
-    updateLimitValues(targetCurrency);
-
-    // Actualizar historial de transacciones
-    updateTransactionValues(targetCurrency);
-}
-
-/**
- * Actualiza los valores en las tarjetas de métricas
- * @param {string} targetCurrency - Moneda objetivo
- */
-function updateMetricValues(targetCurrency) {
-    const metricValues = document.querySelectorAll('.metric-value');
-
-    metricValues.forEach(element => {
-        // Solo procesar elementos que contienen valores monetarios (con $)
-        if (element.textContent.includes('$')) {
-            const currencySpan = element.querySelector('.metric-currency');
-            if (currencySpan) {
-                // Obtener el valor numérico actual (asumiendo que está en COP)
-                const currentText = element.textContent;
-                const numericValue = extractNumericValue(currentText);
-
-                if (numericValue !== null) {
-                    // Convertir a la nueva moneda
-                    const convertedValue = convertCurrency(numericValue, 'COP', targetCurrency);
-
-                    // Formatear y actualizar
-                    const formattedValue = formatCurrency(convertedValue, targetCurrency);
-                    element.innerHTML = formattedValue + '<span class="metric-currency">' + targetCurrency + '</span>';
-                }
-            }
-        }
-    });
-}
-
-/**
- * Actualiza los valores en los límites de gasto
- * @param {string} targetCurrency - Moneda objetivo
- */
-function updateLimitValues(targetCurrency) {
-    // Actualizar balances de categoría
-    const categoryBalances = document.querySelectorAll('.limit-category-balance');
-    categoryBalances.forEach(element => {
-        updateMonetaryText(element, targetCurrency);
-    });
-
-    // Actualizar valores restantes
-    const remainingValues = document.querySelectorAll('.limit-remaining');
-    remainingValues.forEach(element => {
-        updateMonetaryText(element, targetCurrency);
-    });
-}
-
-/**
- * Actualiza los valores en el historial de transacciones
- * @param {string} targetCurrency - Moneda objetivo
- */
-function updateTransactionValues(targetCurrency) {
-    const transactionAmounts = document.querySelectorAll('.transaction-amount');
-    transactionAmounts.forEach(element => {
+    monetaryElements.forEach(element => {
         updateMonetaryText(element, targetCurrency);
     });
 }
@@ -330,24 +271,20 @@ function updateTransactionValues(targetCurrency) {
  */
 function updateMonetaryText(element, targetCurrency) {
     const text = element.textContent;
-    const numbers = extractAllNumbers(text);
-
-    if (numbers.length > 0) {
-        let newText = text;
-
-        // Reemplazar cada número encontrado
-        numbers.forEach(num => {
-            const converted = convertCurrency(num, 'COP', targetCurrency);
-            const formatted = formatCurrency(converted, targetCurrency);
-            newText = newText.replace('$' + num.toLocaleString(), formatted);
-            newText = newText.replace(num.toString(), formatted.replace(CURRENCY_SYMBOLS[targetCurrency], ''));
-        });
-
-        // Reemplazar "COP" por la nueva moneda
-        newText = newText.replace(/COP/g, targetCurrency);
-
-        element.textContent = newText;
+    if (!text.includes('$') && !text.includes('€')) {
+        return;
     }
+
+    const currentCurrencyMatch = text.match(/\b(COP|USD|EUR)\b/);
+    const fromCurrency = currentCurrencyMatch ? currentCurrencyMatch[1] : 'COP';
+
+    const newText = text.replace(/([+-]?)([€$])([0-9,]+)/g, (match, sign, symbol, digits) => {
+        const amount = parseInt(digits.replace(/,/g, ''), 10);
+        const converted = convertCurrency(amount, fromCurrency, targetCurrency);
+        return sign + formatCurrency(converted, targetCurrency);
+    });
+
+    element.textContent = newText.replace(/\b(COP|USD|EUR)\b/g, targetCurrency);
 }
 
 /**
