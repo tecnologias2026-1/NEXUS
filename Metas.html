@@ -1,50 +1,5 @@
 <!DOCTYPE html>
-<!--
-  ============================================================
-  NEXUS — Plataforma de Educación y Gestión Financiera
-  ============================================================
-  Archivo  : metas.html
-  Módulo   : Metas Financieras (Dashboard)
-  Versión  : 1.1.0
-  Autores  : David Avila · Juan Lagos · David Alvarado — UMNG
 
-  Descripción
-  ───────────
-  Vista autenticada del módulo de metas. Muestra metas
-  personales y colaborativas del usuario, con barras de
-  progreso en tiempo real y modal de creación.
-
-  Hojas de estilo (orden intencional — no usar @import)
-  ───────────────────────────────────────────────────────
-  1. layout.css     → Grid de dos columnas: sidebar + contenido
-  2. components.css → Variables CSS, botones, inputs, modals
-  3. dashboard.css  → Sidebar, tarjetas de meta, progress bars
-
-  JavaScript
-  ──────────
-  js/metas.js  → Focus trap del modal, actualización de ARIA
-                 en barras de progreso, menús de opciones,
-                 cambio de moneda y cierre de sesión.
-
-  Accesibilidad: WCAG 2.2 — Nivel AA
-  ────────────────────────────────────
-  · Landmarks semánticos completos
-  · Skip link para navegación por teclado (WCAG 2.4.1)
-  · role="progressbar" con aria-valuenow/min/max/valuetext
-  · aria-current="page" en enlace activo del sidebar (WCAG 2.4.3)
-  · aria-live="polite" para notificaciones dinámicas (WCAG 4.1.3)
-  · Focus trap implementado en js/metas.js
-  · Contenedores de error accesibles con role="alert" (WCAG 3.3.1)
-
-  Seguridad
-  ─────────
-  · CSP via meta tag (reforzar con cabecera HTTP en producción,
-    que tiene prioridad sobre el meta tag)
-  · Página autenticada: noindex, nofollow
-  · Permissions-Policy restringe APIs de hardware innecesarias
-  · Script cargado con defer — no bloquea el parser HTML
-  ============================================================
--->
 <html lang="es">
 
 <head>
@@ -102,12 +57,6 @@
   <!-- Grid de dos columnas definido en dashboard.css -->
   <div class="dashboard-layout">
 
-    <!-- ================================================================
-      SIDEBAR
-      <aside> con role="complementary" y aria-label explícito porque
-      una misma página puede tener múltiples landmarks <aside>.
-      El contenido de navegación es complementario, no principal.
-    ================================================================ -->
     <aside class="sidebar" role="complementary" aria-label="Menú de navegación del dashboard">
 
       <!-- Marca visible; el div del ícono es decorativo (aria-hidden) -->
@@ -116,11 +65,7 @@
         <span class="sidebar-brand-name">Nexus</span>
       </div>
 
-      <!--
-        aria-label diferencia esta <nav> de otras posibles en la página.
-        role="list" en el <ul> restaura la semántica de lista en Safari/VoiceOver
-        cuando list-style está en none (bug conocido de iOS).
-      -->
+
       <nav class="sidebar-nav" aria-label="Navegación principal del dashboard">
         <ul class="sidebar-nav-list" role="list">
 
@@ -149,10 +94,7 @@
             </a>
           </li>
 
-          <!--
-            aria-current="page" informa al lector de pantalla cuál es la
-            sección activa. La clase "active" solo maneja el estilo visual.
-          -->
+
           <li class="sidebar-nav-item">
             <a href="metas.html" class="sidebar-nav-link active" aria-current="page">
               <svg class="sidebar-nav-icon" aria-hidden="true" width="20" height="20"
@@ -208,10 +150,8 @@
           </svg>
           <div class="sidebar-currency-info">
             <span class="sidebar-currency-label">Moneda</span>
-            <!--
-              aria-label completo porque el texto "COP" solo tiene
-              suficiente contexto para usuarios con visión.
-            -->
+   
+      
             <button type="button" class="sidebar-currency-value"
               aria-label="Cambiar moneda. Moneda actual: COP">COP</button>
           </div>
@@ -232,14 +172,7 @@
 
       </div>
     </aside>
-    <!-- /sidebar -->
 
-
-    <!-- ================================================================
-      CONTENIDO PRINCIPAL
-      tabindex="-1" permite recibir foco desde el skip link sin
-      incluir el <main> en el orden de tabulación natural.
-    ================================================================ -->
     <main class="dashboard-main" id="main-content" tabindex="-1">
 
       <header class="page-header">
@@ -247,19 +180,9 @@
         <p class="page-subtitle">Comparte metas y compite sanamente</p>
       </header>
 
-      <!--
-        Región de anuncios dinámicos para lectores de pantalla.
-        Permanece vacío en el HTML; js/metas.js inyecta mensajes
-        de éxito/error aquí. aria-atomic="true" hace que el lector
-        anuncie el mensaje completo, no solo la parte que cambió.
-      -->
       <div id="metas-status-region" role="status" aria-live="polite"
         aria-atomic="true" class="sr-only"></div>
 
-      <!--
-        aria-haspopup="dialog" advierte al usuario de teclado que
-        el botón abrirá un diálogo antes de que lo active.
-      -->
       <div class="metas-actions-bar">
         <button type="button" class="btn-agregar-meta" id="btn-agregar-meta"
           aria-haspopup="dialog" aria-controls="modal-agregar-meta">
@@ -273,12 +196,6 @@
         </button>
       </div>
 
-
-      <!-- ============================================================
-        SECCIÓN: METAS PERSONALES
-        aria-labelledby une el <h2> con la sección para que los
-        lectores anuncien "Metas Personales, región" al navegar.
-      ============================================================ -->
       <section class="metas-seccion" aria-labelledby="titulo-metas-personales">
 
         <h2 class="metas-seccion-titulo" id="titulo-metas-personales">
@@ -294,22 +211,12 @@
 
         <ul class="metas-lista" role="list" aria-label="Lista de metas personales">
 
-          <!-- ── TARJETA DE META PERSONAL ─────────────────────────────
-            <article> porque cada tarjeta es contenido autocontenido
-            con sentido propio fuera del contexto de la lista.
-            aria-labelledby nombra el artículo completo usando el <h3>
-            interno, mejorando la navegación por landmarks.
-          ──────────────────────────────────────────────────────────── -->
           <li class="meta-item">
             <article class="meta-card meta-card--personal"
               aria-labelledby="meta-personal-1-titulo">
 
               <header class="meta-card-header">
-                <!--
-                  Ícono de categoría — placeholder hasta que la BD
-                  provea la imagen real. Si es un <img>, añadir
-                  alt="Categoría: [nombre]".
-                -->
+
                 <div class="meta-card-icono" aria-hidden="true">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -322,10 +229,7 @@
 
                 <div class="meta-card-header-info">
                   <h3 class="meta-card-titulo" id="meta-personal-1-titulo">Meta X</h3>
-                  <!--
-                    data-meta-dias → js/metas.js reemplaza el placeholder
-                    con el valor real de la BD y actualiza aria-label.
-                  -->
+  
                   <p class="meta-card-dias" aria-label="Días restantes: cargando">
                     <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24"
                       fill="none" stroke="currentColor" stroke-width="2"
@@ -339,10 +243,6 @@
                   </p>
                 </div>
 
-                <!--
-                  aria-expanded="false" refleja el estado inicial cerrado.
-                  js/metas.js lo toglea a "true" al abrir el menú.
-                -->
                 <div class="meta-card-acciones">
                   <button type="button" class="btn-meta-opciones"
                     aria-label="Opciones para Meta X"
@@ -360,14 +260,6 @@
                 </div>
               </header>
 
-              <!--
-                role="progressbar" con aria-valuenow/min/max es el patrón
-                correcto para barras de progreso (WCAG 4.1.2).
-                aria-valuetext provee una cadena legible: "45% completado"
-                en lugar del número crudo "45".
-                js/metas.js actualiza aria-valuenow, aria-valuetext y
-                el width del relleno al recibir datos de la BD.
-              -->
               <div class="meta-progreso-wrapper">
                 <div class="meta-progreso-labels">
                   <span class="meta-progreso-label">Progreso</span>
@@ -385,12 +277,7 @@
                   <div class="meta-progreso-relleno" style="width: 0%"></div>
                 </div>
               </div>
-
-              <!--
-                data-meta-ahorrado / data-meta-objetivo son selectores
-                para que js/metas.js actualice solo los valores numéricos
-                sin reescribir el DOM completo.
-              -->
+    
               <div class="meta-montos">
                 <div class="meta-monto-grupo">
                   <span class="meta-monto-etiqueta">Ahorrado</span>
@@ -499,12 +386,6 @@
       <!-- /metas-personales -->
 
 
-      <!-- ============================================================
-        SECCIÓN: METAS COLABORATIVAS
-        Los montos individuales están ocultos por política de privacidad
-        (RNF-06): cada participante solo ve sus propios montos reales;
-        el resto del grupo solo ve porcentajes de contribución.
-      ============================================================ -->
       <section class="metas-seccion metas-seccion--colaborativas"
         aria-labelledby="titulo-metas-colaborativas">
 
@@ -522,21 +403,12 @@
 
         <ul class="metas-lista" role="list" aria-label="Lista de metas colaborativas">
 
-          <!-- ── TARJETA DE META COLABORATIVA ─────────────────────────
-            Misma estructura base que las tarjetas personales, más la
-            sub-sección de contribuciones individuales por participante.
-            IDs únicos por tarjeta para cumplir WCAG 4.1.2.
-          ──────────────────────────────────────────────────────────── -->
           <li class="meta-item">
             <article class="meta-card meta-card--colaborativa"
               aria-labelledby="meta-colab-1-titulo">
 
               <header class="meta-card-header">
-                <!--
-                  Avatar del grupo. Si el grupo tiene imagen propia,
-                  reemplazar el <div> por:
-                  <img src="..." alt="Foto del grupo Meta Colab" width="40" height="40">
-                -->
+    
                 <div class="meta-card-avatar-grupo" aria-hidden="true">
                   <span class="meta-card-avatar-inicial">M</span>
                 </div>
@@ -700,12 +572,6 @@
 
                 </ul>
 
-                <!--
-                  <p role="note"> en lugar de <aside> dentro de <article>:
-                  un <aside> anidado en <article> crearía un landmark
-                  "complementary" inesperado que fragmenta la navegación
-                  por landmarks de los lectores de pantalla.
-                -->
                 <p class="meta-privacidad-nota" role="note">
                   <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24"
                     fill="none" stroke="currentColor" stroke-width="2"
@@ -899,12 +765,6 @@
 
         </ul>
 
-        <!--
-          Nota de privacidad global a nivel de sección (RNF-06).
-          Se ubica en <aside> dentro de <section>, no dentro de <article>,
-          para evitar crear landmarks "complementary" anidados que
-          fragmenten la navegación por landmarks del lector de pantalla.
-        -->
         <aside class="metas-privacidad-global" role="note"
           aria-label="Política de privacidad en metas colaborativas">
           <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24"
@@ -960,12 +820,6 @@
         <p class="modal-subtitle">Define tu objetivo y empieza a ahorrar</p>
       </div>
 
-      <!--
-        <fieldset> + <legend> es el patrón correcto para agrupar
-        controles relacionados (WCAG 1.3.1).
-        La selección Personal/Colaborativa puede mostrar campos
-        adicionales (ej. invitar participantes) vía js/metas.js.
-      -->
       <fieldset class="modal-tipo-meta">
         <legend class="modal-tipo-meta-legend">Tipo de meta</legend>
         <div class="modal-tipo-opciones">
@@ -1001,14 +855,6 @@
 
         </div>
       </fieldset>
-
-      <!--
-        novalidate delega la validación a js/metas.js para mostrar
-        mensajes de error accesibles con aria-describedby + aria-invalid,
-        en lugar de los tooltips nativos del browser (WCAG 3.3.1).
-        Los contenedores de error usan role="alert" para que el lector
-        los anuncie inmediatamente al aparecer (WCAG 4.1.3).
-      -->
       <form id="form-nueva-meta" class="meta-form" novalidate>
 
         <div class="form-group">

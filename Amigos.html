@@ -1,45 +1,5 @@
 <!DOCTYPE html>
-<!--
-  ============================================================
-  NEXUS — Plataforma de Educación y Gestión Financiera
-  ------------------------------------------------------------
-  Archivo  : social.html
-  Módulo   : Círculo Social
-  Versión  : 1.0.0
-  Autores  : David Esteban Avila Rojas    · 1202775
-             Juan Nicolás Lagos Fuquen    · 1202737
-             David Felipe Alvarado Romero · 1202727
-  Proyecto : UMNG · 2026
-  ------------------------------------------------------------
-  Descripción:
-    Vista principal del módulo Social de NEXUS.
-    Permite al usuario consultar el ranking semanal de su
-    círculo, gestionar amigos y participar en metas de
-    ahorro colaborativas con privacidad de montos reales
-    (RNF-06: solo se muestran porcentajes de avance).
 
-  Dependencias de estilos:
-    · css/layout.css    → Sistema de grid y espaciado
-    · css/components.css → Tokens de diseño y componentes UI
-    · css/social.css    → Estilos exclusivos de este módulo
-
-  Accesibilidad:
-    · Conforme con WCAG 2.2 nivel AA
-    · Landmarks semánticos: <header>, <nav>, <main>, <footer>
-    · Skip link para navegación por teclado (2.4.1)
-    · Roles ARIA en regiones dinámicas
-    · Contraste mínimo 4.5:1 en texto normal (1.4.3)
-    · Focus visible en todos los elementos interactivos (2.4.7)
-    · Textos alternativos en todos los íconos funcionales (1.1.1)
-
-  Performance:
-    · Recursos CSS cargados con <link> (sin @import)
-    · Sin scripts bloqueantes en <head>
-    · Scripts diferidos con atributo defer
-    · Imágenes de avatar con width/height explícitos (CLS)
-    · Sin contenido renderizado exclusivamente por JS (LCP)
-  ============================================================
--->
 <html lang="es">
 
 <head>
@@ -80,27 +40,12 @@
 
 <body class="dashboard-page">
 
-  <!-- ─────────────────────────────────────────────────────────────
-       SKIP LINK
-       Permite a usuarios de teclado saltar la navegación lateral
-       y acceder directamente al contenido principal.
-       WCAG 2.4.1 (Bypass Blocks) — Nivel A
-  ───────────────────────────────────────────────────────────── -->
+
   <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
 
-  <!-- ─────────────────────────────────────────────────────────────
-       CONTENEDOR RAÍZ DE LA APLICACIÓN
-       .app-shell define el layout de dos columnas:
-       sidebar fijo + área de contenido principal.
-  ───────────────────────────────────────────────────────────── -->
   <div class="app-shell">
 
-    <!-- ═══════════════════════════════════════════════════════════
-         BARRA LATERAL DE NAVEGACIÓN (SIDEBAR)
-         role="navigation" + aria-label: distingue esta nav de
-         otras posibles regiones de navegación en la página.
-         WCAG 1.3.1, 2.4.1
-    ═══════════════════════════════════════════════════════════ -->
+
     <aside class="sidebar" aria-label="Navegación del panel de control">
 
       <!-- ── IDENTIDAD DE MARCA EN SIDEBAR ── -->
@@ -110,12 +55,7 @@
         <span class="sidebar-brand-name">Nexus</span>
       </a>
 
-      <!-- ── NAVEGACIÓN PRINCIPAL DEL DASHBOARD ── -->
-      <!--
-        Uso de <nav> + aria-label para diferenciar esta región
-        de navegación del resto. aria-current="page" marca la
-        página activa para lectores de pantalla (WCAG 2.4.3).
-      -->
+  
       <nav class="sidebar-nav" aria-label="Secciones del panel">
         <ul class="sidebar-nav-list" role="list">
 
@@ -233,11 +173,6 @@
     ═══════════════════════════════════════════════════════════ -->
     <main class="main-area" id="main-content" tabindex="-1">
 
-      <!-- ── CABECERA DE SECCIÓN ── -->
-      <!--
-        Estructura de encabezado coherente con el resto del dashboard.
-        h1 identifica claramente la sección activa (WCAG 2.4.6).
-      -->
       <header class="page-header">
         <div class="page-header-text">
           <h1 class="page-title">Círculo Social</h1>
@@ -268,15 +203,7 @@
       </section>
 
 
-      <!-- ── RANKING SEMANAL ── -->
-      <!--
-        Región semántica con aria-labelledby apuntando al h2
-        interior. Esto crea un landmark de sección correctamente
-        nombrado para lectores de pantalla (WCAG 1.3.1).
-
-        El ranking es una lista ordenada (<ol>) porque el orden
-        importa semánticamente; la posición transmite información.
-      -->
+   
       <section class="ranking-section" aria-labelledby="ranking-title">
 
         <h2 id="ranking-title" class="section-title">
@@ -293,11 +220,7 @@
           Ranking Semanal
         </h2>
 
-        <!--
-          <ol> con role="list" explícito para lectores de pantalla
-          que eliminan semántica de lista con CSS.
-          Cada <li> contiene un article con datos del usuario.
-        -->
+
         <ol class="ranking-list" role="list" aria-label="Clasificación semanal de tu círculo">
 
           <!-- ── POSICIÓN 1 ── -->
@@ -411,10 +334,8 @@
             </article>
           </li>
 
-          <!-- ── POSICIÓN 4 — EL USUARIO ACTUAL ──
-               La fila propia recibe la clase --self para destacarse
-               visualmente. aria-label confirma que es "tu posición".
-          -->
+
+    
           <li class="ranking-item ranking-item--self" role="listitem">
             <article class="ranking-card ranking-card--self"
                      aria-label="Tu posición: Puesto 4, Tú">
@@ -526,20 +447,7 @@
         <!-- /ol.ranking-list -->
 
       </section>
-      <!-- /section.ranking-section -->
-
-
-      <!-- ── METAS COLABORATIVAS ── -->
-      <!--
-        RF-14 al RF-20: Componente social que permite crear metas
-        de ahorro colaborativas y participar en retos de tiempo limitado.
-
-        RNF-06: Privacidad social — solo se muestran porcentajes de
-        avance. Los montos reales son ocultos.
-
-        Cada meta es un <article> independiente (semánticamente
-        auto-contenido) dentro de una <section> etiquetada.
-      -->
+      
       <section class="collab-goals-section" aria-labelledby="collab-goals-title">
 
         <!-- Encabezado de sección con ícono de personas -->
@@ -709,12 +617,6 @@
               </ul>
             </div>
 
-            <!-- Aviso de privacidad (RNF-06) -->
-            <!--
-              role="note" + aria-label: comunica al usuario que los
-              montos están ocultos intencionalmente. No es un error.
-              WCAG 4.1.3 (Status Messages)
-            -->
             <footer class="goal-card-footer" role="note"
                     aria-label="Nota de privacidad financiera">
               <svg aria-hidden="true" focusable="false"
@@ -862,13 +764,7 @@
       </section>
       <!-- /section.collab-goals-section -->
 
-
-      <!-- ── NOTA LEGAL / AVISO DE PRIVACIDAD ──
-           Requerimiento explícito del diseño Figma (RNF-06).
-           role="contentinfo" dentro de <main> no es válido;
-           usamos <aside> + aria-label para comunicar que es
-           información complementaria sobre la política de privacidad.
-      -->
+   
       <aside class="privacy-notice" aria-label="Nota sobre privacidad en metas colaborativas">
         <svg aria-hidden="true" focusable="false"
              width="14" height="14" viewBox="0 0 24 24" fill="none"
@@ -891,17 +787,6 @@
   </div>
   <!-- /div.app-shell -->
 
-
-  <!-- ═══════════════════════════════════════════════════════════
-       MODAL: AGREGAR AMIGO
-       Implementa el patrón WAI-ARIA de diálogo modal con:
-       · role="dialog" + aria-modal="true"
-       · aria-labelledby apuntando al h2 interior
-       · Trampa de foco gestionada por auth.js (o social.js)
-       · Cierre con Escape (gestionado por JS)
-       · aria-hidden="true" cuando está cerrado
-       WCAG 2.1.2 (No Keyboard Trap), 1.3.1, 4.1.2
-  ═══════════════════════════════════════════════════════════ -->
   <div id="add-friend-modal" class="modal" role="dialog"
        aria-labelledby="add-friend-modal-title"
        aria-modal="true"
@@ -924,17 +809,10 @@
         <p class="modal-subtitle">Busca a un usuario por nombre o correo</p>
       </div>
 
-      <!--
-        novalidate: la validación la gestiona JS para dar mensajes
-        de error accesibles con aria-describedby (WCAG 3.3.1).
-      -->
       <form class="auth-form-content" id="add-friend-form" novalidate>
 
         <div class="form-group">
-          <!--
-            El <label> está programáticamente asociado al input
-            mediante for/id. (WCAG 1.3.1, 3.3.2)
-          -->
+      
           <label for="friend-search" class="form-label">
             Nombre o correo electrónico
           </label>
@@ -954,8 +832,7 @@
           </p>
         </div>
 
-        <!-- Contenedor de resultados de búsqueda: aria-live="polite"
-             anuncia resultados a lectores de pantalla sin interrumpir (WCAG 4.1.3) -->
+      
         <div id="friend-search-results"
              class="search-results"
              role="listbox"
@@ -983,12 +860,6 @@
   <!-- /div#add-friend-modal -->
 
 
-  <!-- ─────────────────────────────────────────────────────────────
-       SCRIPTS
-       Cargados al final del body para no bloquear el render.
-       defer garantiza ejecución posterior al parseo del DOM.
-       Performance skill: scripts no bloqueantes (defer).
-  ───────────────────────────────────────────────────────────── -->
 
   <!-- Módulo de autenticación compartido (gestión de modales, sesión) -->
   <script defer src="js/auth.js"></script>
