@@ -1,0 +1,493 @@
+<!-- Declaración HTML5: Indica que esto es un archivo HTML moderno -->
+<!DOCTYPE html>
+
+<!-- Etiqueta raíz en español: Especifica que el contenido está en idioma español -->
+<html lang="es">
+
+<head>
+  <!-- Especifica la codificación de caracteres (UTF-8): Soporta acentos, mayúsculas, etc. -->
+  <meta charset="UTF-8">
+  
+  <!-- Viewport: Hace que la página se adapte a cualquier pantalla (móvil, tablet, desktop) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Página autenticada por usuario: No debe aparecer en buscadores Google/Bing -->
+  <meta name="robots" content="noindex, nofollow">
+  
+  <!-- Descripción: Texto que aparece en los resultados de búsqueda -->
+  <meta name="description" content="Analiza tus patrones de gasto, proyecciones y salud financiera con gráficos y estadísticas detalladas en NEXUS.">
+
+  <!-- Restricción de permisos: Esta página NO necesita acceso a geolocalización, cámara ni micrófono -->
+  <meta http-equiv="Permissions-Policy" content="geolocation=(), camera=(), microphone=()">
+
+  <!-- Título: Aparece en la pestaña del navegador -->
+  <title>Análisis | NEXUS - Tu resumen financiero</title>
+
+  <!-- Preconexión a Google Fonts: Acelera la carga de fuentes personalizadas -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Favicon: Icono pequeño que aparece en la pestaña del navegador -->
+  <link rel="icon" href="assets/icons/favicon.ico" type="image/x-icon">
+
+  <!-- ESTILOS CSS (en orden de especificidad) -->
+  
+  <!-- Estilos base: Layout general (estructura Grid/Flexbox del dashboard) -->
+  <link rel="stylesheet" href="css/layout.css">
+  
+  <!-- Estilos de componentes: Botones, tarjetas, inputs reutilizables -->
+  <link rel="stylesheet" href="css/components.css">
+  
+  <!-- Estilos específicos del dashboard: Sidebar, header, main content -->
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+
+<!-- Body con clase especial que indica que esta es una página del dashboard (pagina autenticada) -->
+<body class="dashboard-page">
+
+
+  <!-- Skip link: Link invisible que aparece al hacer Tab (para accesibilidad)
+       Permite a usuarios de teclado/lector de pantalla saltar el sidebar y acceder rápido al contenido -->
+  <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+
+  <!-- Región dinámica para lectores de pantalla: Invisible visualmente
+       Se usa para anunciar cambios (mensajes de éxito, errores, etc.) que ocurren sin recargar la página -->
+  <div id="status-announcer" aria-live="polite" aria-atomic="true" class="sr-only"></div>
+
+  <!-- Contenedor principal del layout: Grid de dos columnas (sidebar + main) -->
+  <div class="dashboard-layout">
+
+    <!-- ================================================
+         SIDEBAR — Navegación principal y controles
+         ================================================
+         Menú lateral fijo que permite navegar entre:
+         - Inicio (Dashboard)
+         - Transacciones
+         - Metas
+         - Social
+         - Análisis (PÁGINA ACTUAL - marcada con active)
+         
+         También contiene:
+         - Selector de moneda
+         - Botón cerrar sesión
+    -->
+    <nav class="sidebar" aria-label="Navegación principal de NEXUS" id="sidebar">
+
+      <!-- ============================================
+           MARCA Y LOGO DE NEXUS
+           ============================================ -->
+      <div class="sidebar-logo">
+        <!-- Imagen del logo con dimensiones fijas (36x36px) para evitar problemas de layout -->
+        <img
+          src="assets/icons/Logo.png"
+          alt="NEXUS — Plataforma financiera"
+          width="36"
+          height="36"
+          class="sidebar-logo-img"
+          loading="eager"
+          decoding="sync">
+        <!-- Nombre de la marca al lado del logo -->
+        <span class="sidebar-logo-name">Nexus</span>
+      </div>
+
+      <!-- ============================================
+           MENÚ DE NAVEGACIÓN
+           ============================================
+           Lista de enlaces a las diferentes secciones.
+           aria-current="page" marca la página actual (Análisis)
+       -->
+      <ul class="sidebar-nav-list" role="list">
+        <!-- Link 1: Inicio (Dashboard) -->
+        <li>
+          <a href="dashboard.html" class="sidebar-nav-link">
+            <!-- Icono SVG: Casa (para Inicio) -->
+            <svg class="sidebar-nav-icon" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            <!-- Texto del enlace -->
+            <span>Inicio</span>
+          </a>
+        </li>
+
+        <!-- Link 2: Transacciones -->
+        <li>
+          <a href="transacciones.html" class="sidebar-nav-link">
+            <!-- Icono SVG: Tarjeta/Transacción -->
+            <svg class="sidebar-nav-icon" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="5" width="20" height="14" rx="2"/>
+              <line x1="2" y1="10" x2="22" y2="10"/>
+            </svg>
+            <span>Transacciones</span>
+          </a>
+        </li>
+
+        <!-- Link 3: Metas -->
+        <li>
+          <a href="metas.html" class="sidebar-nav-link">
+            <!-- Icono SVG: Círculos concéntricos (objetivo/meta) -->
+            <svg class="sidebar-nav-icon" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <circle cx="12" cy="12" r="6"/>
+              <circle cx="12" cy="12" r="2"/>
+            </svg>
+            <span>Metas</span>
+          </a>
+        </li>
+
+        <!-- Link 4: Social -->
+        <li>
+          <a href="social.html" class="sidebar-nav-link">
+            <!-- Icono SVG: Personas/Comunidad -->
+            <svg class="sidebar-nav-icon" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+            <span>Social</span>
+          </a>
+        </li>
+
+        <!-- Link 5: Análisis (PÁGINA ACTUAL) -->
+        <li>
+          <!-- Clase active + aria-current="page" indican que esta es la página actual -->
+          <a href="analisis.html" class="sidebar-nav-link sidebar-nav-link--active" aria-current="page">
+            <!-- Icono SVG: Gráfico de barras (análisis) -->
+            <svg class="sidebar-nav-icon" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="20" x2="18" y2="10"/>
+              <line x1="12" y1="20" x2="12" y2="4"/>
+              <line x1="6" y1="20" x2="6" y2="14"/>
+            </svg>
+            <span>Análisis</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- ============================================
+           PIE DEL SIDEBAR
+           ============================================
+           Selector de moneda y botón para cerrar sesión
+       -->
+      <div class="sidebar-footer">
+
+        <!-- SELECTOR DE MONEDA -->
+        <div class="sidebar-currency">
+          <!-- Icono SVG: Globo terraqueo (moneda internacional) -->
+          <svg class="sidebar-nav-icon" aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="2" y1="12" x2="22" y2="12"/>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+          </svg>
+          <!-- Contenedor con etiqueta y selector -->
+          <div class="sidebar-currency-info">
+            <!-- Etiqueta: "Moneda" -->
+            <span class="sidebar-currency-label">Moneda</span>
+            <!-- Label invisible pero disponible para screenreaders (accesibilidad) -->
+            <label for="currency-select" class="sr-only">Seleccionar moneda</label>
+            <!-- Dropdown para elegir moneda (COP, USD, EUR) -->
+            <select id="currency-select" class="sidebar-currency-select">
+              <option value="COP" selected>COP</option>
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- BOTÓN CERRAR SESIÓN -->
+        <button type="button" class="sidebar-logout-btn" id="btn-logout">
+          <!-- Icono SVG: Puerta (logout) -->
+          <svg class="sidebar-nav-icon" aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+          <span>Cerrar sesión</span>
+        </button>
+
+      </div>
+    </nav>
+    <!-- /SIDEBAR -->
+
+
+
+
+    <!-- ================================================
+         ÁREA PRINCIPAL — Header + Contenido del análisis
+         ================================================
+         Contiene:
+         1. Header: Título y descripción de la página
+         2. Main: Las 3 secciones de análisis:
+            - Tarjetas de métricas clave
+            - Salud financiera (lista)
+            - Proyecciones (gráficos)
+    -->
+    <div class="dashboard-main">
+
+      <!-- ============================================
+           HEADER DE LA PÁGINA
+           ============================================
+           Muestra el título "Análisis Financiero" 
+           y descripción "Visualiza tus patrones y proyecciones"
+       -->
+      <header class="dashboard-header">
+        <div class="page-header-content">
+          <!-- Título principal de la página -->
+          <h1 class="page-title">Análisis Financiero</h1>
+          <!-- Subtítulo descriptivo -->
+          <p class="page-subtitle">Visualiza tus patrones y proyecciones</p>
+        </div>
+      </header>
+
+      <!-- ============================================
+           CONTENIDO PRINCIPAL
+           ============================================
+           Aquí van las 3 secciones de análisis
+       -->
+      <main class="main-content" id="main-content" tabindex="-1">
+
+
+        <!-- ============================================
+             SECCIÓN 1: TARJETAS DE MÉTRICAS CLAVE
+             ============================================
+             Muestra 4 tarjetas coloridas con información importante:
+             1. Ahorro (%): Cambio porcentual en ahorros
+             2. Ahorros ($): Total de dinero ahorrado
+             3. Gastos ($): Gasto total del mes
+             4. Meta ($): Meta de ahorro establecida
+             
+             Cada tarjeta tiene icono + label + valor
+             Layout: Grid (2x2 o responsive)
+        -->
+        <section class="metrics-section" aria-labelledby="metrics-title">
+          <!-- Título invisible para accesibilidad (solo screenreaders) -->
+          <h2 id="metrics-title" class="sr-only">Métricas clave de tu análisis financiero</h2>
+
+          <!-- Contenedor Grid: Tus compañeros usarán CSS Grid aquí -->
+          <div class="metrics-grid">
+
+            <!-- TARJETA 1: Ahorro (cambio porcentual) - COLOR PÚRPURA -->
+            <article class="metric-card metric-card--savings">
+              <!-- Encabezado de la tarjeta (etiqueta + icono) -->
+              <div class="metric-header">
+                <!-- Etiqueta: "Ahorro" -->
+                <h3 class="metric-label">Ahorro</h3>
+                <!-- Icono emoji: 📈 (flecha hacia arriba - símbolo de cambio) -->
+                <span class="metric-icon" aria-hidden="true">📈</span>
+              </div>
+              <!-- Valor principal: -75% (en rojo porque es negativo) -->
+              <p class="metric-value metric-value--negative">-75%</p>
+            </article>
+
+            <!-- TARJETA 2: Ahorros totales - COLOR VERDE -->
+            <article class="metric-card metric-card--total-savings">
+              <div class="metric-header">
+                <h3 class="metric-label">Ahorros</h3>
+                <!-- Icono emoji: 💰 (bolsa de dinero) -->
+                <span class="metric-icon" aria-hidden="true">💰</span>
+              </div>
+              <!-- Valor: $225 COP -->
+              <p class="metric-value">$225<span class="metric-currency">COP</span></p>
+            </article>
+
+            <!-- TARJETA 3: Gastos totales - COLOR NARANJA -->
+            <article class="metric-card metric-card--expenses">
+              <div class="metric-header">
+                <h3 class="metric-label">Gastos</h3>
+                <!-- Icono emoji: 💸 (dinero volando - gasto) -->
+                <span class="metric-icon" aria-hidden="true">💸</span>
+              </div>
+              <!-- Valor: $3300 COP -->
+              <p class="metric-value">$3300<span class="metric-currency">COP</span></p>
+            </article>
+
+            <!-- TARJETA 4: Meta de ahorro - COLOR ROSA/MAGENTA -->
+            <article class="metric-card metric-card--goal">
+              <div class="metric-header">
+                <h3 class="metric-label">Meta</h3>
+                <!-- Icono emoji: 🎯 (objetivo/blanco) -->
+                <span class="metric-icon" aria-hidden="true">🎯</span>
+              </div>
+              <!-- Valor: $5255 COP -->
+              <p class="metric-value">$5255<span class="metric-currency">COP</span></p>
+            </article>
+
+          </div>
+        </section>
+
+
+        <!-- ============================================
+             SECCIÓN 2: SALUD FINANCIERA
+             ============================================
+             Muestra 4 items en una lista con detalles financieros:
+             1. Ingresos totales: $300 COP
+             2. Gastos totales: $525 COP
+             3. Gastos fijos: $80 COP
+             4. Ratio gastos/ingresos: 27%
+             
+             Cada item tiene:
+             - Etiqueta (nombre)
+             - Categoría (tipo)
+             - Valor (cantidad o porcentaje)
+        -->
+        <section class="financial-health-section" aria-labelledby="health-title">
+          <!-- Título de la sección -->
+          <h2 id="health-title" class="section-title">Salud Financiera</h2>
+
+          <!-- Contenedor con la lista -->
+          <div class="health-content">
+            <!-- Lista de items de salud financiera -->
+            <ul class="health-list" role="list">
+
+              <!-- ITEM 1: Ingresos totales -->
+              <li class="health-item">
+                <!-- Parte izquierda: label + categoría -->
+                <div class="health-item-content">
+                  <!-- Nombre del ítem -->
+                  <span class="health-label">Ingresos totales</span>
+                  <!-- Categoría/tipo -->
+                  <span class="health-category">Ingresos fijos</span>
+                </div>
+                <!-- Parte derecha: valor (destacado) -->
+                <strong class="health-value health-value--income">$300 COP</strong>
+              </li>
+
+              <!-- ITEM 2: Gastos totales -->
+              <li class="health-item">
+                <div class="health-item-content">
+                  <span class="health-label">Gastos totales</span>
+                  <span class="health-category">Gastos fijos</span>
+                </div>
+                <strong class="health-value health-value--expense">$525 COP</strong>
+              </li>
+
+              <!-- ITEM 3: Gastos fijo (esenciales) -->
+              <li class="health-item">
+                <div class="health-item-content">
+                  <span class="health-label">Gastos fijo</span>
+                  <span class="health-category">Gastos esenciales</span>
+                </div>
+                <strong class="health-value health-value--fixed">$80 COP</strong>
+              </li>
+
+              <!-- ITEM 4: Ratio gastos/ingresos -->
+              <li class="health-item">
+                <div class="health-item-content">
+                  <span class="health-label">Gastos fijo + ingreso</span>
+                  <span class="health-category">Últimos 30 días</span>
+                </div>
+                <!-- Porcentaje mostrado en bold -->
+                <strong class="health-value health-value--ratio">27%</strong>
+              </li>
+
+            </ul>
+          </div>
+        </section>
+
+
+        <!-- ============================================
+             SECCIÓN 3: PROYECCIONES
+             ============================================
+             Muestra predicciones de ahorro para 3 meses basadas en 
+             el consumo promedio del usuario.
+             
+             Cada proyección tiene:
+             - Label con el mes (Mes 1, Mes 2, Mes 3)
+             - Valor predicho en COP
+             - Barra visual de progreso coloreada
+        -->
+        <section class="projections-section" aria-labelledby="projections-title">
+          <!-- Título de la sección -->
+          <h2 id="projections-title" class="section-title">Proyecciones</h2>
+
+          <!-- Cabecera con explicación -->
+          <div class="projections-header">
+            <!-- Subtítulo explicativo -->
+            <p class="projections-subtitle">Basado en el consumo promedio ponderado</p>
+            <!-- Período analizado (3 meses) -->
+            <span class="projections-time" aria-label="Período de análisis">3 meses</span>
+          </div>
+
+          <!-- Contenedor con las proyecciones -->
+          <div class="projections-content">
+            <!-- Lista de proyecciones por mes -->
+            <ul class="projections-list" role="list">
+
+              <!-- PROYECCIÓN MES 1 -->
+              <li class="projection-item">
+                <!-- Encabezado: Label y valor -->
+                <div class="projection-item-header">
+                  <!-- Texto: "Mes 1" -->
+                  <span class="projection-label">Mes 1</span>
+                  <!-- Valor predicho -->
+                  <span class="projection-value">$0 COP</span>
+                </div>
+                <!-- Barra de progreso visual (accesible con role="progressbar") -->
+                <div class="projection-bar-container" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                  <!-- Barra interna con ancho basado en porcentaje (style="width: 0%") -->
+                  <!-- Clase de color: cyan (azul claro) -->
+                  <div class="projection-bar projection-bar--cyan" style="width: 0%"></div>
+                </div>
+              </li>
+
+              <!-- PROYECCIÓN MES 2 -->
+              <li class="projection-item">
+                <div class="projection-item-header">
+                  <span class="projection-label">Mes 2</span>
+                  <span class="projection-value">$0 COP</span>
+                </div>
+                <!-- Barra de progreso con color púrpura -->
+                <div class="projection-bar-container" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                  <div class="projection-bar projection-bar--purple" style="width: 0%"></div>
+                </div>
+              </li>
+
+              <!-- PROYECCIÓN MES 3 -->
+              <li class="projection-item">
+                <div class="projection-item-header">
+                  <span class="projection-label">Mes 3</span>
+                  <span class="projection-value">$0 COP</span>
+                </div>
+                <!-- Barra de progreso con color naranja -->
+                <div class="projection-bar-container" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                  <div class="projection-bar projection-bar--orange" style="width: 0%"></div>
+                </div>
+              </li>
+
+            </ul>
+
+            <!-- NOTA INFORMATIVA -->
+            <!-- Cuadro de consejo para mejorar proyecciones -->
+            <div class="projections-note" role="note">
+              <!-- Icono: i (información) -->
+              <svg class="note-icon" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="16" x2="12" y2="12"/>
+                <line x1="12" y1="8" x2="12.01" y2="8"/>
+              </svg>
+              <!-- Texto del consejo/nota -->
+              <p class="note-text">Consejo: Mantén un consumo mensual consistente para mejores proyecciones.</p>
+            </div>
+
+          </div>
+        </section>
+
+      </main>
+
+    </div>
+    <!-- /DASHBOARD MAIN -->
+
+  </div>
+
+  <!-- ============================================
+       SCRIPTS JAVASCRIPT
+       ============================================
+       Script que maneja la funcionalidad interactiva del dashboard:
+       - Cambiar moneda
+       - Logout
+       - Actualizar datos dinámicamente
+  -->
+  <script src="js/dashboard.js"></script>
+  
+  <!-- Script de navegación: Maneja cambio de moneda en el análisis -->
+  <script src="js/navigation.js"></script>

@@ -1,0 +1,554 @@
+<!-- Declaración HTML5: Indica que esto es un archivo HTML moderno -->
+<!DOCTYPE html>
+
+<!-- Etiqueta raíz en español: Especifica que el contenido está en idioma español -->
+<html lang="es">
+
+<head>
+  <!-- Especifica la codificación de caracteres (UTF-8): Soporta acentos, mayúsculas, etc. -->
+  <meta charset="UTF-8">
+  
+  <!-- Viewport: Hace que la página se adapte a cualquier pantalla (móvil, tablet, desktop) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Página autenticada por usuario: No debe aparecer en buscadores Google/Bing -->
+  <meta name="robots" content="noindex, nofollow">
+  
+  <!-- Descripción: Texto que aparece en los resultados de búsqueda -->
+  <meta name="description" content="Registra tus ingresos y gastos, visualiza límites mensuales por categoría y accede al historial de transacciones en NEXUS.">
+
+  <!-- Restricción de permisos: Esta página NO necesita acceso a geolocalización, cámara ni micrófono -->
+  <meta http-equiv="Permissions-Policy" content="geolocation=(), camera=(), microphone=()">
+
+  <!-- Título: Aparece en la pestaña del navegador -->
+  <title>Transacciones | NEXUS - Registra tus ingresos y gastos</title>
+
+  <!-- Preconexión a Google Fonts: Acelera la carga de fuentes personalizadas -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Favicon: Icono pequeño que aparece en la pestaña del navegador -->
+  <link rel="icon" href="assets/icons/favicon.ico" type="image/x-icon">
+
+  <!-- ESTILOS CSS (en orden de especificidad) -->
+  
+  <!-- Estilos base: Layout general (estructura Grid/Flexbox del dashboard) -->
+  <link rel="stylesheet" href="css/layout.css">
+  
+  <!-- Estilos de componentes: Botones, tarjetas, inputs reutilizables -->
+  <link rel="stylesheet" href="css/components.css">
+  
+  <!-- Estilos específicos del dashboard: Sidebar, header, main content -->
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+
+<!-- Body con clase especial que indica que esta es una página del dashboard (página autenticada) -->
+<body class="dashboard-page">
+
+  <!-- Skip link: Link invisible que aparece al hacer Tab (para accesibilidad)
+       Permite a usuarios de teclado/lector de pantalla saltar el sidebar y acceder rápido al contenido -->
+  <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+
+  <!-- Región dinámica para lectores de pantalla: Invisible visualmente
+       Se usa para anunciar cambios (mensajes de éxito, errores, etc.) que ocurren sin recargar la página -->
+  <div id="status-announcer" aria-live="polite" aria-atomic="true" class="sr-only"></div>
+
+  <!-- Contenedor principal del layout: Grid de dos columnas (sidebar + main) -->
+  <div class="dashboard-layout">
+
+    <!-- ================================================
+         SIDEBAR — Navegación principal y controles
+         ================================================
+         Menú lateral fijo que permite navegar entre:
+         - Inicio (Dashboard)
+         - Transacciones (PÁGINA ACTUAL)
+         - Metas
+         - Social
+         - Análisis
+         
+         También contiene:
+         - Selector de moneda
+         - Botón cerrar sesión
+    -->
+    <nav class="sidebar" aria-label="Navegación principal de NEXUS" id="sidebar">
+
+      <!-- ============================================
+           MARCA Y LOGO DE NEXUS
+           ============================================ -->
+      <div class="sidebar-logo">
+        <!-- Imagen del logo con dimensiones fijas (36x36px) para evitar problemas de layout -->
+        <img
+          src="assets/icons/Logo.png"
+          alt="NEXUS — Plataforma financiera"
+          width="36"
+          height="36"
+          class="sidebar-logo-img"
+          loading="eager"
+          decoding="sync">
+        <!-- Nombre de la marca al lado del logo -->
+        <span class="sidebar-logo-name">Nexus</span>
+      </div>
+
+      <!-- ============================================
+           MENÚ DE NAVEGACIÓN
+           ============================================
+           Lista de enlaces a las diferentes secciones.
+           aria-current="page" marca la página actual (Transacciones)
+       -->
+      <ul class="sidebar-nav-list" role="list">
+        <!-- Link 1: Inicio (Dashboard) -->
+        <li>
+          <a href="dashboard.html" class="sidebar-nav-link">
+            <!-- Icono SVG: Casa (para Inicio) -->
+            <svg class="sidebar-nav-icon" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            <!-- Texto del enlace -->
+            <span>Inicio</span>
+          </a>
+        </li>
+
+        <!-- Link 2: Transacciones (PÁGINA ACTUAL) -->
+        <li>
+          <!-- Clase active + aria-current="page" indican que esta es la página actual -->
+          <a href="transacciones.html" class="sidebar-nav-link sidebar-nav-link--active" aria-current="page">
+            <!-- Icono SVG: Tarjeta/Transacción -->
+            <svg class="sidebar-nav-icon" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="5" width="20" height="14" rx="2"/>
+              <line x1="2" y1="10" x2="22" y2="10"/>
+            </svg>
+            <span>Transacciones</span>
+          </a>
+        </li>
+
+        <!-- Link 3: Metas -->
+        <li>
+          <a href="metas.html" class="sidebar-nav-link">
+            <!-- Icono SVG: Círculos concéntricos (objetivo/meta) -->
+            <svg class="sidebar-nav-icon" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <circle cx="12" cy="12" r="6"/>
+              <circle cx="12" cy="12" r="2"/>
+            </svg>
+            <span>Metas</span>
+          </a>
+        </li>
+
+        <!-- Link 4: Social -->
+        <li>
+          <a href="social.html" class="sidebar-nav-link">
+            <!-- Icono SVG: Personas/Comunidad -->
+            <svg class="sidebar-nav-icon" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+            <span>Social</span>
+          </a>
+        </li>
+
+        <!-- Link 5: Análisis -->
+        <li>
+          <a href="analisis.html" class="sidebar-nav-link">
+            <!-- Icono SVG: Gráfico de barras (análisis) -->
+            <svg class="sidebar-nav-icon" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="20" x2="18" y2="10"/>
+              <line x1="12" y1="20" x2="12" y2="4"/>
+              <line x1="6" y1="20" x2="6" y2="14"/>
+            </svg>
+            <span>Análisis</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- ============================================
+           PIE DEL SIDEBAR
+           ============================================
+           Selector de moneda y botón para cerrar sesión
+       -->
+      <div class="sidebar-footer">
+
+        <!-- SELECTOR DE MONEDA -->
+        <div class="sidebar-currency">
+          <!-- Icono SVG: Globo terraqueo (moneda internacional) -->
+          <svg class="sidebar-nav-icon" aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="2" y1="12" x2="22" y2="12"/>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+          </svg>
+          <!-- Contenedor con etiqueta y selector -->
+          <div class="sidebar-currency-info">
+            <!-- Etiqueta: "Moneda" -->
+            <span class="sidebar-currency-label">Moneda</span>
+            <!-- Label invisible pero disponible para screenreaders (accesibilidad) -->
+            <label for="currency-select" class="sr-only">Seleccionar moneda</label>
+            <!-- Dropdown para elegir moneda (COP, USD, EUR) -->
+            <select id="currency-select" class="sidebar-currency-select">
+              <option value="COP" selected>COP</option>
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- BOTÓN CERRAR SESIÓN -->
+        <button type="button" class="sidebar-logout-btn" id="btn-logout">
+          <!-- Icono SVG: Puerta (logout) -->
+          <svg class="sidebar-nav-icon" aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+          <span>Cerrar sesión</span>
+        </button>
+
+      </div>
+    </nav>
+    <!-- /SIDEBAR -->
+
+
+    <!-- ================================================
+         ÁREA PRINCIPAL — Header + Contenido de transacciones
+         ================================================
+         Contiene:
+         1. Header: Título y descripción de la página
+         2. Main: Las secciones de transacciones:
+            - Límites mensuales por categoría
+            - Botón agregar transacción
+            - Historial de transacciones realizadas
+    -->
+    <div class="dashboard-main">
+
+      <!-- ============================================
+           HEADER DE LA PÁGINA
+           ============================================
+           Muestra el título "Transacciones" 
+           y descripción "Registra tus ingresos y gastos"
+       -->
+      <header class="dashboard-header">
+        <div class="page-header-content">
+          <!-- Título principal de la página -->
+          <h1 class="page-title">Transacciones</h1>
+          <!-- Subtítulo descriptivo -->
+          <p class="page-subtitle">Registra tus ingresos y gastos</p>
+        </div>
+      </header>
+
+      <!-- ============================================
+           CONTENIDO PRINCIPAL
+           ============================================
+           Aquí van las secciones de transacciones
+       -->
+      <main class="main-content" id="main-content" tabindex="-1">
+
+        <!-- ============================================
+             SECCIÓN 1: LÍMITES MENSUALES
+             ============================================
+             Muestra una lista de categorías de gasto con:
+             - Nombre de categoría (Alimentación, Entretenimiento, etc.)
+             - Gasto actual vs límite ($250 COP de $300 COP)
+             - Barra de progreso visual
+             - Porcentaje usado
+             - Dinero restante que se puede gastar
+             
+             Cada item es un contenedor con:
+             - Header: nombre + icono
+             - Barra de progreso
+             - Estadísticas (% y monto restante)
+        -->
+        <section class="spending-limits-section" aria-labelledby="limits-title">
+          <!-- Título de la sección -->
+          <h2 id="limits-title" class="section-title">Límites mensuales</h2>
+
+          <!-- Contenedor: Lista de categorías con límites -->
+          <div class="spending-limits-content">
+            <!-- Lista de límites de gasto por categoría -->
+            <ul class="spending-limits-list" role="list">
+
+              <!-- CATEGORÍA 1: Alimentación -->
+              <li class="spending-limit-item">
+                <!-- Encabezado: Nombre categoría + icono toggleable -->
+                <div class="limit-item-header">
+                  <!-- Contenedor con nombre y subcategoría -->
+                  <div class="limit-item-info">
+                    <!-- Nombre de la categoría -->
+                    <h3 class="limit-category-name">Alimentación</h3>
+                    <!-- Balance: gasto actual vs límite -->
+                    <p class="limit-category-balance">$250 COP de $300 COP</p>
+                  </div>
+                  <!-- Icono toggle (expandir/contraer detalles) -->
+                  <button type="button" class="limit-item-toggle" aria-label="Ver detalles de Alimentación" aria-expanded="false">
+                    <!-- Icono SVG: Chevron derecha -->
+                    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                  </button>
+                </div>
+
+                <!-- Barra de progreso visual -->
+                <div class="limit-progress-container" role="progressbar" aria-valuenow="83" aria-valuemin="0" aria-valuemax="100" aria-label="Progreso: 83% del límite usado">
+                  <!-- Barra rellena (muestra cuánto se ha gastado) -->
+                  <div class="limit-progress-bar" style="width: 83%"></div>
+                </div>
+
+                <!-- Estadísticas: % usado y monto restante -->
+                <div class="limit-stats">
+                  <!-- Porcentaje del límite usado -->
+                  <span class="limit-percentage">83% usado</span>
+                  <!-- Dinero que queda para gastar en esta categoría -->
+                  <span class="limit-remaining">$50 COP restante</span>
+                </div>
+              </li>
+
+              <!-- CATEGORÍA 2: Entretenimiento -->
+              <li class="spending-limit-item">
+                <div class="limit-item-header">
+                  <div class="limit-item-info">
+                    <h3 class="limit-category-name">Entretenimiento</h3>
+                    <p class="limit-category-balance">$45 COP de $100 COP</p>
+                  </div>
+                  <button type="button" class="limit-item-toggle" aria-label="Ver detalles de Entretenimiento" aria-expanded="false">
+                    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                  </button>
+                </div>
+
+                <!-- Barra de progreso: 45% -->
+                <div class="limit-progress-container" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" aria-label="Progreso: 45% del límite usado">
+                  <div class="limit-progress-bar" style="width: 45%"></div>
+                </div>
+
+                <div class="limit-stats">
+                  <span class="limit-percentage">45% usado</span>
+                  <span class="limit-remaining">$55 COP restante</span>
+                </div>
+              </li>
+
+              <!-- CATEGORÍA 3: Transporte -->
+              <li class="spending-limit-item">
+                <div class="limit-item-header">
+                  <div class="limit-item-info">
+                    <h3 class="limit-category-name">Transporte</h3>
+                    <p class="limit-category-balance">$80 COP de $100 COP</p>
+                  </div>
+                  <button type="button" class="limit-item-toggle" aria-label="Ver detalles de Transporte" aria-expanded="false">
+                    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                  </button>
+                </div>
+
+                <!-- Barra de progreso: 80% -->
+                <div class="limit-progress-container" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" aria-label="Progreso: 80% del límite usado">
+                  <div class="limit-progress-bar" style="width: 80%"></div>
+                </div>
+
+                <div class="limit-stats">
+                  <span class="limit-percentage">80% usado</span>
+                  <span class="limit-remaining">$20 COP restante</span>
+                </div>
+              </li>
+
+              <!-- CATEGORÍA 4: Estudios -->
+              <li class="spending-limit-item">
+                <div class="limit-item-header">
+                  <div class="limit-item-info">
+                    <h3 class="limit-category-name">Estudios</h3>
+                    <p class="limit-category-balance">$150 COP de $200 COP</p>
+                  </div>
+                  <button type="button" class="limit-item-toggle" aria-label="Ver detalles de Estudios" aria-expanded="false">
+                    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                  </button>
+                </div>
+
+                <!-- Barra de progreso: 75% -->
+                <div class="limit-progress-container" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" aria-label="Progreso: 75% del límite usado">
+                  <div class="limit-progress-bar" style="width: 75%"></div>
+                </div>
+
+                <div class="limit-stats">
+                  <span class="limit-percentage">75% usado</span>
+                  <span class="limit-remaining">$50 COP restante</span>
+                </div>
+              </li>
+
+              <!-- CATEGORÍA 5: Ropa -->
+              <li class="spending-limit-item">
+                <div class="limit-item-header">
+                  <div class="limit-item-info">
+                    <h3 class="limit-category-name">Ropa</h3>
+                    <p class="limit-category-balance">$0 COP de $150 COP</p>
+                  </div>
+                  <button type="button" class="limit-item-toggle" aria-label="Ver detalles de Ropa" aria-expanded="false">
+                    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                  </button>
+                </div>
+
+                <!-- Barra de progreso: 0% (no se ha gastado) -->
+                <div class="limit-progress-container" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Progreso: 0% del límite usado">
+                  <div class="limit-progress-bar" style="width: 0%"></div>
+                </div>
+
+                <div class="limit-stats">
+                  <span class="limit-percentage">0% usado</span>
+                  <span class="limit-remaining">$150 COP restante</span>
+                </div>
+              </li>
+
+            </ul>
+          </div>
+        </section>
+
+        <!-- ============================================
+             SECCIÓN 2: BOTÓN AGREGAR TRANSACCIÓN
+             ============================================
+             Botón de acción prominente (color negro/oscuro)
+             que abre un modal para registrar nueva transacción
+        -->
+        <div class="add-transaction-section">
+          <!-- Botón para agregar nueva transacción -->
+          <button type="button" class="btn-add-transaction" id="btn-add-transaction" aria-haspopup="dialog">
+            <!-- Icono SVG: Más (+) -->
+            <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            <!-- Texto del botón -->
+            <span>Agregar Transacción</span>
+          </button>
+        </div>
+
+        <!-- ============================================
+             SECCIÓN 3: HISTORIAL DE TRANSACCIONES
+             ============================================
+             Muestra una lista de transacciones realizadas
+             (ingresos y gastos pasados) ordenadas cronológicamente
+             
+             Cada item contiene:
+             - Icono de la categoría
+             - Nombre de la transacción
+             - Categoría
+             - Fecha
+             - Monto (color rojo para gastos, verde para ingresos)
+        -->
+        <section class="transaction-history-section" aria-labelledby="history-title">
+          <!-- Título de la sección -->
+          <h2 id="history-title" class="section-title">Historial</h2>
+
+          <!-- Contenedor: Lista de transacciones -->
+          <div class="transaction-history-content">
+            <!-- Lista de transacciones realizadas -->
+            <ul class="transaction-history-list" role="list">
+
+              <!-- TRANSACCIÓN 1: Curso online (gasto) -->
+              <li class="transaction-item">
+                <!-- Icono de la categoría -->
+                <div class="transaction-icon" aria-hidden="true">
+                  <!-- Icono SVG: Laptop/Educación -->
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21H4a2 2 0 0 1-2-2V5c0-1.1.9-2 2-2h16c1.1 0 2 .9 2 2v14c0 1.1-.9 2-2 2z"/>
+                    <polyline points="23 18 1 18"/>
+                  </svg>
+                </div>
+
+                <!-- Contenedor con detalles de la transacción -->
+                <div class="transaction-details">
+                  <!-- Nombre de la transacción -->
+                  <h3 class="transaction-name">Curso online</h3>
+                  <!-- Categoría y fecha -->
+                  <div class="transaction-meta">
+                    <span class="transaction-category">Estudios</span>
+                    <span class="transaction-date" aria-label="5 de octubre 2024">5 octubre</span>
+                  </div>
+                </div>
+
+                <!-- Monto del gasto (negativo en rojo) -->
+                <strong class="transaction-amount transaction-amount--expense">-$150 COP</strong>
+              </li>
+
+              <!-- TRANSACCIÓN 2: Proyecto extra (ingreso) -->
+              <li class="transaction-item">
+                <!-- Icono de la categoría -->
+                <div class="transaction-icon" aria-hidden="true">
+                  <!-- Icono SVG: Dinero/Ingreso -->
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1" fill="currentColor"/>
+                    <circle cx="19" cy="12" r="1" fill="currentColor"/>
+                    <circle cx="5" cy="12" r="1" fill="currentColor"/>
+                    <path d="M12 5v14"/>
+                    <path d="M5 12h14"/>
+                  </svg>
+                </div>
+
+                <!-- Contenedor con detalles de la transacción -->
+                <div class="transaction-details">
+                  <!-- Nombre de la transacción -->
+                  <h3 class="transaction-name">Proyecto extra</h3>
+                  <!-- Categoría y fecha -->
+                  <div class="transaction-meta">
+                    <span class="transaction-category">Freelancia</span>
+                    <span class="transaction-date" aria-label="1 de octubre 2024">1 octubre</span>
+                  </div>
+                </div>
+
+                <!-- Monto del ingreso (positivo en verde) -->
+                <strong class="transaction-amount transaction-amount--income">+$300 COP</strong>
+              </li>
+
+              <!-- TRANSACCIÓN 3: Cine y streaming (gasto) -->
+              <li class="transaction-item">
+                <!-- Icono de la categoría -->
+                <div class="transaction-icon" aria-hidden="true">
+                  <!-- Icono SVG: Televisión/Entretenimiento -->
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="23 7 16 12 23 17 23 7"/>
+                    <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+                  </svg>
+                </div>
+
+                <!-- Contenedor con detalles de la transacción -->
+                <div class="transaction-details">
+                  <!-- Nombre de la transacción -->
+                  <h3 class="transaction-name">Cine y streaming</h3>
+                  <!-- Categoría y fecha -->
+                  <div class="transaction-meta">
+                    <span class="transaction-category">Entretenimiento</span>
+                    <span class="transaction-date" aria-label="27 de septiembre 2024">27 septiembre</span>
+                  </div>
+                </div>
+
+                <!-- Monto del gasto (negativo en rojo) -->
+                <strong class="transaction-amount transaction-amount--expense">-$45 COP</strong>
+              </li>
+
+            </ul>
+          </div>
+        </section>
+
+      </main>
+
+    </div>
+    <!-- /DASHBOARD MAIN -->
+
+  </div>
+
+  <!-- ============================================
+       SCRIPTS JAVASCRIPT
+       ============================================
+       Script que maneja la funcionalidad interactiva del dashboard:
+       - Cambiar moneda
+       - Logout
+       - Agregar transacción
+       - Toggle detalles límites
+  -->
+  <script src="js/dashboard.js"></script>
+  
+  <!-- Script de navegación: Maneja cambio de moneda en transacciones -->
+  <script src="js/navigation.js"></script>
