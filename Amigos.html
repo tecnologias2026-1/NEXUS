@@ -787,78 +787,266 @@
   </div>
   <!-- /div.app-shell -->
 
-  <div id="add-friend-modal" class="modal" role="dialog"
-       aria-labelledby="add-friend-modal-title"
-       aria-modal="true"
-       aria-hidden="true">
 
-    <!-- Fondo semitransparente: cierra el modal al hacer clic fuera -->
+<div id="add-friend-modal" class="modal" role="dialog"
+     aria-labelledby="add-friend-modal-title"
+     aria-modal="true"
+     aria-hidden="true">
+
     <div class="modal-backdrop" id="add-friend-backdrop"></div>
 
     <div class="modal-content">
 
-      <!-- Botón de cierre con aria-label descriptivo (WCAG 1.1.1) -->
-      <button type="button" class="modal-close" id="add-friend-close"
-              aria-label="Cerrar modal de agregar amigo">
-        <span aria-hidden="true">&times;</span>
-      </button>
+        <!-- Botón cerrar — idéntico al de auth -->
+        <button type="button" class="modal-close" id="add-friend-close"
+                aria-label="Cerrar modal de agregar amigo">
+            <span aria-hidden="true">&times;</span>
+        </button>
 
-      <div class="modal-header">
-        <!-- id referenciado por aria-labelledby del dialog -->
-        <h2 id="add-friend-modal-title" class="modal-title">Agregar amigo</h2>
-        <p class="modal-subtitle">Busca a un usuario por nombre o correo</p>
-      </div>
-
-      <form class="auth-form-content" id="add-friend-form" novalidate>
-
-        <div class="form-group">
-      
-          <label for="friend-search" class="form-label">
-            Nombre o correo electrónico
-          </label>
-          <input type="search"
-                 id="friend-search"
-                 name="friend-search"
-                 class="form-input"
-                 placeholder="ej. sofía@correo.com"
-                 autocomplete="off"
-                 autocorrect="off"
-                 spellcheck="false"
-                 aria-describedby="friend-search-hint"
-                 required>
-          <!-- Sugerencia de uso, referenciada por aria-describedby -->
-          <p id="friend-search-hint" class="form-hint">
-            Escribe al menos 3 caracteres para buscar.
-          </p>
+        <!-- Ícono superior -->
+        <div class="modal-icon-hero" aria-hidden="true">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="8.5" cy="7" r="4"/>
+                <line x1="20" y1="8" x2="20" y2="14"/>
+                <line x1="23" y1="11" x2="17" y2="11"/>
+            </svg>
         </div>
 
-      
-        <div id="friend-search-results"
-             class="search-results"
-             role="listbox"
-             aria-label="Resultados de búsqueda de amigos"
-             aria-live="polite"
-             aria-atomic="false">
-          <!-- Los resultados se inyectan aquí vía JS -->
+        <!-- Cabecera -->
+        <div class="modal-header">
+            <h2 id="add-friend-modal-title" class="modal-title">
+                Agregar nuevos amigos
+            </h2>
+            <p class="modal-subtitle">
+                Invita a tus contactos en esta aventura de ahorro
+            </p>
         </div>
 
-        <div class="form-actions">
-          <button type="button" class="btn btn-outline" id="add-friend-cancel">
-            Cancelar
-          </button>
-          <button type="submit" class="btn btn-primary">
-            Enviar solicitud
-          </button>
-        </div>
+        <!-- ── LISTA DE CONTACTOS SUGERIDOS ── -->
+        <section aria-labelledby="contacts-list-title">
+            <div class="contacts-card">
+                <h3 id="contacts-list-title" class="contacts-card-title">
+                    De tus contactos
+                </h3>
 
-      </form>
+                <ul class="contacts-list" role="list"
+                    aria-label="Contactos sugeridos para agregar">
+
+                    <!-- Cada <li> sigue el patrón: avatar · nombre · botón agregar -->
+
+                    <li class="contact-item">
+                        <img src="assets/avatars/avatar-1.png"
+                             alt="Avatar de Carlos R."
+                             width="32" height="32"
+                             class="contact-avatar"
+                             loading="lazy"
+                             onerror="this.src='assets/icons/avatar-default.svg'">
+                        <span class="contact-name">Carlos R.</span>
+                        <button type="button" class="btn-add-contact"
+                                aria-label="Agregar a Carlos R. como amigo">
+                            <svg aria-hidden="true" focusable="false"
+                                 width="18" height="18" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="8.5" cy="7" r="4"/>
+                                <line x1="20" y1="8" x2="20" y2="14"/>
+                                <line x1="23" y1="11" x2="17" y2="11"/>
+                            </svg>
+                        </button>
+                    </li>
+
+                    <li class="contact-item">
+                        <img src="assets/avatars/avatar-2.png"
+                             alt="Avatar de Sofía M."
+                             width="32" height="32"
+                             class="contact-avatar"
+                             loading="lazy"
+                             onerror="this.src='assets/icons/avatar-default.svg'">
+                        <span class="contact-name">Sofía M.</span>
+                        <button type="button" class="btn-add-contact"
+                                aria-label="Agregar a Sofía M. como amigo">
+                            <svg aria-hidden="true" focusable="false"
+                                 width="18" height="18" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="8.5" cy="7" r="4"/>
+                                <line x1="20" y1="8" x2="20" y2="14"/>
+                                <line x1="23" y1="11" x2="17" y2="11"/>
+                            </svg>
+                        </button>
+                    </li>
+
+                    <li class="contact-item">
+                        <img src="assets/avatars/avatar-3.png"
+                             alt="Avatar de Laura P."
+                             width="32" height="32"
+                             class="contact-avatar"
+                             loading="lazy"
+                             onerror="this.src='assets/icons/avatar-default.svg'">
+                        <span class="contact-name">Laura P.</span>
+                        <button type="button" class="btn-add-contact"
+                                aria-label="Agregar a Laura P. como amigo">
+                            <svg aria-hidden="true" focusable="false"
+                                 width="18" height="18" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="8.5" cy="7" r="4"/>
+                                <line x1="20" y1="8" x2="20" y2="14"/>
+                                <line x1="23" y1="11" x2="17" y2="11"/>
+                            </svg>
+                        </button>
+                    </li>
+
+                    <li class="contact-item">
+                        <img src="assets/avatars/avatar-4.png"
+                             alt="Avatar de Andrés T."
+                             width="32" height="32"
+                             class="contact-avatar"
+                             loading="lazy"
+                             onerror="this.src='assets/icons/avatar-default.svg'">
+                        <span class="contact-name">Andrés T.</span>
+                        <button type="button" class="btn-add-contact"
+                                aria-label="Agregar a Andrés T. como amigo">
+                            <svg aria-hidden="true" focusable="false"
+                                 width="18" height="18" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="8.5" cy="7" r="4"/>
+                                <line x1="20" y1="8" x2="20" y2="14"/>
+                                <line x1="23" y1="11" x2="17" y2="11"/>
+                            </svg>
+                        </button>
+                    </li>
+
+                    <li class="contact-item">
+                        <img src="assets/avatars/avatar-5.png"
+                             alt="Avatar de Valentina C."
+                             width="32" height="32"
+                             class="contact-avatar"
+                             loading="lazy"
+                             onerror="this.src='assets/icons/avatar-default.svg'">
+                        <span class="contact-name">Valentina C.</span>
+                        <button type="button" class="btn-add-contact"
+                                aria-label="Agregar a Valentina C. como amigo">
+                            <svg aria-hidden="true" focusable="false"
+                                 width="18" height="18" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="8.5" cy="7" r="4"/>
+                                <line x1="20" y1="8" x2="20" y2="14"/>
+                                <line x1="23" y1="11" x2="17" y2="11"/>
+                            </svg>
+                        </button>
+                    </li>
+
+                    <li class="contact-item">
+                        <img src="assets/avatars/avatar-1.png"
+                             alt="Avatar de Miguel F."
+                             width="32" height="32"
+                             class="contact-avatar"
+                             loading="lazy"
+                             onerror="this.src='assets/icons/avatar-default.svg'">
+                        <span class="contact-name">Miguel F.</span>
+                        <button type="button" class="btn-add-contact"
+                                aria-label="Agregar a Miguel F. como amigo">
+                            <svg aria-hidden="true" focusable="false"
+                                 width="18" height="18" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="8.5" cy="7" r="4"/>
+                                <line x1="20" y1="8" x2="20" y2="14"/>
+                                <line x1="23" y1="11" x2="17" y2="11"/>
+                            </svg>
+                        </button>
+                    </li>
+
+                    <li class="contact-item">
+                        <img src="assets/avatars/avatar-2.png"
+                             alt="Avatar de Diana L."
+                             width="32" height="32"
+                             class="contact-avatar"
+                             loading="lazy"
+                             onerror="this.src='assets/icons/avatar-default.svg'">
+                        <span class="contact-name">Diana L.</span>
+                        <button type="button" class="btn-add-contact"
+                                aria-label="Agregar a Diana L. como amigo">
+                            <svg aria-hidden="true" focusable="false"
+                                 width="18" height="18" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="8.5" cy="7" r="4"/>
+                                <line x1="20" y1="8" x2="20" y2="14"/>
+                                <line x1="23" y1="11" x2="17" y2="11"/>
+                            </svg>
+                        </button>
+                    </li>
+
+                </ul>
+            </div>
+        </section>
+
+        <!-- ── BOTÓN PRINCIPAL: AGREGAR AMIGO POR BÚSQUEDA ── -->
+        <button type="button" class="btn btn-primary btn-add-friend-primary"
+                aria-label="Buscar y agregar amigo manualmente">
+            <svg aria-hidden="true" focusable="false"
+                 width="16" height="16" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2.5"
+                 stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5"  y1="12" x2="19" y2="12"/>
+            </svg>
+            Agregar amigo
+        </button>
+
+        <!-- ── LINK DE INVITACIÓN ── -->
+        <!--
+            El botón copia el link al portapapeles.
+            aria-live="polite" en el span interno anuncia la
+            confirmación "Link copiado con éxito" sin mover el foco.
+            WCAG 4.1.3 (Status Messages)
+        -->
+        <button type="button" class="btn-invite-link"
+                id="copy-invite-link"
+                aria-describedby="invite-link-status">
+            <span class="invite-link-title">Link de invitación</span>
+            <span class="invite-link-url" aria-hidden="true">
+                nexus.app/invite/xxxxxxxxxxxxxxx
+            </span>
+            <span id="invite-link-status"
+                  class="sr-only"
+                  aria-live="polite"
+                  aria-atomic="true">
+                <!-- JS escribe aquí: "Link copiado con éxito" -->
+            </span>
+        </button>
+
+        <!-- ── BOTÓN REGRESAR ── -->
+        <button type="button" class="btn-modal-back" id="add-friend-back"
+                aria-label="Regresar a la vista del Círculo Social">
+            <svg aria-hidden="true" focusable="false"
+                 width="16" height="16" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"/>
+            </svg>
+            Regresar
+        </button>
 
     </div>
     <!-- /div.modal-content -->
 
-  </div>
-  <!-- /div#add-friend-modal -->
-
+</div>
+<!-- /div#add-friend-modal -->
 
 
   <!-- Módulo de autenticación compartido (gestión de modales, sesión) -->
