@@ -60,6 +60,15 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = 'index.html';
         });
     });
+
+    // ==========================================
+    // 4. INICIALIZACIÓN DE MODAL AGREGAR TRANSACCIÓN
+    // ==========================================
+
+    // Solo ejecutar si hay modal de agregar transacción (página transacciones.html)
+    if (document.getElementById('add-transaction-modal')) {
+        initializeAddTransactionModal();
+    }
 });
 
 // ==========================================
@@ -343,4 +352,125 @@ function convertCurrency(amount, fromCurrency, toCurrency) {
 function formatCurrency(amount, currency) {
     const symbol = CURRENCY_SYMBOLS[currency] || '$';
     return symbol + amount.toLocaleString();
+}
+
+// ==========================================
+// FUNCIONES DE MODAL AGREGAR TRANSACCIÓN
+// ==========================================
+
+/**
+ * Inicializa el modal para agregar nuevas transacciones
+ * Se ejecuta solo en la página transacciones.html
+ */
+function initializeAddTransactionModal() {
+    // Obtener referencias a elementos del modal
+    const modal = document.getElementById('add-transaction-modal');
+    const addTransactionBtn = document.getElementById('btn-add-transaction');
+    const modalCloseBtn = document.getElementById('modal-close-btn');
+    const modalCancelBtn = document.getElementById('modal-cancel-btn');
+    const addTransactionForm = document.getElementById('add-transaction-form');
+
+    // Botones toggle de tipo de transacción
+    const typeToggleBtns = document.querySelectorAll('.form-toggle-btn');
+
+    /**
+     * Abre el modal de agregar transacción
+     */
+    function openModal() {
+        modal.classList.add('active');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden'; // Prevenir scroll de la página
+        addTransactionForm.reset(); // Limpiar el formulario
+        // Resetear tipo a "Ingreso" por defecto
+        typeToggleBtns[0].classList.add('form-toggle-btn--active');
+        typeToggleBtns[0].setAttribute('aria-pressed', 'true');
+        typeToggleBtns[1].classList.remove('form-toggle-btn--active');
+        typeToggleBtns[1].setAttribute('aria-pressed', 'false');
+    }
+
+    /**
+     * Cierra el modal de agregar transacción
+     */
+    function closeModal() {
+        modal.classList.remove('active');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = 'auto'; // Restaurar scroll
+    }
+
+    /**
+     * Maneja los clics en los botones toggle de tipo
+     */
+    typeToggleBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Remover clase active de todos los botones
+            typeToggleBtns.forEach(b => {
+                b.classList.remove('form-toggle-btn--active');
+                b.setAttribute('aria-pressed', 'false');
+            });
+            // Agregar clase active al botón clickeado
+            btn.classList.add('form-toggle-btn--active');
+            btn.setAttribute('aria-pressed', 'true');
+        });
+    });
+
+    /**
+     * Evento: Click en botón "Agregar Transacción"
+     * Acción: Abre el modal
+     */
+    addTransactionBtn.addEventListener('click', openModal);
+
+    /**
+     * Evento: Click en botón cerrar (X)
+     * Acción: Cierra el modal
+     */
+    modalCloseBtn.addEventListener('click', closeModal);
+
+    /**
+     * Evento: Click en botón "Cancelar"
+     * Acción: Cierra el modal
+     */
+    modalCancelBtn.addEventListener('click', closeModal);
+
+    /**
+     * Evento: Envío del formulario
+     * Acción: Valida y envía los datos (por ahora solo mostramos un mensaje)
+     */
+    addTransactionForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        // Obtener datos del formulario
+        const transactionType = document.querySelector('.form-toggle-btn--active').getAttribute('data-type');
+        const category = document.getElementById('transaction-category').value;
+        const amount = document.getElementById('transaction-amount').value;
+        const description = document.getElementById('transaction-description').value;
+        const isRecurring = document.getElementById('transaction-recurring').checked;
+        const isFixed = document.getElementById('transaction-fixed').checked;
+
+        // Aquí iría la lógica para guardar la transacción
+        console.log('Transacción a guardar:', {
+            type: transactionType,
+            category: category,
+            amount: amount,
+            description: description,
+            recurring: isRecurring,
+            fixed: isFixed
+        });
+
+        // Cerrar el modal
+        closeModal();
+
+        // Aquí podrías mostrar un mensaje de éxito, actualizar la lista, etc.
+        alert('Transacción guardada exitosamente');
+    });
+
+    /**
+     * Evento: Clic fuera del modal (en el overlay)
+     * Acción: Cierra el modal si se hace clic en el fondo
+     */
+    modal.addEventListener('click', (event) => {
+        // Solo cerrar si se hace clic directamente en el modal (no en el contenido)
+        if (event.target === modal) {
+            closeModal();
+        }
+    });
 }

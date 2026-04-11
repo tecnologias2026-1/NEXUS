@@ -534,6 +534,182 @@
 
       </main>
 
+      <!-- ============================================
+           MODAL: AGREGAR TRANSACCIÓN
+           ============================================
+           Modal/Dialog que se abre al hacer clic en 
+           "Agregar Transacción" para registrar una nueva transacción.
+           
+           Contenido:
+           - Selector de tipo (Ingreso/Gasto)
+           - Selector de categoría (dropdown)
+           - Input de monto
+           - Input de descripción
+           - Checkboxes: transacción recurrente, gasto fijo
+           - Botones: Cancelar, Guardar
+      -->
+      <div id="add-transaction-modal" class="modal modal-overlay" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
+        <!-- Contenedor del modal (centra el contenido) -->
+        <div class="modal-content">
+          <!-- Encabezado del modal -->
+          <div class="modal-header">
+            <!-- Título del modal (invisible pero accesible para screenreaders) -->
+            <h2 id="modal-title" class="sr-only">Agregar nueva transacción</h2>
+            <!-- Botón cerrar modal (X) -->
+            <button type="button" class="modal-close-btn" id="modal-close-btn" aria-label="Cerrar modal">
+              <!-- Icono SVG: X (cerrar) -->
+              <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Formulario de transacción -->
+          <form id="add-transaction-form" class="transaction-form">
+            
+            <!-- SECCIÓN 1: TIPO DE TRANSACCIÓN -->
+            <!-- Selector de Ingreso o Gasto -->
+            <fieldset class="form-fieldset">
+              <!-- Leyenda para accesibilidad -->
+              <legend class="form-legend">Tipo</legend>
+              
+              <!-- Contenedor de botones toggle (grupo) -->
+              <div class="form-toggle-group" role="group" aria-label="Selecciona tipo de transacción">
+                <!-- Botón 1: Ingreso -->
+                <button 
+                  type="button" 
+                  class="form-toggle-btn form-toggle-btn--active" 
+                  data-type="income" 
+                  aria-pressed="true"
+                  aria-label="Registrar ingreso">
+                  <!-- Icono SVG: Flecha hacia arriba (ingreso) -->
+                  <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="23 6 13.46 15.54"/>
+                    <polyline points="23 6 6 23"/>
+                    <polyline points="1 1 23 6 18 24 1 1"/>
+                  </svg>
+                  <!-- Texto -->
+                  <span>Ingreso</span>
+                </button>
+
+                <!-- Botón 2: Gasto -->
+                <button 
+                  type="button" 
+                  class="form-toggle-btn" 
+                  data-type="expense" 
+                  aria-pressed="false"
+                  aria-label="Registrar gasto">
+                  <!-- Icono SVG: Flecha hacia abajo (gasto) -->
+                  <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="1 18 10.46 8.46"/>
+                    <polyline points="1 18 18 1"/>
+                    <polyline points="23 23 1 18 6 0 23 23"/>
+                  </svg>
+                  <!-- Texto -->
+                  <span>Gasto</span>
+                </button>
+              </div>
+            </fieldset>
+
+            <!-- SECCIÓN 2: CATEGORÍA -->
+            <fieldset class="form-fieldset">
+              <!-- Label y selector -->
+              <label for="transaction-category" class="form-label">Categoría</label>
+              <select id="transaction-category" class="form-select" required>
+                <option value="" disabled selected>Selecciona una categoría</option>
+                <option value="alimentacion">Alimentación</option>
+                <option value="entretenimiento">Entretenimiento</option>
+                <option value="transporte">Transporte</option>
+                <option value="estudios">Estudios</option>
+                <option value="ropa">Ropa</option>
+                <option value="otro">Otro</option>
+              </select>
+            </fieldset>
+
+            <!-- SECCIÓN 3: MONTO -->
+            <fieldset class="form-fieldset">
+              <!-- Label y input -->
+              <label for="transaction-amount" class="form-label">Monto</label>
+              <div class="form-input-prefix">
+                <!-- Símbolo de moneda (adelante del input) -->
+                <span class="form-input-symbol">$</span>
+                <!-- Input numérico con decimales -->
+                <input 
+                  type="number" 
+                  id="transaction-amount" 
+                  class="form-input" 
+                  placeholder="0.00" 
+                  step="0.01" 
+                  min="0" 
+                  required
+                  aria-label="Monto de la transacción">
+              </div>
+            </fieldset>
+
+            <!-- SECCIÓN 4: DESCRIPCIÓN -->
+            <fieldset class="form-fieldset">
+              <!-- Label e input -->
+              <label for="transaction-description" class="form-label">Descripción</label>
+              <input 
+                type="text" 
+                id="transaction-description" 
+                class="form-input" 
+                placeholder="Ej: Compra en supermercado"
+                aria-label="Descripción de la transacción">
+            </fieldset>
+
+            <!-- SECCIÓN 5: OPCIONES ADICIONALES -->
+            <fieldset class="form-fieldset form-fieldset--checkboxes">
+              <!-- Contenedor de checkboxes -->
+              <div class="form-checkbox-group" role="group" aria-label="Opciones adicionales">
+                
+                <!-- Checkbox 1: Transacción recurrente -->
+                <div class="form-checkbox-item">
+                  <input 
+                    type="checkbox" 
+                    id="transaction-recurring" 
+                    class="form-checkbox">
+                  <label for="transaction-recurring" class="form-checkbox-label">Transacción recurrente</label>
+                </div>
+
+                <!-- Checkbox 2: Gasto fijo -->
+                <div class="form-checkbox-item">
+                  <input 
+                    type="checkbox" 
+                    id="transaction-fixed" 
+                    class="form-checkbox">
+                  <label for="transaction-fixed" class="form-checkbox-label">Gasto fijo</label>
+                </div>
+
+              </div>
+            </fieldset>
+
+            <!-- SECCIÓN 6: BOTONES DE ACCIÓN -->
+            <div class="form-actions">
+              <!-- Botón Cancelar -->
+              <button 
+                type="button" 
+                class="btn-cancel" 
+                id="modal-cancel-btn"
+                aria-label="Cerrar formulario sin guardar">
+                Cancelar
+              </button>
+
+              <!-- Botón Guardar -->
+              <button 
+                type="submit" 
+                class="btn-submit"
+                aria-label="Guardar transacción">
+                Guardar
+              </button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+      <!-- /MODAL AGREGAR TRANSACCIÓN -->
+
     </div>
     <!-- /DASHBOARD MAIN -->
 
