@@ -492,22 +492,25 @@ body.dashboard-page .modal[aria-hidden="false"] {
 }
 
 body.dashboard-page .modal-overlay {
-  position: absolute;
+  position: fixed;
   inset: 0;
   background: rgba(15, 23, 42, 0.55);
+  z-index: 999;
 }
 
 body.dashboard-page .modal-content {
-  position: relative;
+  position: fixed;
+  top: 50%;
+  left: 50%;
   width: 90%;
   max-width: 520px;
-  margin: 80px auto;
+  transform: translate(-50%, -50%);
   background: #ffffff;
   border-radius: 20px;
   padding: 24px;
   box-sizing: border-box;
   box-shadow: 0 20px 50px rgba(15, 23, 42, 0.22);
-  z-index: 2;
+  z-index: 1000;
 }
 
 body.dashboard-page .modal-header {
