@@ -20,6 +20,8 @@ body.dashboard-page .dashboard-layout {
   display: flex;
   min-height: 100vh;
   background: var(--metas-bg);
+  flex-wrap: nowrap;
+  align-items: stretch;
 }
 
 /* sidebar */
@@ -176,6 +178,7 @@ body.dashboard-page .sidebar-logout-btn {
 /* contenido */
 body.dashboard-page .dashboard-main {
   flex: 1;
+  min-width: 0;
   padding: 32px 48px 28px;
   background: var(--metas-bg);
   box-sizing: border-box;
@@ -895,4 +898,19 @@ body.dashboard-page .btn-primary {
   body.dashboard-page .btn {
     width: 100%;
   }
+
+  /* Override dashboard.css responsive stacking on narrow screens */
+  body.dashboard-page .dashboard-layout {
+    flex-direction: row;
+  }
+
+  body.dashboard-page .sidebar {
+    border-right: 1px solid #e5e7eb;
+    border-bottom: none;
+  }
+
+  body.dashboard-page .dashboard-main {
+    min-width: 0;
+  }
 }
+

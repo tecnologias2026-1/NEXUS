@@ -19,6 +19,8 @@ body.dashboard-page .dashboard-layout {
   display: flex;
   min-height: 100vh;
   background: var(--analysis-bg);
+  flex-wrap: nowrap;
+  align-items: stretch;
 }
 
 /* sidebar igual a Metas */
@@ -195,6 +197,7 @@ body.dashboard-page .sidebar-logout-btn {
 /* main */
 body.dashboard-page .dashboard-main {
   flex: 1;
+  min-width: 0;
   padding: 32px 48px 28px;
   background: var(--analysis-bg);
   box-sizing: border-box;
@@ -553,6 +556,20 @@ body.dashboard-page .note-text {
 
   body.dashboard-page .dashboard-main {
     padding: 20px 16px;
+  }
+
+  /* Override shared dashboard stacking on narrow screens */
+  body.dashboard-page .dashboard-layout {
+    flex-direction: row;
+  }
+
+  body.dashboard-page .sidebar {
+    border-right: 1px solid #e5e7eb;
+    border-bottom: none;
+  }
+
+  body.dashboard-page .dashboard-main {
+    min-width: 0;
   }
 
   body.dashboard-page .page-title {

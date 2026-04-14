@@ -229,13 +229,13 @@
               <!-- Número de posición: oculto visualmente pero accesible -->
               <span class="ranking-pos" aria-label="Posición 1">1</span>
 
-              <!-- Avatar de usuario: img con alt descriptivo (WCAG 1.1.1) -->
-              <img src="assets/avatars/avatar-1.png"
-                   alt="Avatar de Sofía Martínez"
-                   width="36" height="36"
-                   class="ranking-avatar ranking-avatar--gold"
-                   loading="lazy"
-                   onerror="this.src='assets/icons/avatar-default.svg'">
+              <!-- Avatar de usuario: ícono SVG inline -->
+              <svg class="ranking-avatar ranking-avatar--gold" aria-hidden="true" focusable="false"
+                   width="36" height="36" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
 
               <!-- Datos del usuario -->
               <div class="ranking-user-info">
@@ -270,12 +270,12 @@
           <li class="ranking-item" role="listitem">
             <article class="ranking-card" aria-label="Posición 2: Carlos Rueda">
               <span class="ranking-pos" aria-label="Posición 2">2</span>
-              <img src="assets/avatars/avatar-2.png"
-                   alt="Avatar de Carlos Rueda"
-                   width="36" height="36"
-                   class="ranking-avatar ranking-avatar--silver"
-                   loading="lazy"
-                   onerror="this.src='assets/icons/avatar-default.svg'">
+              <svg class="ranking-avatar ranking-avatar--silver" aria-hidden="true" focusable="false"
+                   width="36" height="36" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
               <div class="ranking-user-info">
                 <span class="ranking-username">Carlos Rueda</span>
                 <div class="ranking-meta" aria-label="Nivel 6, racha de 9 días">
@@ -304,12 +304,12 @@
           <li class="ranking-item" role="listitem">
             <article class="ranking-card" aria-label="Posición 3: Laura Pineda">
               <span class="ranking-pos" aria-label="Posición 3">3</span>
-              <img src="assets/avatars/avatar-3.png"
-                   alt="Avatar de Laura Pineda"
-                   width="36" height="36"
-                   class="ranking-avatar ranking-avatar--bronze"
-                   loading="lazy"
-                   onerror="this.src='assets/icons/avatar-default.svg'">
+              <svg class="ranking-avatar ranking-avatar--bronze" aria-hidden="true" focusable="false"
+                   width="36" height="36" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
               <div class="ranking-user-info">
                 <span class="ranking-username">Laura Pineda</span>
                 <div class="ranking-meta" aria-label="Nivel 6, racha de 7 días">
@@ -344,12 +344,12 @@
                 Imagen de avatar propio. La alternativa "Tu avatar"
                 identifica al usuario sin repetir el nombre visualmente.
               -->
-              <img src="assets/avatars/avatar-self.png"
-                   alt="Tu avatar"
-                   width="36" height="36"
-                   class="ranking-avatar ranking-avatar--self"
-                   loading="eager"
-                   onerror="this.src='assets/icons/avatar-default.svg'">
+              <svg class="ranking-avatar ranking-avatar--self" aria-hidden="true" focusable="false"
+                   width="36" height="36" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
               <div class="ranking-user-info">
                 <!-- "Yo" es la etiqueta canónica del usuario en el sistema -->
                 <span class="ranking-username ranking-username--self">Yo</span>
@@ -379,12 +379,12 @@
           <li class="ranking-item" role="listitem">
             <article class="ranking-card" aria-label="Posición 5: Andrés Torres">
               <span class="ranking-pos" aria-label="Posición 5">5</span>
-              <img src="assets/avatars/avatar-4.png"
-                   alt="Avatar de Andrés Torres"
-                   width="36" height="36"
-                   class="ranking-avatar"
-                   loading="lazy"
-                   onerror="this.src='assets/icons/avatar-default.svg'">
+              <svg class="ranking-avatar" aria-hidden="true" focusable="false"
+                   width="36" height="36" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
               <div class="ranking-user-info">
                 <span class="ranking-username">Andrés Torres</span>
                 <div class="ranking-meta" aria-label="Nivel 5, racha de 3 días">
@@ -413,12 +413,12 @@
           <li class="ranking-item" role="listitem">
             <article class="ranking-card" aria-label="Posición 6: Valentina Cruz">
               <span class="ranking-pos" aria-label="Posición 6">6</span>
-              <img src="assets/avatars/avatar-5.png"
-                   alt="Avatar de Valentina Cruz"
-                   width="36" height="36"
-                   class="ranking-avatar"
-                   loading="lazy"
-                   onerror="this.src='assets/icons/avatar-default.svg'">
+              <svg class="ranking-avatar" aria-hidden="true" focusable="false"
+                   width="36" height="36" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
               <div class="ranking-user-info">
                 <span class="ranking-username">Valentina Cruz</span>
                 <div class="ranking-meta" aria-label="Nivel 4, racha de 1 día">
@@ -546,12 +546,12 @@
 
                 <!-- ── TU CONTRIBUCIÓN ── -->
                 <li class="contribution-item">
-                  <img src="assets/avatars/avatar-self.png"
-                       alt="Tu avatar"
-                       width="28" height="28"
-                       class="contribution-avatar contribution-avatar--self"
-                       loading="lazy"
-                       onerror="this.src='assets/icons/avatar-default.svg'">
+                  <svg class="contribution-avatar contribution-avatar--self" aria-hidden="true" focusable="false"
+                       width="28" height="28" viewBox="0 0 24 24" fill="none"
+                       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                  </svg>
                   <span class="contribution-name contribution-name--self">Tú</span>
                   <!-- Barra mini de contribución individual -->
                   <div class="contribution-bar-wrap" role="presentation">
@@ -565,12 +565,12 @@
 
                 <!-- ── CONTRIBUCIÓN: SOFÍA ── -->
                 <li class="contribution-item">
-                  <img src="assets/avatars/avatar-1.png"
-                       alt="Avatar de Sofía"
-                       width="28" height="28"
-                       class="contribution-avatar"
-                       loading="lazy"
-                       onerror="this.src='assets/icons/avatar-default.svg'">
+                  <svg class="contribution-avatar" aria-hidden="true" focusable="false"
+                       width="28" height="28" viewBox="0 0 24 24" fill="none"
+                       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                  </svg>
                   <span class="contribution-name">Sofía</span>
                   <div class="contribution-bar-wrap" role="presentation">
                     <div class="contribution-bar" aria-hidden="true">
@@ -582,12 +582,12 @@
 
                 <!-- ── CONTRIBUCIÓN: CARLOS ── -->
                 <li class="contribution-item">
-                  <img src="assets/avatars/avatar-2.png"
-                       alt="Avatar de Carlos"
-                       width="28" height="28"
-                       class="contribution-avatar"
-                       loading="lazy"
-                       onerror="this.src='assets/icons/avatar-default.svg'">
+                  <svg class="contribution-avatar" aria-hidden="true" focusable="false"
+                       width="28" height="28" viewBox="0 0 24 24" fill="none"
+                       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                  </svg>
                   <span class="contribution-name">Carlos</span>
                   <div class="contribution-bar-wrap" role="presentation">
                     <div class="contribution-bar" aria-hidden="true">
@@ -599,12 +599,12 @@
 
                 <!-- ── CONTRIBUCIÓN: LAURA ── -->
                 <li class="contribution-item">
-                  <img src="assets/avatars/avatar-3.png"
-                       alt="Avatar de Laura"
-                       width="28" height="28"
-                       class="contribution-avatar"
-                       loading="lazy"
-                       onerror="this.src='assets/icons/avatar-default.svg'">
+                  <svg class="contribution-avatar" aria-hidden="true" focusable="false"
+                       width="28" height="28" viewBox="0 0 24 24" fill="none"
+                       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                  </svg>
                   <span class="contribution-name">Laura</span>
                   <div class="contribution-bar-wrap" role="presentation">
                     <div class="contribution-bar" aria-hidden="true">
@@ -692,12 +692,12 @@
                   aria-label="Progreso individual de cada participante">
 
                 <li class="contribution-item">
-                  <img src="assets/avatars/avatar-self.png"
-                       alt="Tu avatar"
-                       width="28" height="28"
-                       class="contribution-avatar contribution-avatar--self"
-                       loading="lazy"
-                       onerror="this.src='assets/icons/avatar-default.svg'">
+                  <svg class="contribution-avatar contribution-avatar--self" aria-hidden="true" focusable="false"
+                       width="28" height="28" viewBox="0 0 24 24" fill="none"
+                       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                  </svg>
                   <span class="contribution-name contribution-name--self">Tú</span>
                   <div class="contribution-bar-wrap" role="presentation">
                     <div class="contribution-bar" aria-hidden="true">
@@ -709,12 +709,12 @@
                 </li>
 
                 <li class="contribution-item">
-                  <img src="assets/avatars/avatar-4.png"
-                       alt="Avatar de Andrés"
-                       width="28" height="28"
-                       class="contribution-avatar"
-                       loading="lazy"
-                       onerror="this.src='assets/icons/avatar-default.svg'">
+                  <svg class="contribution-avatar" aria-hidden="true" focusable="false"
+                       width="28" height="28" viewBox="0 0 24 24" fill="none"
+                       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                  </svg>
                   <span class="contribution-name">Andrés</span>
                   <div class="contribution-bar-wrap" role="presentation">
                     <div class="contribution-bar" aria-hidden="true">
@@ -725,12 +725,12 @@
                 </li>
 
                 <li class="contribution-item">
-                  <img src="assets/avatars/avatar-5.png"
-                       alt="Avatar de Valentina"
-                       width="28" height="28"
-                       class="contribution-avatar"
-                       loading="lazy"
-                       onerror="this.src='assets/icons/avatar-default.svg'">
+                  <svg class="contribution-avatar" aria-hidden="true" focusable="false"
+                       width="28" height="28" viewBox="0 0 24 24" fill="none"
+                       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                  </svg>
                   <span class="contribution-name">Valentina</span>
                   <div class="contribution-bar-wrap" role="presentation">
                     <div class="contribution-bar" aria-hidden="true">
@@ -838,12 +838,13 @@
                     <!-- Cada <li> sigue el patrón: avatar · nombre · botón agregar -->
 
                     <li class="contact-item">
-                        <img src="assets/avatars/avatar-1.png"
-                             alt="Avatar de Carlos R."
-                             width="32" height="32"
-                             class="contact-avatar"
-                             loading="lazy"
-                             onerror="this.src='assets/icons/avatar-default.svg'">
+                        <svg class="contact-avatar" aria-hidden="true" focusable="false"
+                             width="32" height="32" viewBox="0 0 24 24"
+                             fill="none" stroke="currentColor" stroke-width="2"
+                             stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                          <circle cx="12" cy="7" r="4"/>
+                        </svg>
                         <span class="contact-name">Carlos R.</span>
                         <button type="button" class="btn-add-contact"
                                 aria-label="Agregar a Carlos R. como amigo">
@@ -860,12 +861,13 @@
                     </li>
 
                     <li class="contact-item">
-                        <img src="assets/avatars/avatar-2.png"
-                             alt="Avatar de Sofía M."
-                             width="32" height="32"
-                             class="contact-avatar"
-                             loading="lazy"
-                             onerror="this.src='assets/icons/avatar-default.svg'">
+                        <svg class="contact-avatar" aria-hidden="true" focusable="false"
+                             width="32" height="32" viewBox="0 0 24 24"
+                             fill="none" stroke="currentColor" stroke-width="2"
+                             stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                          <circle cx="12" cy="7" r="4"/>
+                        </svg>
                         <span class="contact-name">Sofía M.</span>
                         <button type="button" class="btn-add-contact"
                                 aria-label="Agregar a Sofía M. como amigo">
@@ -882,12 +884,13 @@
                     </li>
 
                     <li class="contact-item">
-                        <img src="assets/avatars/avatar-3.png"
-                             alt="Avatar de Laura P."
-                             width="32" height="32"
-                             class="contact-avatar"
-                             loading="lazy"
-                             onerror="this.src='assets/icons/avatar-default.svg'">
+                        <svg class="contact-avatar" aria-hidden="true" focusable="false"
+                             width="32" height="32" viewBox="0 0 24 24"
+                             fill="none" stroke="currentColor" stroke-width="2"
+                             stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                          <circle cx="12" cy="7" r="4"/>
+                        </svg>
                         <span class="contact-name">Laura P.</span>
                         <button type="button" class="btn-add-contact"
                                 aria-label="Agregar a Laura P. como amigo">
@@ -904,12 +907,13 @@
                     </li>
 
                     <li class="contact-item">
-                        <img src="assets/avatars/avatar-4.png"
-                             alt="Avatar de Andrés T."
-                             width="32" height="32"
-                             class="contact-avatar"
-                             loading="lazy"
-                             onerror="this.src='assets/icons/avatar-default.svg'">
+                        <svg class="contact-avatar" aria-hidden="true" focusable="false"
+                             width="32" height="32" viewBox="0 0 24 24"
+                             fill="none" stroke="currentColor" stroke-width="2"
+                             stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                          <circle cx="12" cy="7" r="4"/>
+                        </svg>
                         <span class="contact-name">Andrés T.</span>
                         <button type="button" class="btn-add-contact"
                                 aria-label="Agregar a Andrés T. como amigo">
@@ -926,12 +930,13 @@
                     </li>
 
                     <li class="contact-item">
-                        <img src="assets/avatars/avatar-5.png"
-                             alt="Avatar de Valentina C."
-                             width="32" height="32"
-                             class="contact-avatar"
-                             loading="lazy"
-                             onerror="this.src='assets/icons/avatar-default.svg'">
+                        <svg class="contact-avatar" aria-hidden="true" focusable="false"
+                             width="32" height="32" viewBox="0 0 24 24"
+                             fill="none" stroke="currentColor" stroke-width="2"
+                             stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                          <circle cx="12" cy="7" r="4"/>
+                        </svg>
                         <span class="contact-name">Valentina C.</span>
                         <button type="button" class="btn-add-contact"
                                 aria-label="Agregar a Valentina C. como amigo">
@@ -948,12 +953,13 @@
                     </li>
 
                     <li class="contact-item">
-                        <img src="assets/avatars/avatar-1.png"
-                             alt="Avatar de Miguel F."
-                             width="32" height="32"
-                             class="contact-avatar"
-                             loading="lazy"
-                             onerror="this.src='assets/icons/avatar-default.svg'">
+                        <svg class="contact-avatar" aria-hidden="true" focusable="false"
+                             width="32" height="32" viewBox="0 0 24 24"
+                             fill="none" stroke="currentColor" stroke-width="2"
+                             stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                          <circle cx="12" cy="7" r="4"/>
+                        </svg>
                         <span class="contact-name">Miguel F.</span>
                         <button type="button" class="btn-add-contact"
                                 aria-label="Agregar a Miguel F. como amigo">
@@ -970,12 +976,13 @@
                     </li>
 
                     <li class="contact-item">
-                        <img src="assets/avatars/avatar-2.png"
-                             alt="Avatar de Diana L."
-                             width="32" height="32"
-                             class="contact-avatar"
-                             loading="lazy"
-                             onerror="this.src='assets/icons/avatar-default.svg'">
+                        <svg class="contact-avatar" aria-hidden="true" focusable="false"
+                             width="32" height="32" viewBox="0 0 24 24"
+                             fill="none" stroke="currentColor" stroke-width="2"
+                             stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                          <circle cx="12" cy="7" r="4"/>
+                        </svg>
                         <span class="contact-name">Diana L.</span>
                         <button type="button" class="btn-add-contact"
                                 aria-label="Agregar a Diana L. como amigo">
