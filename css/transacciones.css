@@ -670,12 +670,38 @@ body.dashboard-page .btn-submit {
   }
 }
 
+/*Ajustar el responsive de transacciones en el menu*/
 @media (max-width: 768px) {
   body.dashboard-page .sidebar {
     width: 92px;
     min-width: 92px;
     padding: 14px 10px;
   }
+
+  body.dashboard-page .sidebar-brand,
+  body.dashboard-page .sidebar-logo {
+    justify-content: center;
+  }
+
+  /* ...todo lo que ya tienes... */
+
+  body.dashboard-page .modal-content {
+    width: calc(100% - 24px);
+    margin: 40px auto;
+    padding: 20px;
+  }
+
+  body.dashboard-page .sidebar {
+    width: 110px;
+    min-width: 110px;
+  }
+
+  body.dashboard-page .sidebar-nav-link {
+    font-size: 10px;
+    line-height: 1.2;
+    word-break: break-word;
+  }
+
 
   body.dashboard-page .sidebar-brand,
   body.dashboard-page .sidebar-logo {
