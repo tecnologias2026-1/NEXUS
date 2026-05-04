@@ -961,3 +961,444 @@ body.dashboard-page {
     padding: 14px;
   }
 }
+
+/* ============================================================
+   MODAL: AGREGAR AMIGO — DISEÑO BLANCO/NEGRO/AMARILLO
+   ============================================================
+   Sigue la estética del mockup original: paleta neutra,
+   acentos amarillos en avatares, botón principal negro.
+*/
+
+/* Icono superior del modal: cuadrado redondeado negro */
+.modal-icon-hero {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 18px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #111827;
+  color: #ffffff;
+  border-radius: 14px;
+}
+
+/* Encabezado centrado */
+.modal-header {
+  text-align: center;
+  margin-bottom: 22px;
+}
+
+.modal-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.modal-subtitle {
+  margin-top: 6px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+/* Tarjeta que envuelve la lista de contactos */
+.contacts-card {
+  margin: 0 0 18px 0;
+  padding: 22px;
+  background-color: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: 18px;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
+}
+
+.contacts-card-title {
+  margin: 0 0 16px 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+/* Lista de contactos */
+.contacts-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+/* Fila de cada contacto: avatar amarillo + nombre + botón outline */
+.contact-item {
+  display: grid;
+  grid-template-columns: 32px 1fr 32px;
+  align-items: center;
+  gap: 14px;
+  padding: 4px 0;
+  background: transparent;
+  border: none;
+}
+
+/* Avatar tipo emoji amarillo (acento del diseño) */
+.contact-avatar {
+  width: 32px;
+  height: 32px;
+  padding: 6px;
+  background-color: #fef3c7;
+  color: #b45309;
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+
+.contact-name {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-main);
+}
+
+/* Botón "+" del contacto: outline gris (sin fondo) */
+.btn-add-contact {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background-color: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: color 0.18s ease, transform 0.18s ease;
+}
+
+.btn-add-contact:hover {
+  color: var(--text-main);
+  transform: scale(1.15);
+}
+
+.btn-add-contact:focus {
+  outline: 2px solid #111827;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Estado: contacto ya agregado al ranking */
+.btn-add-contact--added {
+  color: var(--success);
+  cursor: default;
+  transform: none;
+}
+
+.btn-add-contact--added:hover {
+  color: var(--success);
+  transform: none;
+}
+
+/* Botón principal del modal: "Agregar amigo" (negro sólido) */
+.btn-add-friend-primary {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 22px;
+  margin-top: 0;
+  border: none;
+  border-radius: 14px;
+  background-color: #111827;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.btn-add-friend-primary:hover {
+  background-color: #1f2937;
+  transform: translateY(-2px);
+}
+
+/* Botón "Link de invitación" (estilo card neutra) */
+.btn-invite-link {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  margin-top: 16px;
+  padding: 18px;
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+  cursor: pointer;
+  transition: background-color 0.18s ease, transform 0.18s ease;
+}
+
+.btn-invite-link:hover {
+  background-color: #fafafa;
+  transform: translateY(-1px);
+}
+
+.invite-link-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.invite-link-url {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-family: monospace;
+  word-break: break-all;
+}
+
+/* Botón "Regresar" — grande, sin fondo */
+.btn-modal-back {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 18px;
+  padding: 12px;
+  border: none;
+  background-color: transparent;
+  color: var(--text-main);
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.18s ease;
+}
+
+.btn-modal-back:hover {
+  color: #000000;
+}
+
+
+/* ============================================================
+   SUB-MODAL: AGREGAR AMIGO MANUAL (reemplaza prompt nativo)
+   ============================================================
+   Modal pequeño centrado con un input para escribir el nombre.
+   Mantiene la estética blanco/negro/amarillo del modal padre.
+*/
+
+/* Contenido más compacto que el modal padre */
+.modal-content--small {
+  max-width: 420px;
+}
+
+.add-friend-manual-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-field-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.form-field-input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  font-size: 15px;
+  color: var(--text-main);
+  background-color: #ffffff;
+  box-sizing: border-box;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.form-field-input:focus {
+  outline: none;
+  border-color: #111827;
+  box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.08);
+}
+
+.form-field-hint {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* Botones del sub-modal: cancelar (outline) y confirmar (negro) */
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.btn-modal-cancel,
+.btn-modal-confirm {
+  flex: 1;
+  padding: 14px 18px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.18s ease, transform 0.18s ease;
+}
+
+.btn-modal-cancel {
+  background-color: #ffffff;
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+}
+
+.btn-modal-cancel:hover {
+  background-color: #f9fafb;
+}
+
+.btn-modal-confirm {
+  background-color: #111827;
+  color: #ffffff;
+}
+
+.btn-modal-confirm:hover {
+  background-color: #1f2937;
+  transform: translateY(-1px);
+}
+
+
+/* ============================================================
+   TOAST: NOTIFICACIÓN DE AMIGO AGREGADO
+   ============================================================
+   Aparece en la esquina inferior derecha cuando se agrega un
+   amigo al ranking, con animación de slide-in y auto-cierre.
+*/
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  min-width: 260px;
+  max-width: 340px;
+  background-color: #ffffff;
+  border: 1px solid var(--border-color);
+  border-left: 4px solid var(--success);
+  border-radius: var(--radius-md);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.18);
+  pointer-events: auto;
+  animation: toast-slide-in 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.toast--leaving {
+  animation: toast-slide-out 0.28s ease forwards;
+}
+
+.toast-icon {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #dcfce7;
+  color: var(--success);
+  border-radius: 50%;
+}
+
+.toast-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.toast-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.toast-message {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+@keyframes toast-slide-in {
+  from {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes toast-slide-out {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+}
+
+
+/* ============================================================
+   ANIMACIÓN: NUEVO AMIGO ENTRANDO AL RANKING
+   ============================================================
+   Aplicada al <li> recién insertado para resaltar visualmente
+   que un amigo nuevo apareció en la lista.
+*/
+.ranking-item--new {
+  animation: ranking-item-in 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ranking-item--new .ranking-card {
+  box-shadow: 0 0 0 3px rgba(91, 61, 245, 0.18);
+  transition: box-shadow 1.6s ease;
+}
+
+@keyframes ranking-item-in {
+  from {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+
+/* ============================================================
+   PREFERS-REDUCED-MOTION (accesibilidad)
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .toast,
+  .toast--leaving,
+  .ranking-item--new {
+    animation: none;
+  }
+
+  .btn-add-contact:hover,
+  .btn-add-friend-primary:hover {
+    transform: none;
+  }
+}

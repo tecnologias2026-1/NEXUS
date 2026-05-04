@@ -40,5 +40,61 @@
       "categoria": "Salario",
       "tipo": "ingreso"
     }
+  ],
+  "amigos": [
+    {
+      "id": 1,
+      "nombre": "Sofía Martínez",
+      "nivel": 7,
+      "racha": 14,
+      "puntos": 2480,
+      "tendencia": "up",
+      "esUsuarioActual": false
+    },
+    {
+      "id": 2,
+      "nombre": "Carlos Rueda",
+      "nivel": 6,
+      "racha": 9,
+      "puntos": 2210,
+      "tendencia": "up",
+      "esUsuarioActual": false
+    },
+    {
+      "id": 3,
+      "nombre": "Laura Pineda",
+      "nivel": 6,
+      "racha": 7,
+      "puntos": 1980,
+      "tendencia": "neutral",
+      "esUsuarioActual": false
+    },
+    {
+      "id": 4,
+      "nombre": "Yo",
+      "nivel": 5,
+      "racha": 5,
+      "puntos": 1750,
+      "tendencia": "up",
+      "esUsuarioActual": true
+    },
+    {
+      "id": 5,
+      "nombre": "Andrés Torres",
+      "nivel": 5,
+      "racha": 3,
+      "puntos": 1520,
+      "tendencia": "down",
+      "esUsuarioActual": false
+    },
+    {
+      "id": 6,
+      "nombre": "Valentina Cruz",
+      "nivel": 4,
+      "racha": 1,
+      "puntos": 1240,
+      "tendencia": "down",
+      "esUsuarioActual": false
+    }
   ]
 }

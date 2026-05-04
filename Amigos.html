@@ -221,228 +221,12 @@
         </h2>
 
 
+        <!-- Lista de amigos: se llena dinámicamente desde data.json vía lista_amigos.js -->
         <ol class="ranking-list" role="list" aria-label="Clasificación semanal de tu círculo">
-
-          <!-- ── POSICIÓN 1 ── -->
-          <li class="ranking-item" role="listitem">
-            <article class="ranking-card" aria-label="Posición 1: Sofía Martínez">
-              <!-- Número de posición: oculto visualmente pero accesible -->
-              <span class="ranking-pos" aria-label="Posición 1">1</span>
-
-              <!-- Avatar de usuario: ícono SVG inline -->
-              <svg class="ranking-avatar ranking-avatar--gold" aria-hidden="true" focusable="false"
-                   width="36" height="36" viewBox="0 0 24 24" fill="none"
-                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                <circle cx="12" cy="7" r="4"/>
-              </svg>
-
-              <!-- Datos del usuario -->
-              <div class="ranking-user-info">
-                <span class="ranking-username">Sofía Martínez</span>
-                <div class="ranking-meta" aria-label="Nivel 7, racha de 14 días">
-                  <span class="ranking-level">Nivel 7</span>
-                  <!-- Ícono de llama: decorativo -->
-                  <svg class="icon-streak" aria-hidden="true" focusable="false"
-                       width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2c0 0-5 5-5 11a5 5 0 0 0 10 0C17 7 12 2 12 2z"/>
-                  </svg>
-                  <span class="ranking-streak">14d</span>
-                </div>
-              </div>
-
-              <!-- Puntuación con cambio de tendencia -->
-              <div class="ranking-score-block">
-                <!-- Flecha de tendencia: aria-label explica el cambio (WCAG 1.4.1) -->
-                <svg class="icon-trend icon-trend--up" aria-label="Subió posiciones"
-                     focusable="false" width="14" height="14" viewBox="0 0 24 24"
-                     fill="none" stroke="currentColor" stroke-width="2.5"
-                     stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="18 15 12 9 6 15"/>
-                </svg>
-                <span class="ranking-pts" aria-label="2480 puntos">2480</span>
-                <span class="ranking-pts-label" aria-hidden="true">pts</span>
-              </div>
-            </article>
+          <!-- Estado de carga inicial (reemplazado por JS al renderizar) -->
+          <li class="ranking-loading-state">
+            <p style="text-align: center; color: #999; padding: 1.5rem;">Cargando ranking...</p>
           </li>
-
-          <!-- ── POSICIÓN 2 ── -->
-          <li class="ranking-item" role="listitem">
-            <article class="ranking-card" aria-label="Posición 2: Carlos Rueda">
-              <span class="ranking-pos" aria-label="Posición 2">2</span>
-              <svg class="ranking-avatar ranking-avatar--silver" aria-hidden="true" focusable="false"
-                   width="36" height="36" viewBox="0 0 24 24" fill="none"
-                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                <circle cx="12" cy="7" r="4"/>
-              </svg>
-              <div class="ranking-user-info">
-                <span class="ranking-username">Carlos Rueda</span>
-                <div class="ranking-meta" aria-label="Nivel 6, racha de 9 días">
-                  <span class="ranking-level">Nivel 6</span>
-                  <svg class="icon-streak" aria-hidden="true" focusable="false"
-                       width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2c0 0-5 5-5 11a5 5 0 0 0 10 0C17 7 12 2 12 2z"/>
-                  </svg>
-                  <span class="ranking-streak">9d</span>
-                </div>
-              </div>
-              <div class="ranking-score-block">
-                <svg class="icon-trend icon-trend--up" aria-label="Subió posiciones"
-                     focusable="false" width="14" height="14" viewBox="0 0 24 24"
-                     fill="none" stroke="currentColor" stroke-width="2.5"
-                     stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="18 15 12 9 6 15"/>
-                </svg>
-                <span class="ranking-pts" aria-label="2210 puntos">2210</span>
-                <span class="ranking-pts-label" aria-hidden="true">pts</span>
-              </div>
-            </article>
-          </li>
-
-          <!-- ── POSICIÓN 3 ── -->
-          <li class="ranking-item" role="listitem">
-            <article class="ranking-card" aria-label="Posición 3: Laura Pineda">
-              <span class="ranking-pos" aria-label="Posición 3">3</span>
-              <svg class="ranking-avatar ranking-avatar--bronze" aria-hidden="true" focusable="false"
-                   width="36" height="36" viewBox="0 0 24 24" fill="none"
-                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                <circle cx="12" cy="7" r="4"/>
-              </svg>
-              <div class="ranking-user-info">
-                <span class="ranking-username">Laura Pineda</span>
-                <div class="ranking-meta" aria-label="Nivel 6, racha de 7 días">
-                  <span class="ranking-level">Nivel 6</span>
-                  <svg class="icon-streak" aria-hidden="true" focusable="false"
-                       width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2c0 0-5 5-5 11a5 5 0 0 0 10 0C17 7 12 2 12 2z"/>
-                  </svg>
-                  <span class="ranking-streak">7d</span>
-                </div>
-              </div>
-              <div class="ranking-score-block">
-                <svg class="icon-trend icon-trend--neutral" aria-label="Sin cambio de posición"
-                     focusable="false" width="14" height="14" viewBox="0 0 24 24"
-                     fill="none" stroke="currentColor" stroke-width="2.5"
-                     stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="5" y1="12" x2="19" y2="12"/>
-                </svg>
-                <span class="ranking-pts" aria-label="1980 puntos">1980</span>
-                <span class="ranking-pts-label" aria-hidden="true">pts</span>
-              </div>
-            </article>
-          </li>
-
-
-    
-          <li class="ranking-item ranking-item--self" role="listitem">
-            <article class="ranking-card ranking-card--self"
-                     aria-label="Tu posición: Puesto 4, Tú">
-              <span class="ranking-pos" aria-label="Posición 4">4</span>
-              <!--
-                Imagen de avatar propio. La alternativa "Tu avatar"
-                identifica al usuario sin repetir el nombre visualmente.
-              -->
-              <svg class="ranking-avatar ranking-avatar--self" aria-hidden="true" focusable="false"
-                   width="36" height="36" viewBox="0 0 24 24" fill="none"
-                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                <circle cx="12" cy="7" r="4"/>
-              </svg>
-              <div class="ranking-user-info">
-                <!-- "Yo" es la etiqueta canónica del usuario en el sistema -->
-                <span class="ranking-username ranking-username--self">Yo</span>
-                <div class="ranking-meta" aria-label="Nivel 5, racha de 5 días">
-                  <span class="ranking-level">Nivel 5</span>
-                  <svg class="icon-streak" aria-hidden="true" focusable="false"
-                       width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2c0 0-5 5-5 11a5 5 0 0 0 10 0C17 7 12 2 12 2z"/>
-                  </svg>
-                  <span class="ranking-streak">5d</span>
-                </div>
-              </div>
-              <div class="ranking-score-block">
-                <svg class="icon-trend icon-trend--up" aria-label="Subiste posiciones"
-                     focusable="false" width="14" height="14" viewBox="0 0 24 24"
-                     fill="none" stroke="currentColor" stroke-width="2.5"
-                     stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="18 15 12 9 6 15"/>
-                </svg>
-                <span class="ranking-pts" aria-label="1750 puntos">1750</span>
-                <span class="ranking-pts-label" aria-hidden="true">pts</span>
-              </div>
-            </article>
-          </li>
-
-          <!-- ── POSICIÓN 5 ── -->
-          <li class="ranking-item" role="listitem">
-            <article class="ranking-card" aria-label="Posición 5: Andrés Torres">
-              <span class="ranking-pos" aria-label="Posición 5">5</span>
-              <svg class="ranking-avatar" aria-hidden="true" focusable="false"
-                   width="36" height="36" viewBox="0 0 24 24" fill="none"
-                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                <circle cx="12" cy="7" r="4"/>
-              </svg>
-              <div class="ranking-user-info">
-                <span class="ranking-username">Andrés Torres</span>
-                <div class="ranking-meta" aria-label="Nivel 5, racha de 3 días">
-                  <span class="ranking-level">Nivel 5</span>
-                  <svg class="icon-streak" aria-hidden="true" focusable="false"
-                       width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2c0 0-5 5-5 11a5 5 0 0 0 10 0C17 7 12 2 12 2z"/>
-                  </svg>
-                  <span class="ranking-streak">3d</span>
-                </div>
-              </div>
-              <div class="ranking-score-block">
-                <svg class="icon-trend icon-trend--down" aria-label="Bajó posiciones"
-                     focusable="false" width="14" height="14" viewBox="0 0 24 24"
-                     fill="none" stroke="currentColor" stroke-width="2.5"
-                     stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="6 9 12 15 18 9"/>
-                </svg>
-                <span class="ranking-pts" aria-label="1520 puntos">1520</span>
-                <span class="ranking-pts-label" aria-hidden="true">pts</span>
-              </div>
-            </article>
-          </li>
-
-          <!-- ── POSICIÓN 6 ── -->
-          <li class="ranking-item" role="listitem">
-            <article class="ranking-card" aria-label="Posición 6: Valentina Cruz">
-              <span class="ranking-pos" aria-label="Posición 6">6</span>
-              <svg class="ranking-avatar" aria-hidden="true" focusable="false"
-                   width="36" height="36" viewBox="0 0 24 24" fill="none"
-                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                <circle cx="12" cy="7" r="4"/>
-              </svg>
-              <div class="ranking-user-info">
-                <span class="ranking-username">Valentina Cruz</span>
-                <div class="ranking-meta" aria-label="Nivel 4, racha de 1 día">
-                  <span class="ranking-level">Nivel 4</span>
-                  <svg class="icon-streak" aria-hidden="true" focusable="false"
-                       width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2c0 0-5 5-5 11a5 5 0 0 0 10 0C17 7 12 2 12 2z"/>
-                  </svg>
-                  <span class="ranking-streak">1d</span>
-                </div>
-              </div>
-              <div class="ranking-score-block">
-                <svg class="icon-trend icon-trend--down" aria-label="Bajó posiciones"
-                     focusable="false" width="14" height="14" viewBox="0 0 24 24"
-                     fill="none" stroke="currentColor" stroke-width="2.5"
-                     stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="6 9 12 15 18 9"/>
-                </svg>
-                <span class="ranking-pts" aria-label="1240 puntos">1240</span>
-                <span class="ranking-pts-label" aria-hidden="true">pts</span>
-              </div>
-            </article>
-          </li>
-
         </ol>
         <!-- /ol.ranking-list -->
 
@@ -1056,10 +840,98 @@
 <!-- /div#add-friend-modal -->
 
 
-  <!-- Módulo de autenticación compartido (gestión de modales, sesión) -->
-  <script defer src="js/auth.js"></script>
+<!-- ════════════════════════════════════════════════════════════
+     SUB-MODAL: AGREGAR AMIGO MANUAL
+     ════════════════════════════════════════════════════════════
+     Reemplaza al prompt() nativo del navegador. Se abre desde
+     el botón "Agregar amigo" del modal padre y permite escribir
+     el nombre con la misma estética del resto de la página.
+-->
+<div id="add-friend-manual-modal" class="modal" role="dialog"
+     aria-labelledby="add-friend-manual-title"
+     aria-modal="true"
+     aria-hidden="true">
 
-  <!-- Módulo específico del círculo social (ranking, metas, modal amigos) -->
+    <div class="modal-backdrop" id="add-friend-manual-backdrop"></div>
+
+    <div class="modal-content modal-content--small">
+
+        <!-- Botón cerrar (×) -->
+        <button type="button" class="modal-close" id="add-friend-manual-close"
+                aria-label="Cerrar formulario de agregar amigo">
+            <span aria-hidden="true">&times;</span>
+        </button>
+
+        <!-- Icono superior (mismo estilo que el modal padre) -->
+        <div class="modal-icon-hero" aria-hidden="true">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="8.5" cy="7" r="4"/>
+                <line x1="20" y1="8" x2="20" y2="14"/>
+                <line x1="23" y1="11" x2="17" y2="11"/>
+            </svg>
+        </div>
+
+        <!-- Cabecera -->
+        <div class="modal-header">
+            <h2 id="add-friend-manual-title" class="modal-title">
+                Agregar amigo manualmente
+            </h2>
+            <p class="modal-subtitle">
+                Escribe el nombre del amigo que quieres invitar
+            </p>
+        </div>
+
+        <!-- Formulario -->
+        <form id="add-friend-manual-form" class="add-friend-manual-form" novalidate>
+
+            <div class="form-field">
+                <label for="add-friend-manual-input" class="form-field-label">
+                    Nombre del amigo
+                </label>
+                <input
+                    type="text"
+                    id="add-friend-manual-input"
+                    class="form-field-input"
+                    placeholder="Ej: Camila Rojas"
+                    autocomplete="off"
+                    required
+                    maxlength="40">
+                <p class="form-field-hint">Máximo 40 caracteres</p>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-modal-cancel" id="add-friend-manual-cancel">
+                    Cancelar
+                </button>
+                <button type="submit" class="btn-modal-confirm">
+                    Agregar
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+    <!-- /div.modal-content -->
+
+</div>
+<!-- /div#add-friend-manual-modal -->
+
+
+  <!-- ============================================
+       MÓDULOS JAVASCRIPT - ORDEN IMPORTANTE
+       ============================================
+       1. auth.js          - Autenticación compartida
+       2. amigo.js         - Generación de HTML para cada amigo del ranking
+       3. lista_amigos.js  - Carga, ordena y renderiza el ranking completo
+       4. social.js        - Coordinador: modal de agregar amigo y eventos
+       5. navigation.js    - Navegación y cambio de moneda
+  -->
+  <script defer src="js/auth.js"></script>
+  <script defer src="js/amigo.js"></script>
+  <script defer src="js/lista_amigos.js"></script>
   <script defer src="js/social.js"></script>
   <script src="js/navigation.js"></script>
 
