@@ -1,0 +1,44 @@
+{
+  "transacciones": [
+    {
+      "id": 1,
+      "nombre": "Curso online",
+      "valor": 150,
+      "fecha": "2024-10-05",
+      "categoria": "Estudios",
+      "tipo": "gasto"
+    },
+    {
+      "id": 2,
+      "nombre": "Proyecto extra",
+      "valor": 300,
+      "fecha": "2024-10-01",
+      "categoria": "Freelancia",
+      "tipo": "ingreso"
+    },
+    {
+      "id": 3,
+      "nombre": "Cine y streaming",
+      "valor": 45,
+      "fecha": "2024-09-27",
+      "categoria": "Entretenimiento",
+      "tipo": "gasto"
+    },
+    {
+      "id": 4,
+      "nombre": "Almuerzo",
+      "valor": 25,
+      "fecha": "2024-09-25",
+      "categoria": "Alimentación",
+      "tipo": "gasto"
+    },
+    {
+      "id": 5,
+      "nombre": "Salario",
+      "valor": 2000,
+      "fecha": "2024-09-01",
+      "categoria": "Salario",
+      "tipo": "ingreso"
+    }
+  ]
+}

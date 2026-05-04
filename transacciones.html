@@ -435,93 +435,10 @@
           <!-- Título de la sección -->
           <h2 id="history-title" class="section-title">Historial</h2>
 
-          <!-- Contenedor: Lista de transacciones -->
+          <!-- Contenedor: Lista de transacciones (se llena dinámicamente con JavaScript) -->
           <div class="transaction-history-content">
-            <!-- Lista de transacciones realizadas -->
-            <ul class="transaction-history-list" role="list">
-
-              <!-- TRANSACCIÓN 1: Curso online (gasto) -->
-              <li class="transaction-item">
-                <!-- Icono de la categoría -->
-                <div class="transaction-icon" aria-hidden="true">
-                  <!-- Icono SVG: Laptop/Educación -->
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M20 21H4a2 2 0 0 1-2-2V5c0-1.1.9-2 2-2h16c1.1 0 2 .9 2 2v14c0 1.1-.9 2-2 2z"/>
-                    <polyline points="23 18 1 18"/>
-                  </svg>
-                </div>
-
-                <!-- Contenedor con detalles de la transacción -->
-                <div class="transaction-details">
-                  <!-- Nombre de la transacción -->
-                  <h3 class="transaction-name">Curso online</h3>
-                  <!-- Categoría y fecha -->
-                  <div class="transaction-meta">
-                    <span class="transaction-category">Estudios</span>
-                    <span class="transaction-date" aria-label="5 de octubre 2024">5 octubre</span>
-                  </div>
-                </div>
-
-                <!-- Monto del gasto (negativo en rojo) -->
-                <strong class="transaction-amount transaction-amount--expense">-$150 COP</strong>
-              </li>
-
-              <!-- TRANSACCIÓN 2: Proyecto extra (ingreso) -->
-              <li class="transaction-item">
-                <!-- Icono de la categoría -->
-                <div class="transaction-icon" aria-hidden="true">
-                  <!-- Icono SVG: Dinero/Ingreso -->
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="1" fill="currentColor"/>
-                    <circle cx="19" cy="12" r="1" fill="currentColor"/>
-                    <circle cx="5" cy="12" r="1" fill="currentColor"/>
-                    <path d="M12 5v14"/>
-                    <path d="M5 12h14"/>
-                  </svg>
-                </div>
-
-                <!-- Contenedor con detalles de la transacción -->
-                <div class="transaction-details">
-                  <!-- Nombre de la transacción -->
-                  <h3 class="transaction-name">Proyecto extra</h3>
-                  <!-- Categoría y fecha -->
-                  <div class="transaction-meta">
-                    <span class="transaction-category">Freelancia</span>
-                    <span class="transaction-date" aria-label="1 de octubre 2024">1 octubre</span>
-                  </div>
-                </div>
-
-                <!-- Monto del ingreso (positivo en verde) -->
-                <strong class="transaction-amount transaction-amount--income">+$300 COP</strong>
-              </li>
-
-              <!-- TRANSACCIÓN 3: Cine y streaming (gasto) -->
-              <li class="transaction-item">
-                <!-- Icono de la categoría -->
-                <div class="transaction-icon" aria-hidden="true">
-                  <!-- Icono SVG: Televisión/Entretenimiento -->
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polygon points="23 7 16 12 23 17 23 7"/>
-                    <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
-                  </svg>
-                </div>
-
-                <!-- Contenedor con detalles de la transacción -->
-                <div class="transaction-details">
-                  <!-- Nombre de la transacción -->
-                  <h3 class="transaction-name">Cine y streaming</h3>
-                  <!-- Categoría y fecha -->
-                  <div class="transaction-meta">
-                    <span class="transaction-category">Entretenimiento</span>
-                    <span class="transaction-date" aria-label="27 de septiembre 2024">27 septiembre</span>
-                  </div>
-                </div>
-
-                <!-- Monto del gasto (negativo en rojo) -->
-                <strong class="transaction-amount transaction-amount--expense">-$45 COP</strong>
-              </li>
-
-            </ul>
+            <!-- Las transacciones se cargarán aquí dinámicamente desde data.json -->
+            <p style="text-align: center; color: #999; padding: 2rem;">Cargando transacciones...</p>
           </div>
         </section>
 
@@ -541,7 +458,7 @@
            - Checkboxes: transacción recurrente, gasto fijo
            - Botones: Cancelar, Guardar
       -->
-      <div id="add-transaction-modal" class="modal modal-overlay" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
+      <div id="add-transaction-modal" class="modal modal-overlay" role="dialog" aria-labelledby="modal-title" aria-hidden="true" data-modal="add-transaction-modal">
         <!-- Contenedor del modal (centra el contenido) -->
         <div class="modal-content">
           <!-- Encabezado del modal -->
@@ -559,7 +476,9 @@
           </div>
 
           <!-- Formulario de transacción -->
-          <form id="add-transaction-form" class="transaction-form">
+          <form id="form-nueva-transaccion" class="transaction-form">
+            <!-- Input oculto para guardar el tipo de transacción (ingreso/gasto) -->
+            <input type="hidden" id="transaction-type" value="ingreso">
             
             <!-- SECCIÓN 1: TIPO DE TRANSACCIÓN -->
             <!-- Selector de Ingreso o Gasto -->
@@ -573,7 +492,7 @@
                 <button 
                   type="button" 
                   class="form-toggle-btn form-toggle-btn--active" 
-                  data-type="income" 
+                  data-type="ingreso" 
                   aria-pressed="true"
                   aria-label="Registrar ingreso">
                   <!-- Icono SVG: Flecha hacia arriba (ingreso) -->
@@ -590,7 +509,7 @@
                 <button 
                   type="button" 
                   class="form-toggle-btn" 
-                  data-type="expense" 
+                  data-type="gasto" 
                   aria-pressed="false"
                   aria-label="Registrar gasto">
                   <!-- Icono SVG: Flecha hacia abajo (gasto) -->
@@ -611,12 +530,12 @@
               <label for="transaction-category" class="form-label">Categoría</label>
               <select id="transaction-category" class="form-select" required>
                 <option value="" disabled selected>Selecciona una categoría</option>
-                <option value="alimentacion">Alimentación</option>
-                <option value="entretenimiento">Entretenimiento</option>
-                <option value="transporte">Transporte</option>
-                <option value="estudios">Estudios</option>
-                <option value="ropa">Ropa</option>
-                <option value="otro">Otro</option>
+                <option value="Alimentacion">Alimentación</option>
+                <option value="Entretenimiento">Entretenimiento</option>
+                <option value="Transporte">Transporte</option>
+                <option value="Estudios">Estudios</option>
+                <option value="Ropa">Ropa</option>
+                <option value="Otro">Otro</option>
               </select>
             </fieldset>
 
@@ -709,17 +628,20 @@
   </div>
 
   <!-- ============================================
-       SCRIPTS JAVASCRIPT
+       MÓDULOS JAVASCRIPT - ORDEN IMPORTANTE
        ============================================
-       Script que maneja la funcionalidad interactiva del dashboard:
-       - Cambiar moneda
-       - Logout
-       - Agregar transacción
-       - Toggle detalles límites
+       1. gastos.js - Generación de HTML para gastos
+       2. ingresos.js - Generación de HTML para ingresos
+       3. historial.js - Gestión del historial completo
+       4. transacciones.js - Coordinador principal
+       5. dashboard.js - Funcionalidad del dashboard
+       6. navigation.js - Navegación y cambio de moneda
   -->
+  <script src="js/gastos.js"></script>
+  <script src="js/ingresos.js"></script>
+  <script src="js/historial.js"></script>
+  <script src="js/transacciones.js"></script>
   <script src="js/dashboard.js"></script>
-  
-  <!-- Script de navegación: Maneja cambio de moneda en transacciones -->
   <script src="js/navigation.js"></script>
 
 </body>
