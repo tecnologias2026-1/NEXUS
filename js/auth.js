@@ -80,17 +80,21 @@ document.addEventListener('DOMContentLoaded', () => {
      * Evento: Click en botón de cerrar (X)
      * Acción: Cierra el modal
      */
-    closeBtn.addEventListener('click', () => {
-        modal.classList.remove('active');
-    });
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+    }
 
     /**
      * Evento: Click en el fondo oscuro (backdrop)
      * Acción: Cierra el modal si se hace click fuera del formulario
      */
-    backdrop.addEventListener('click', () => {
-        modal.classList.remove('active');
-    });
+    if (backdrop) {
+        backdrop.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+    }
 
     // ==========================================
     // 3. VALIDACIÓN Y ENVÍO DE FORMULARIOS

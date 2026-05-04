@@ -80,7 +80,7 @@ header {
   width: 32px;
   height: 32px;
   border-radius: 10px;
-  background: url("../assets/Logo.png") center/60% no-repeat, var(--gradient-primary);
+  background: url("../assets/icons/Logo.png") center/60% no-repeat, var(--gradient-primary);
 }
 
 .logo-name {

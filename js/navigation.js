@@ -247,16 +247,55 @@ function initializeAuthNavigation() {
 
 /**
  * Inicializa el cambio de moneda en páginas de dashboard
- * Se ejecuta solo si hay selector de moneda
+ * Se ejecuta si hay un selector o un botón de moneda.
  */
 function initializeCurrencyChange() {
     const currencySelect = document.getElementById('currency-select');
+    const currencyButton = document.querySelector('.sidebar-currency-btn');
+    const currencyValue = document.querySelector('.sidebar-currency-value');
 
-    // Evento: Cambio en el selector de moneda
-    currencySelect.addEventListener('change', (event) => {
-        const newCurrency = event.target.value;
-        updateAllMonetaryValues(newCurrency);
-    });
+    const savedCurrency = localStorage.getItem('selectedCurrency') || 'COP';
+
+    const updateCurrencyUI = (currency) => {
+        if (currencySelect) {
+            currencySelect.value = currency;
+        }
+        if (currencyValue) {
+            currencyValue.textContent = currency;
+        }
+        if (currencyButton) {
+            currencyButton.setAttribute('aria-label', `Cambiar moneda. Moneda actual: ${currency}`);
+        }
+    };
+
+    const changeCurrency = (targetCurrency) => {
+        if (!targetCurrency || !CURRENCY_RATES[targetCurrency]) {
+            return;
+        }
+
+        localStorage.setItem('selectedCurrency', targetCurrency);
+        updateCurrencyUI(targetCurrency);
+        updateAllMonetaryValues(targetCurrency);
+    };
+
+    if (currencySelect) {
+        currencySelect.addEventListener('change', (event) => {
+            changeCurrency(event.target.value);
+        });
+    }
+
+    if (currencyButton) {
+        currencyButton.addEventListener('click', () => {
+            const currencies = Object.keys(CURRENCY_RATES);
+            const current = currencyValue ? currencyValue.textContent.trim() : 'COP';
+            const index = currencies.indexOf(current);
+            const nextCurrency = currencies[(index + 1) % currencies.length];
+            changeCurrency(nextCurrency);
+        });
+    }
+
+    updateCurrencyUI(savedCurrency);
+    updateAllMonetaryValues(savedCurrency);
 }
 
 /**

@@ -40,9 +40,7 @@
   
   <!-- Estilos específicos del dashboard: Sidebar, header, main content -->
   <link rel="stylesheet" href="css/dashboard.css">
-  <link rel="stylesheet" href="css/layout.css">
-  <link rel="stylesheet" href="css/components.css">
-<link rel="stylesheet" href="css/analisis.css">
+  <link rel="stylesheet" href="css/analisis.css">
 </head>
 
 <!-- Body con clase especial que indica que esta es una página del dashboard (pagina autenticada) -->
@@ -80,16 +78,7 @@
            MARCA Y LOGO DE NEXUS
            ============================================ -->
       <div class="sidebar-logo">
-        <!-- Imagen del logo con dimensiones fijas (36x36px) para evitar problemas de layout -->
-        <img
-          src="assets/icons/Logo.png"
-          alt="NEXUS — Plataforma financiera"
-          width="36"
-          height="36"
-          class="sidebar-logo-img"
-          loading="eager"
-          decoding="sync">
-        <!-- Nombre de la marca al lado del logo -->
+        <div class="sidebar-logo-icon" aria-hidden="true">N</div>
         <span class="sidebar-logo-name">Nexus</span>
       </div>
 
@@ -494,3 +483,6 @@
   
   <!-- Script de navegación: Maneja cambio de moneda en el análisis -->
   <script src="js/navigation.js"></script>
+
+</body>
+</html>

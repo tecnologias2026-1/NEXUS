@@ -8,11 +8,10 @@
   <!-- Página autenticada: sin indexación -->
   <meta http-equiv="Content-Security-Policy"
     content="default-src 'self';
-             script-src 'self';
+             script-src 'self' 'unsafe-inline';
              style-src 'self' 'unsafe-inline';
              img-src 'self' data:;
              connect-src 'self';
-             frame-ancestors 'none';
              form-action 'self';">
   <meta http-equiv="Permissions-Policy"
     content="geolocation=(), camera=(), microphone=(), payment=()">
@@ -1007,6 +1006,7 @@
 
   <!-- defer: el DOM está listo antes de ejecutar el script -->
   <script src="js/Metas.js" defer></script>
+  <script src="js/navigation.js"></script>
 
 </body>
 </html>
