@@ -54,20 +54,6 @@ const ICONOS_GASTOS = {
 };
 
 /**
- * Formatea una fecha ISO a formato legible en español
- * @param {string} fechaISO - Fecha en formato ISO (YYYY-MM-DD)
- * @returns {string} Fecha formateada (ej: "5 octubre")
- * 
- * @example
- * formatearFecha("2024-10-05") // "5 octubre"
- */
-function formatearFecha(fechaISO) {
-  const fecha = new Date(fechaISO + 'T00:00:00');
-  const opciones = { day: 'numeric', month: 'long' };
-  return fecha.toLocaleDateString('es-ES', opciones);
-}
-
-/**
  * Obtiene el icono SVG para una categoría de gasto
  * @param {string} categoria - Nombre de la categoría
  * @returns {string} HTML del icono SVG
@@ -151,7 +137,6 @@ if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     generarFilaGasto,
     generarFilasGastos,
-    obtenerIconoGasto,
-    formatearFecha
+    obtenerIconoGasto
   };
 }
