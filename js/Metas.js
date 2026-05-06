@@ -42,11 +42,16 @@ const btnStep2Back       = document.getElementById('btn-step2-back');
 const btnStep2Create     = document.getElementById('btn-step2-create');
 
 const srAnnouncer        = document.getElementById('sr-announcer');
+const METAS_STORAGE_KEY  = 'metas';
+const personalGoalsList  = document.querySelector('[aria-label="Lista de metas personales"]');
+const colabGoalsList     = document.querySelector('[aria-label="Lista de metas colaborativas"]');
+const statusRegion       = document.getElementById('metas-status-region');
 
 
 // Anuncia mensajes a tecnologías asistivas (aria-live).
 // Limpia antes de escribir para que el mismo texto se anuncie si se repite.
 function announce(message) {
+  if (!srAnnouncer) return;
   srAnnouncer.textContent = '';
   requestAnimationFrame(() => {
     srAnnouncer.textContent = message;
@@ -65,9 +70,385 @@ function getFocusableElements(container) {
 }
 
 // Muestra u oculta el mensaje de error de un campo.
-function setFieldError(input, errorEl, isValid) {
+function setFieldError(input, errorEl, isValid, message = '') {
   input.setAttribute('aria-invalid', String(!isValid));
   errorEl.classList.toggle('is-visible', !isValid);
+  errorEl.textContent = isValid ? '' : message;
+}
+
+function setStatusMessage(message) {
+  if (statusRegion) statusRegion.textContent = message;
+  announce(message);
+}
+
+function escapeHTML(value) {
+  return String(value ?? '').replace(/[&<>"']/g, char => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+  }[char]));
+}
+
+function formatCurrencyCOP(value) {
+  const numericValue = Number(value) || 0;
+  return `$${numericValue.toLocaleString('es-CO')} COP`;
+}
+
+function parseLocalDate(fechaISO) {
+  const [year, month, day] = String(fechaISO || '').split('-').map(Number);
+  if (!year || !month || !day) return null;
+  return new Date(year, month - 1, day);
+}
+
+function getDaysText(fechaISO) {
+  const dueDate = parseLocalDate(fechaISO);
+  if (!dueDate) return 'Sin fecha limite';
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  dueDate.setHours(0, 0, 0, 0);
+
+  const diffDays = Math.ceil((dueDate - today) / 86400000);
+  if (diffDays > 1) return `${diffDays} dias restantes`;
+  if (diffDays === 1) return '1 dia restante';
+  if (diffDays === 0) return 'Vence hoy';
+
+  const overdueDays = Math.abs(diffDays);
+  return overdueDays === 1 ? 'Vencida hace 1 dia' : `Vencida hace ${overdueDays} dias`;
+}
+
+function getProgress(meta) {
+  const objetivo = Number(meta.objetivo) || 0;
+  const ahorrado = Number(meta.ahorrado) || 0;
+  if (objetivo <= 0) return 0;
+  return Math.min(100, Math.max(0, Math.round((ahorrado / objetivo) * 100)));
+}
+
+function getInitial(name) {
+  return String(name || 'M').trim().charAt(0).toUpperCase() || 'M';
+}
+
+function getSafeTitleId(meta) {
+  return `meta-${String(meta.id).replace(/[^a-zA-Z0-9_-]/g, '')}-titulo`;
+}
+
+function getDeleteIconSVG() {
+  return `
+    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="3 6 5 6 21 6" />
+      <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+      <path d="M10 11v6" />
+      <path d="M14 11v6" />
+      <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+    </svg>
+  `;
+}
+
+function getCalendarIconSVG() {
+  return `
+    <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+      <line x1="16" y1="2" x2="16" y2="6" />
+      <line x1="8" y1="2" x2="8" y2="6" />
+      <line x1="3" y1="10" x2="21" y2="10" />
+    </svg>
+  `;
+}
+
+function getPersonalIconSVG() {
+  return `
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round"
+      stroke-linejoin="round">
+      <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+      <line x1="8" y1="21" x2="16" y2="21" />
+      <line x1="12" y1="17" x2="12" y2="21" />
+    </svg>
+  `;
+}
+
+function getUserIconSVG() {
+  return `
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round"
+      stroke-linejoin="round">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+      <circle cx="12" cy="7" r="4" />
+    </svg>
+  `;
+}
+
+function getPrivacyIconSVG() {
+  return `
+    <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+    </svg>
+  `;
+}
+
+function cargarMetas() {
+  try {
+    const metasGuardadas = localStorage.getItem(METAS_STORAGE_KEY);
+    if (!metasGuardadas) return [];
+
+    const metas = JSON.parse(metasGuardadas);
+    return Array.isArray(metas) ? metas : [];
+  } catch (error) {
+    console.error('Error al cargar metas:', error);
+    return [];
+  }
+}
+
+function guardarMetas(metas) {
+  localStorage.setItem(METAS_STORAGE_KEY, JSON.stringify(metas));
+}
+
+function renderGoalProgress(meta, label) {
+  const progress = getProgress(meta);
+  return `
+    <div class="meta-progreso-wrapper">
+      <div class="meta-progreso-labels">
+        <span class="meta-progreso-label">Progreso</span>
+        <span class="meta-progreso-porcentaje" data-meta-porcentaje aria-hidden="true">${progress}%</span>
+      </div>
+      <div class="meta-progreso-barra"
+        role="progressbar"
+        aria-label="${escapeHTML(label)}"
+        aria-valuenow="${progress}" aria-valuemin="0" aria-valuemax="100"
+        aria-valuetext="${progress}% completado"
+        data-meta-progreso>
+        <div class="meta-progreso-relleno" style="width: ${progress}%"></div>
+      </div>
+    </div>
+  `;
+}
+
+function renderGoalAmounts(meta) {
+  return `
+    <div class="meta-montos">
+      <div class="meta-monto-grupo">
+        <span class="meta-monto-etiqueta">Ahorrado</span>
+        <p class="meta-monto-valor meta-monto-ahorrado"
+          data-meta-ahorrado aria-label="Monto ahorrado: ${escapeHTML(formatCurrencyCOP(meta.ahorrado))}">
+          ${escapeHTML(formatCurrencyCOP(meta.ahorrado))}
+        </p>
+      </div>
+      <div class="meta-monto-grupo meta-monto-grupo--derecha">
+        <span class="meta-monto-etiqueta">Meta</span>
+        <p class="meta-monto-valor meta-monto-objetivo"
+          data-meta-objetivo aria-label="Monto objetivo: ${escapeHTML(formatCurrencyCOP(meta.objetivo))}">
+          ${escapeHTML(formatCurrencyCOP(meta.objetivo))}
+        </p>
+      </div>
+    </div>
+  `;
+}
+
+function renderPersonalGoal(meta) {
+  const titleId = getSafeTitleId(meta);
+  const safeName = escapeHTML(meta.nombre);
+  const daysText = getDaysText(meta.fechaLimite || meta.fecha);
+
+  return `
+    <li class="meta-item" data-meta-id="${escapeHTML(meta.id)}">
+      <article class="meta-card meta-card--personal" aria-labelledby="${escapeHTML(titleId)}">
+        <header class="meta-card-header">
+          <div class="meta-card-icono" aria-hidden="true">
+            ${getPersonalIconSVG()}
+          </div>
+
+          <div class="meta-card-header-info">
+            <h3 class="meta-card-titulo" id="${escapeHTML(titleId)}">${safeName}</h3>
+            <p class="meta-card-dias" aria-label="Dias restantes: ${escapeHTML(daysText)}">
+              ${getCalendarIconSVG()}
+              <span data-meta-dias>${escapeHTML(daysText)}</span>
+            </p>
+          </div>
+
+          <div class="meta-card-acciones">
+            <button type="button" class="btn-meta-opciones btn-meta-opciones--delete"
+              aria-label="Eliminar meta ${safeName}"
+              data-delete-meta-id="${escapeHTML(meta.id)}">
+              ${getDeleteIconSVG()}
+            </button>
+          </div>
+        </header>
+
+        ${renderGoalProgress(meta, `Progreso de ${meta.nombre}`)}
+        ${renderGoalAmounts(meta)}
+      </article>
+    </li>
+  `;
+}
+
+function renderContributionItem(participant, meta) {
+  const isCurrentUser = Boolean(participant.esUsuarioActual);
+  const participantName = participant.name || participant.nombre || 'Participante';
+  const aporte = Number(participant.aporte) || 0;
+  const percent = Number(meta.objetivo) > 0
+    ? Math.min(100, Math.max(0, Math.round((aporte / Number(meta.objetivo)) * 100)))
+    : 0;
+  const avatarClass = isCurrentUser
+    ? 'meta-contribucion-avatar meta-contribucion-avatar--tu'
+    : 'meta-contribucion-avatar';
+  const avatarStyle = !isCurrentUser && participant.color
+    ? ` style="background:${escapeHTML(participant.color)};"`
+    : '';
+  const avatarContent = isCurrentUser
+    ? getUserIconSVG()
+    : escapeHTML(participant.initial || getInitial(participantName));
+
+  return `
+    <li class="meta-contribucion-item">
+      <div class="${avatarClass}"${avatarStyle} aria-hidden="true">${avatarContent}</div>
+      <span class="meta-contribucion-nombre">${escapeHTML(isCurrentUser ? 'Tu' : participantName)}</span>
+      <div class="meta-contribucion-barra-wrapper">
+        <div class="meta-contribucion-barra"
+          role="progressbar" aria-label="Contribucion de ${escapeHTML(participantName)}"
+          aria-valuenow="${percent}" aria-valuemin="0" aria-valuemax="100"
+          aria-valuetext="${percent}%" data-contribucion-progreso>
+          <div class="meta-contribucion-relleno" style="width: ${percent}%"></div>
+        </div>
+      </div>
+      <span class="meta-contribucion-porcentaje" data-contribucion-valor aria-hidden="true">${percent}%</span>
+    </li>
+  `;
+}
+
+function renderColabGoal(meta) {
+  const titleId = getSafeTitleId(meta);
+  const safeName = escapeHTML(meta.nombre);
+  const daysText = getDaysText(meta.fechaLimite || meta.fecha);
+  const participantes = Array.isArray(meta.participantes) && meta.participantes.length
+    ? meta.participantes
+    : [{ id: 'usuario-actual', name: 'Tu', initial: 'T', esUsuarioActual: true, aporte: 0 }];
+  const participantCount = participantes.length;
+
+  return `
+    <li class="meta-item" data-meta-id="${escapeHTML(meta.id)}">
+      <article class="meta-card meta-card--colaborativa" aria-labelledby="${escapeHTML(titleId)}">
+        <header class="meta-card-header">
+          <div class="meta-card-avatar-grupo" aria-hidden="true">
+            <span class="meta-card-avatar-inicial">${escapeHTML(getInitial(meta.nombre))}</span>
+          </div>
+
+          <div class="meta-card-header-info">
+            <h3 class="meta-card-titulo" id="${escapeHTML(titleId)}">${safeName}</h3>
+            <div class="meta-card-meta-grupo">
+              <span class="meta-card-meta-item" aria-label="Numero de participantes: ${participantCount}">
+                <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24"
+                  fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                  <circle cx="9" cy="7" r="4" />
+                </svg>
+                <span data-colab-personas>${participantCount} ${participantCount === 1 ? 'persona' : 'personas'}</span>
+              </span>
+              <span class="meta-card-meta-item" aria-label="Dias restantes: ${escapeHTML(daysText)}">
+                ${getCalendarIconSVG()}
+                <span data-colab-dias>${escapeHTML(daysText)}</span>
+              </span>
+            </div>
+          </div>
+
+          <div class="meta-card-acciones">
+            <button type="button" class="btn-meta-opciones btn-meta-opciones--delete"
+              aria-label="Eliminar meta ${safeName}"
+              data-delete-meta-id="${escapeHTML(meta.id)}">
+              ${getDeleteIconSVG()}
+            </button>
+          </div>
+        </header>
+
+        ${renderGoalProgress(meta, `Progreso grupal de ${meta.nombre}`)}
+        ${renderGoalAmounts(meta)}
+
+        <div class="meta-contribuciones">
+          <h4 class="meta-contribuciones-titulo">Contribucion Individual</h4>
+          <ul class="meta-contribuciones-lista" role="list"
+            aria-label="Contribuciones individuales de ${safeName}">
+            ${participantes.map(participant => renderContributionItem(participant, meta)).join('')}
+          </ul>
+
+          ${meta.privacidad ? `
+            <p class="meta-privacidad-nota" role="note">
+              ${getPrivacyIconSVG()}
+              Los montos individuales estan ocultos
+            </p>
+          ` : ''}
+        </div>
+      </article>
+    </li>
+  `;
+}
+
+function renderEmptyState(type) {
+  const text = type === 'personal'
+    ? 'Aun no tienes metas personales. Crea una con el boton "Agregar nueva meta".'
+    : 'Aun no tienes metas colaborativas. Crea una y agrega amigos para compartirla.';
+
+  return `
+    <li class="metas-empty-state">
+      <p>${escapeHTML(text)}</p>
+    </li>
+  `;
+}
+
+function renderGoalsList(listElement, goals, type) {
+  if (!listElement) return;
+
+  if (!goals.length) {
+    listElement.innerHTML = renderEmptyState(type);
+    return;
+  }
+
+  listElement.innerHTML = goals
+    .map(goal => type === 'personal' ? renderPersonalGoal(goal) : renderColabGoal(goal))
+    .join('');
+}
+
+function renderGoals() {
+  const metas = cargarMetas();
+  const personalGoals = metas.filter(meta => meta.tipo === 'personal');
+  const colabGoals = metas.filter(meta => meta.tipo === 'colaborativa');
+
+  renderGoalsList(personalGoalsList, personalGoals, 'personal');
+  renderGoalsList(colabGoalsList, colabGoals, 'colaborativa');
+}
+
+function buildParticipants(amigos) {
+  return [
+    { id: 'usuario-actual', name: 'Tu', initial: 'T', color: '#5B3DF5', esUsuarioActual: true, aporte: 0 },
+    ...amigos.map(friend => ({
+      id: friend.id,
+      name: friend.name,
+      initial: friend.initial || getInitial(friend.name),
+      color: friend.color || '#64748B',
+      esUsuarioActual: false,
+      aporte: 0,
+    })),
+  ];
+}
+
+function deleteMeta(metaId) {
+  const metas = cargarMetas();
+  const meta = metas.find(item => String(item.id) === String(metaId));
+  if (!meta) return;
+
+  const shouldDelete = confirm(`Eliminar la meta "${meta.nombre}"?`);
+  if (!shouldDelete) return;
+
+  guardarMetas(metas.filter(item => String(item.id) !== String(metaId)));
+  renderGoals();
+  setStatusMessage(`Meta "${meta.nombre}" eliminada.`);
 }
 
 
@@ -157,18 +538,18 @@ function validateStep1() {
   let isValid = true;
 
   const nombreValid = inputNombre.value.trim().length >= 2;
-  setFieldError(inputNombre, document.getElementById('meta-nombre-error'), nombreValid);
+  setFieldError(inputNombre, document.getElementById('meta-nombre-error'), nombreValid, 'Escribe un nombre de al menos 2 caracteres.');
   if (!nombreValid) isValid = false;
 
   const objetivoVal   = parseFloat(inputObjetivo.value);
   const objetivoValid = !isNaN(objetivoVal) && objetivoVal >= 1000;
-  setFieldError(inputObjetivo, document.getElementById('meta-objetivo-error'), objetivoValid);
+  setFieldError(inputObjetivo, document.getElementById('meta-objetivo-error'), objetivoValid, 'El monto minimo es $1.000 COP.');
   if (!objetivoValid) isValid = false;
 
   const today        = new Date(); today.setHours(0, 0, 0, 0);
   const selectedDate = new Date(inputFecha.value);
   const fechaValid   = inputFecha.value !== '' && selectedDate > today;
-  setFieldError(inputFecha, document.getElementById('meta-fecha-error'), fechaValid);
+  setFieldError(inputFecha, document.getElementById('meta-fecha-error'), fechaValid, 'Selecciona una fecha posterior a hoy.');
   if (!fechaValid) isValid = false;
 
   if (!isValid) {
@@ -266,7 +647,8 @@ function renderSelectedChips() {
 
 // CREACIÓN DE META
 
-function createMeta() {
+/*
+function createMetaLegacyForConsole() {
   const tipo       = getSelectedType();
   const nombre     = inputNombre.value.trim();
   const objetivo   = parseFloat(inputObjetivo.value);
@@ -285,6 +667,40 @@ function createMeta() {
 
   closeModal();
   announce(`Meta "${nombre}" creada exitosamente.`);
+}
+
+*/
+function createMeta() {
+  const tipo       = getSelectedType();
+  const nombre     = inputNombre.value.trim();
+  const objetivo   = parseFloat(inputObjetivo.value);
+  const fecha      = inputFecha.value;
+  const icono      = document.querySelector('input[name="meta-icono"]:checked')?.value ?? 'laptop';
+  const privacidad = tipo === 'colaborativa' ? togglePrivacidad.checked : false;
+  const amigos     = tipo === 'colaborativa'
+    ? MOCK_FRIENDS.filter(f => state.selectedFriendIds.has(f.id))
+    : [];
+
+  const nuevaMeta = {
+    id: `meta-${Date.now()}`,
+    tipo,
+    nombre,
+    objetivo,
+    ahorrado: 0,
+    fechaLimite: fecha,
+    icono,
+    privacidad,
+    participantes: tipo === 'colaborativa' ? buildParticipants(amigos) : [],
+    creadaEn: new Date().toISOString(),
+  };
+
+  const metas = cargarMetas();
+  metas.push(nuevaMeta);
+  guardarMetas(metas);
+  renderGoals();
+
+  closeModal();
+  setStatusMessage(`Meta "${nombre}" creada exitosamente.`);
 }
 
 
@@ -311,7 +727,10 @@ function resetForm() {
   if (selectedFriendsEl)  selectedFriendsEl.innerHTML = '';
   if (friendsSearchInput) friendsSearchInput.value    = '';
   if (friendsEmptyMsg)    friendsEmptyMsg.style.display = 'block';
-  if (togglePrivacidad)   togglePrivacidad.checked    = true;
+  if (togglePrivacidad) {
+    togglePrivacidad.checked = true;
+    togglePrivacidad.setAttribute('aria-checked', 'true');
+  }
 
   btnStep1Next.textContent = 'Crear meta';
 }
@@ -321,13 +740,15 @@ function resetForm() {
 
 document.addEventListener('DOMContentLoaded', () => {
 
+  renderGoals();
+
   btnOpenModal.addEventListener('click', openModal);
   btnCloseModal.addEventListener('click', closeModal);
   btnCancel.addEventListener('click', closeModal);
 
   // Cierra al hacer clic en el backdrop (fuera del panel)
   modalOverlay.addEventListener('click', (e) => {
-    if (e.target === modalOverlay) closeModal();
+    if (e.target === modalOverlay || e.target.id === 'modal-meta-backdrop') closeModal();
   });
 
   // Cierra con Escape (WCAG 2.1.1)
@@ -406,5 +827,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Fija la fecha mínima del picker (hoy)
   inputFecha.setAttribute('min', new Date().toISOString().split('T')[0]);
+
+  [personalGoalsList, colabGoalsList].forEach(list => {
+    if (!list) return;
+    list.addEventListener('click', (e) => {
+      const deleteButton = e.target.closest('[data-delete-meta-id]');
+      if (!deleteButton) return;
+      deleteMeta(deleteButton.getAttribute('data-delete-meta-id'));
+    });
+  });
 
 });

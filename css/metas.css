@@ -404,6 +404,36 @@ body.dashboard-page .btn-meta-opciones {
   cursor: pointer;
 }
 
+body.dashboard-page .btn-meta-opciones--delete {
+  border-radius: 8px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+body.dashboard-page .btn-meta-opciones--delete:hover,
+body.dashboard-page .btn-meta-opciones--delete:focus-visible {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+body.dashboard-page .metas-empty-state {
+  width: 100%;
+  list-style: none;
+  margin: 0;
+  padding: 18px 20px;
+  border: 1px dashed var(--metas-border);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--metas-text-soft);
+  text-align: center;
+  box-sizing: border-box;
+}
+
+body.dashboard-page .metas-empty-state p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
 /* progreso */
 body.dashboard-page .meta-progreso-wrapper {
   margin-top: 18px;
