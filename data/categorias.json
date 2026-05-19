@@ -1,0 +1,15 @@
+{
+  "categorias": [
+    { "id": 1,  "nombre": "Alimentación",   "tipo": "gasto",   "icono": "🍔", "color": "#f59e0b" },
+    { "id": 2,  "nombre": "Entretenimiento", "tipo": "gasto",   "icono": "🎬", "color": "#a855f7" },
+    { "id": 3,  "nombre": "Transporte",     "tipo": "gasto",   "icono": "🚌", "color": "#3b82f6" },
+    { "id": 4,  "nombre": "Estudios",       "tipo": "gasto",   "icono": "📚", "color": "#10b981" },
+    { "id": 5,  "nombre": "Ropa",           "tipo": "gasto",   "icono": "👕", "color": "#ec4899" },
+    { "id": 6,  "nombre": "Servicios",      "tipo": "gasto",   "icono": "💡", "color": "#0ea5e9" },
+    { "id": 7,  "nombre": "Salud",          "tipo": "gasto",   "icono": "🏥", "color": "#ef4444" },
+    { "id": 8,  "nombre": "Otros",          "tipo": "gasto",   "icono": "📦", "color": "#64748b" },
+    { "id": 20, "nombre": "Salario",        "tipo": "ingreso", "icono": "💼", "color": "#16a34a" },
+    { "id": 21, "nombre": "Freelancia",     "tipo": "ingreso", "icono": "💻", "color": "#0891b2" },
+    { "id": 22, "nombre": "Otros ingresos", "tipo": "ingreso", "icono": "💰", "color": "#84cc16" }
+  ]
+}

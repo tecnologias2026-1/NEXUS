@@ -20,17 +20,11 @@
 /**
  * Inicializa el sistema de transacciones cuando la página carga
  * @returns {void}
- * 
- * @example
- * document.addEventListener('DOMContentLoaded', () => {
- *   inicializarTransacciones();
- * });
  */
 async function inicializarTransacciones() {
   console.log('🚀 Inicializando sistema de transacciones...');
 
   try {
-    // 1. Verificar que las dependencias existan
     if (typeof inicializarHistorial !== 'function') {
       throw new Error('❌ historial.js no está cargado. Verifica el orden de los scripts.');
     }
@@ -39,19 +33,36 @@ async function inicializarTransacciones() {
       throw new Error('❌ gastos.js o ingresos.js no están cargados.');
     }
 
-    // 2. Cargar el historial inicial
     await inicializarHistorial();
-
-    // 3. Inicializar manejadores de eventos
     inicializarEventos();
-
-    // 4. Configurar comportamiento de los botones de tipo
     configurarBotonesDeTipo();
+    await llenarSelectCategorias('gasto'); // arranca filtrado al tipo activo
 
     console.log('✅ Sistema de transacciones inicializado correctamente');
   } catch (error) {
     console.error('❌ Error al inicializar transacciones:', error);
   }
+}
+
+/**
+ * Llena el <select> de categorías del modal filtrando por tipo.
+ * Las opciones se cargan dinámicamente desde categorias.json,
+ * así que agregar una categoría nueva no requiere tocar el HTML.
+ *
+ * @param {string} tipo - "gasto" o "ingreso"
+ * @returns {Promise<void>}
+ */
+async function llenarSelectCategorias(tipo) {
+  const select = document.querySelector('#transaction-category');
+  if (!select) return;
+
+  const categorias = await obtenerCategorias();
+  const filtradas = categorias.filter(c => c.tipo === tipo);
+
+  select.innerHTML = `
+    <option value="" disabled selected>Selecciona una categoría</option>
+    ${filtradas.map(c => `<option value="${c.id}">${c.icono} ${c.nombre}</option>`).join('')}
+  `;
 }
 
 /**
@@ -101,16 +112,12 @@ function configurarBotonesDeTipo() {
   if (!botonesType.length || !inputType) return;
 
   botonesType.forEach(boton => {
-    boton.addEventListener('click', (e) => {
+    boton.addEventListener('click', async (e) => {
       e.preventDefault();
 
-      // Obtener el tipo seleccionado
       const tipo = boton.getAttribute('data-type');
-      
-      // Actualizar el valor del input oculto
       inputType.value = tipo;
 
-      // Actualizar estados visuales de los botones
       botonesType.forEach(b => {
         b.classList.remove('form-toggle-btn--active');
         b.setAttribute('aria-pressed', 'false');
@@ -118,6 +125,9 @@ function configurarBotonesDeTipo() {
 
       boton.classList.add('form-toggle-btn--active');
       boton.setAttribute('aria-pressed', 'true');
+
+      // Re-filtrar categorías según el tipo nuevo
+      await llenarSelectCategorias(tipo);
 
       console.log(`✅ Tipo seleccionado: ${tipo}`);
     });
@@ -162,16 +172,16 @@ async function manejarSubmitNuevaTransaccion(evento) {
   try {
     console.log('📤 Procesando nueva transacción...');
 
-    // Obtener valores del formulario
     const tipo = document.querySelector('#transaction-type')?.value;
-    const categoria = document.querySelector('#transaction-category')?.value;
+    const categoriaIdRaw = document.querySelector('#transaction-category')?.value;
     const monto = parseFloat(document.querySelector('#transaction-amount')?.value || 0);
     const descripcion = document.querySelector('#transaction-description')?.value;
+    const recurrente = document.querySelector('#transaction-recurring')?.checked || false;
+    const fijo = document.querySelector('#transaction-fixed')?.checked || false;
 
-    // Validación básica
-    if (!tipo || !categoria || !monto || !descripcion) {
+    if (!tipo || !categoriaIdRaw || !monto || !descripcion) {
       alert('⚠️ Por favor completa todos los campos');
-      console.warn('❌ Campos incompletos:', { tipo, categoria, monto, descripcion });
+      console.warn('❌ Campos incompletos:', { tipo, categoriaIdRaw, monto, descripcion });
       return;
     }
 
@@ -180,19 +190,21 @@ async function manejarSubmitNuevaTransaccion(evento) {
       return;
     }
 
-    // Crear nueva transacción
+    const usuario = await obtenerUsuarioActual();
     const nuevaTransaccion = {
-      id: Date.now(), // ID único basado en timestamp
+      id: Date.now(),
+      usuario_id: usuario ? usuario.id : null,
+      categoria_id: parseInt(categoriaIdRaw, 10),
+      tipo: tipo,
       nombre: descripcion,
       valor: monto,
-      fecha: new Date().toISOString().split('T')[0], // Fecha actual en formato YYYY-MM-DD
-      categoria: categoria,
-      tipo: tipo
+      fecha: new Date().toISOString().split('T')[0],
+      recurrente: recurrente,
+      fijo: fijo
     };
 
     console.log('✅ Nueva transacción:', nuevaTransaccion);
 
-    // Agregar al historial
     await agregarTransaccion(nuevaTransaccion);
 
     // Limpiar formulario

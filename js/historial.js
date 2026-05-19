@@ -3,91 +3,35 @@
  * MÓDULO: historial.js
  * ============================================================
  * Responsabilidad: Gestionar el historial general de transacciones
- * 
+ *
  * Este módulo se encarga de:
- * - Cargar datos desde data.json (o localStorage)
- * - Organizar transacciones por tipo (gastos/ingresos)
+ * - Obtener transacciones del usuario actual (ya enriquecidas con categoría)
  * - Ordenar transacciones por fecha (más recientes primero)
  * - Delegar generación de HTML a gastos.js e ingresos.js
  * - Renderizar el historial en el DOM
- * 
- * Responsabilidades delegadas:
- * - gastos.js → Generar HTML de gastos
- * - ingresos.js → Generar HTML de ingresos
+ *
+ * Dependencias:
+ * - datos.js     → Punto central de carga (obtenerTransacciones, etc.)
+ * - gastos.js    → Generar HTML de gastos
+ * - ingresos.js  → Generar HTML de ingresos
  * ============================================================
  */
 
 /**
- * Carga las transacciones desde el almacenamiento disponible
- * Intenta primero localStorage, luego data.json
- * 
- * @returns {Promise<Array>} Array de transacciones
- * @throws {Error} Si no puede cargar los datos
- * 
- * @example
- * const transacciones = await cargarTransacciones();
+ * Carga las transacciones del usuario actual.
+ * Cada transacción viene con su .categoria como objeto completo
+ * (con nombre, icono, color) gracias al enriquecimiento de datos.js.
+ *
+ * @returns {Promise<Array>}
  */
 async function cargarTransacciones() {
-  try {
-    // Opción 1: Intenta cargar desde localStorage (datos guardados por usuario)
-    const transaccionesGuardadas = localStorage.getItem('transacciones');
-    if (transaccionesGuardadas) {
-      console.log('📦 Transacciones cargadas desde localStorage');
-      return JSON.parse(transaccionesGuardadas);
-    }
-
-    // Opción 2: Carga desde data.json
-    console.log('🔄 Cargando transacciones desde data.json...');
-    const respuesta = await fetch('data/data.json');
-    
-    if (!respuesta.ok) {
-      throw new Error(`❌ Error HTTP ${respuesta.status}: No se pudo obtener data.json`);
-    }
-
-    const datos = await respuesta.json();
-    const transacciones = datos.transacciones || [];
-
-    // Guardar en localStorage para futuras cargas (más rápido)
-    localStorage.setItem('transacciones', JSON.stringify(transacciones));
-    console.log('✅ Transacciones cargadas desde data.json');
-
-    return transacciones;
-  } catch (error) {
-    console.error('❌ Error al cargar transacciones:', error);
-    return [];
-  }
-}
-
-/**
- * Separa las transacciones en gastos e ingresos
- * @param {Array} transacciones - Array de todas las transacciones
- * @returns {Object} { gastos: [...], ingresos: [...] }
- * 
- * @example
- * const { gastos, ingresos } = separarTransacciones(transacciones);
- */
-function separarTransacciones(transacciones) {
-  const gastos = [];
-  const ingresos = [];
-
-  transacciones.forEach(transaccion => {
-    if (transaccion.tipo === 'gasto') {
-      gastos.push(transaccion);
-    } else if (transaccion.tipo === 'ingreso') {
-      ingresos.push(transaccion);
-    }
-  });
-
-  return { gastos, ingresos };
+  return await obtenerTransacciones();
 }
 
 /**
  * Ordena las transacciones por fecha (más recientes primero)
- * @param {Array} transacciones - Array de transacciones
- * @returns {Array} Array ordenado por fecha descendente
- * 
- * @example
- * const ordenadas = ordenarPorFecha(transacciones);
+ * @param {Array} transacciones
+ * @returns {Array}
  */
 function ordenarPorFecha(transacciones) {
   return transacciones.slice().sort((a, b) => {
@@ -98,10 +42,7 @@ function ordenarPorFecha(transacciones) {
 /**
  * Genera el HTML completo del historial de transacciones
  * @param {Array} transacciones - Array de transacciones ordenadas
- * @returns {string} HTML con todas las transacciones en un <ul>
- * 
- * @example
- * const html = generarHTMLHistorial(transacciones);
+ * @returns {string}
  */
 function generarHTMLHistorial(transacciones) {
   if (transacciones.length === 0) {
@@ -113,7 +54,6 @@ function generarHTMLHistorial(transacciones) {
     `;
   }
 
-  // Generar filas para cada transacción según su tipo
   const filas = transacciones.map(transaccion => {
     if (transaccion.tipo === 'gasto') {
       return generarFilaGasto(transaccion);
@@ -128,46 +68,29 @@ function generarHTMLHistorial(transacciones) {
 
 /**
  * Renderiza el historial en el DOM
- * @param {string} selectorfragmento HTML del historial
- * 
- * @example
- * renderizarHistorial(html);
+ * @param {string} html
  */
 function renderizarHistorial(html) {
   const contenedor = document.querySelector('.transaction-history-content');
-  
   if (!contenedor) {
-    console.error('❌ Contenedor .transaction-history-content no encontrado en el DOM');
+    console.error('❌ Contenedor .transaction-history-content no encontrado');
     return;
   }
-
   contenedor.innerHTML = html;
-  console.log('✅ Historial renderizado en el DOM');
 }
 
 /**
- * Función principal: Carga, organiza y renderiza el historial
+ * Función principal: Carga, ordena y renderiza el historial
  * @returns {Promise<void>}
- * 
- * @example
- * await inicializarHistorial();
  */
 async function inicializarHistorial() {
   try {
-    console.log('🚀 Inicializando historial...');
+    if (window.nexusReady) await window.nexusReady;
 
-    // 1. Cargar transacciones
     const transacciones = await cargarTransacciones();
-
-    // 2. Ordenar por fecha (más recientes primero)
     const ordenadas = ordenarPorFecha(transacciones);
-
-    // 3. Generar HTML
     const html = generarHTMLHistorial(ordenadas);
-
-    // 4. Renderizar en el DOM
     renderizarHistorial(html);
-
   } catch (error) {
     console.error('❌ Error al inicializar historial:', error);
     renderizarHistorial(`
@@ -180,64 +103,27 @@ async function inicializarHistorial() {
 }
 
 /**
- * Agrega una nueva transacción al historial
- * @param {Object} nuevaTransaccion - Transacción a agregar
+ * Agrega una nueva transacción al historial y re-renderiza
+ * @param {Object} nuevaTransaccion - Debe incluir categoria_id (no categoria)
  * @returns {Promise<void>}
- * 
- * @example
- * await agregarTransaccion({ 
- *   id: 6, 
- *   nombre: "Compra", 
- *   valor: 100, 
- *   fecha: "2024-10-10", 
- *   categoria: "Alimentación", 
- *   tipo: "gasto" 
- * });
  */
 async function agregarTransaccion(nuevaTransaccion) {
   try {
-    // Cargar transacciones actuales
-    const transacciones = await cargarTransacciones();
-
-    // Agregar nueva transacción
-    transacciones.push(nuevaTransaccion);
-
-    // Guardar en localStorage
-    localStorage.setItem('transacciones', JSON.stringify(transacciones));
-
-    // Reinicializar historial
+    await agregarTransaccionDatos(nuevaTransaccion);
     await inicializarHistorial();
-
     console.log('✅ Transacción agregada:', nuevaTransaccion);
   } catch (error) {
     console.error('❌ Error al agregar transacción:', error);
   }
 }
 
-/**
- * Limpia todo el historial (útil para testing)
- * ⚠️ CUIDADO: Elimina todas las transacciones guardadas
- * 
- * @returns {void}
- */
-function limpiarHistorial() {
-  if (confirm('⚠️ ¿Estás seguro de que deseas eliminar todo el historial?')) {
-    localStorage.removeItem('transacciones');
-    inicializarHistorial();
-    console.log('✅ Historial limpiado');
-  }
-}
-
-// Exportar funciones para uso en otros módulos
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     cargarTransacciones,
-    separarTransacciones,
     ordenarPorFecha,
     generarHTMLHistorial,
     renderizarHistorial,
     inicializarHistorial,
-    agregarTransaccion,
-    limpiarHistorial
+    agregarTransaccion
   };
 }

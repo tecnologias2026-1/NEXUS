@@ -45,7 +45,23 @@ const ICONOS_GASTOS = {
   'Ropa': `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <path d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/>
   </svg>`,
-  
+
+  'Servicios': `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9 21h6"/>
+    <path d="M12 17v4"/>
+    <path d="M12 3a6 6 0 0 0-3 11v2h6v-2a6 6 0 0 0-3-11z"/>
+  </svg>`,
+
+  'Salud': `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+  </svg>`,
+
+  'Otros': `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+    <line x1="3" y1="9" x2="21" y2="9"/>
+    <line x1="9" y1="21" x2="9" y2="9"/>
+  </svg>`,
+
   'default': `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <circle cx="12" cy="12" r="10"/>
     <line x1="12" y1="8" x2="12" y2="16"/>
@@ -67,49 +83,39 @@ function obtenerIconoGasto(categoria) {
 
 /**
  * Genera el HTML para una fila de gasto en la tabla de transacciones
- * @param {Object} gasto - Objeto de transacción de tipo gasto
- * @param {number} gasto.id - ID único de la transacción
+ * @param {Object} gasto - Objeto de transacción de tipo gasto enriquecido por datos.js
+ * @param {number} gasto.id - ID único
  * @param {string} gasto.nombre - Descripción del gasto
- * @param {number} gasto.valor - Monto del gasto
- * @param {string} gasto.fecha - Fecha en formato ISO
- * @param {string} gasto.categoria - Categoría del gasto
- * @returns {string} HTML de un <li> completo con la estructura de la transacción
- * 
- * @example
- * const gasto = { id: 1, nombre: "Curso", valor: 150, fecha: "2024-10-05", categoria: "Estudios", tipo: "gasto" };
- * const html = generarFilaGasto(gasto);
+ * @param {number} gasto.valor - Monto en COP
+ * @param {string} gasto.fecha - Fecha ISO (YYYY-MM-DD)
+ * @param {Object} gasto.categoria - Objeto categoría completo {id, nombre, icono, color}
+ * @returns {string}
  */
 function generarFilaGasto(gasto) {
-  // Validar que el gasto tenga los datos necesarios
   if (!gasto || !gasto.nombre || !gasto.valor || !gasto.fecha || !gasto.categoria) {
     console.warn('⚠️ Gasto inválido:', gasto);
     return '';
   }
 
+  const nombreCategoria = gasto.categoria.nombre;
   const fechaFormateada = formatearFecha(gasto.fecha);
-  const iconoSVG = obtenerIconoGasto(gasto.categoria);
+  const iconoSVG = obtenerIconoGasto(nombreCategoria);
   const valorFormateado = gasto.valor.toLocaleString('es-CO');
 
-  // Generar HTML con estructura de fila de transacción
   return `
     <li class="transaction-item" data-transaction-id="${gasto.id}" data-transaction-type="gasto">
-      <!-- Icono de la categoría -->
       <div class="transaction-icon" aria-hidden="true">
         ${iconoSVG}
       </div>
 
-      <!-- Contenedor con detalles de la transacción -->
       <div class="transaction-details">
-        <!-- Nombre de la transacción -->
         <h3 class="transaction-name">${gasto.nombre}</h3>
-        <!-- Categoría y fecha -->
         <div class="transaction-meta">
-          <span class="transaction-category">${gasto.categoria}</span>
+          <span class="transaction-category">${nombreCategoria}</span>
           <span class="transaction-date" aria-label="${fechaFormateada}">${fechaFormateada}</span>
         </div>
       </div>
 
-      <!-- Monto del gasto (negativo en rojo) -->
       <strong class="transaction-amount transaction-amount--expense">-$${valorFormateado} COP</strong>
     </li>
   `;

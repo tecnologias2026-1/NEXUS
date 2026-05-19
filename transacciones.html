@@ -526,16 +526,10 @@
 
             <!-- SECCIÓN 2: CATEGORÍA -->
             <fieldset class="form-fieldset">
-              <!-- Label y selector -->
+              <!-- Label y selector — opciones se llenan dinámicamente desde categorias.json -->
               <label for="transaction-category" class="form-label">Categoría</label>
               <select id="transaction-category" class="form-select" required>
                 <option value="" disabled selected>Selecciona una categoría</option>
-                <option value="Alimentacion">Alimentación</option>
-                <option value="Entretenimiento">Entretenimiento</option>
-                <option value="Transporte">Transporte</option>
-                <option value="Estudios">Estudios</option>
-                <option value="Ropa">Ropa</option>
-                <option value="Otro">Otro</option>
               </select>
             </fieldset>
 
@@ -630,14 +624,16 @@
   <!-- ============================================
        MÓDULOS JAVASCRIPT - ORDEN IMPORTANTE
        ============================================
-       1. utils.js - Funciones utilitarias compartidas (formatearFecha, etc.)
-       2. gastos.js - Generación de HTML para gastos
-       3. ingresos.js - Generación de HTML para ingresos
-       4. historial.js - Gestión del historial completo
-       5. transacciones.js - Coordinador principal
-       6. dashboard.js - Funcionalidad del dashboard
-       7. navigation.js - Navegación y cambio de moneda
+       1. datos.js        - Punto central de carga de JSONs + sesión
+       2. utils.js        - Funciones utilitarias compartidas (formatearFecha, etc.)
+       3. gastos.js       - Generación de HTML para gastos
+       4. ingresos.js     - Generación de HTML para ingresos
+       5. historial.js    - Gestión del historial completo
+       6. transacciones.js - Coordinador principal
+       7. dashboard.js    - Funcionalidad del dashboard
+       8. navigation.js   - Navegación y cambio de moneda
   -->
+  <script src="js/datos.js"></script>
   <script src="js/utils.js"></script>
   <script src="js/gastos.js"></script>
   <script src="js/ingresos.js"></script>

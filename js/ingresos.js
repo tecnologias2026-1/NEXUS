@@ -47,7 +47,12 @@ const ICONOS_INGRESOS = {
     <path d="M23 1v6h-6"/>
     <path d="M20.6 15.5A9 9 0 0 1 5.404 3.605 9 9 0 1 0 23 15.5z"/>
   </svg>`,
-  
+
+  'Otros ingresos': `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <path d="M12 6v6l4 2"/>
+  </svg>`,
+
   'default': `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <circle cx="12" cy="12" r="10"/>
     <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
@@ -70,49 +75,39 @@ function obtenerIconoIngreso(categoria) {
 
 /**
  * Genera el HTML para una fila de ingreso en la tabla de transacciones
- * @param {Object} ingreso - Objeto de transacción de tipo ingreso
- * @param {number} ingreso.id - ID único de la transacción
- * @param {string} ingreso.nombre - Descripción del ingreso
- * @param {number} ingreso.valor - Monto del ingreso
- * @param {string} ingreso.fecha - Fecha en formato ISO
- * @param {string} ingreso.categoria - Categoría del ingreso
- * @returns {string} HTML de un <li> completo con la estructura de la transacción
- * 
- * @example
- * const ingreso = { id: 2, nombre: "Proyecto extra", valor: 300, fecha: "2024-10-01", categoria: "Freelancia", tipo: "ingreso" };
- * const html = generarFilaIngreso(ingreso);
+ * @param {Object} ingreso - Objeto de transacción de tipo ingreso enriquecido por datos.js
+ * @param {number} ingreso.id - ID único
+ * @param {string} ingreso.nombre - Descripción
+ * @param {number} ingreso.valor - Monto en COP
+ * @param {string} ingreso.fecha - Fecha ISO (YYYY-MM-DD)
+ * @param {Object} ingreso.categoria - Objeto categoría completo {id, nombre, icono, color}
+ * @returns {string}
  */
 function generarFilaIngreso(ingreso) {
-  // Validar que el ingreso tenga los datos necesarios
   if (!ingreso || !ingreso.nombre || !ingreso.valor || !ingreso.fecha || !ingreso.categoria) {
     console.warn('⚠️ Ingreso inválido:', ingreso);
     return '';
   }
 
+  const nombreCategoria = ingreso.categoria.nombre;
   const fechaFormateada = formatearFecha(ingreso.fecha);
-  const iconoSVG = obtenerIconoIngreso(ingreso.categoria);
+  const iconoSVG = obtenerIconoIngreso(nombreCategoria);
   const valorFormateado = ingreso.valor.toLocaleString('es-CO');
 
-  // Generar HTML con estructura de fila de transacción
   return `
     <li class="transaction-item" data-transaction-id="${ingreso.id}" data-transaction-type="ingreso">
-      <!-- Icono de la categoría -->
       <div class="transaction-icon" aria-hidden="true">
         ${iconoSVG}
       </div>
 
-      <!-- Contenedor con detalles de la transacción -->
       <div class="transaction-details">
-        <!-- Nombre de la transacción -->
         <h3 class="transaction-name">${ingreso.nombre}</h3>
-        <!-- Categoría y fecha -->
         <div class="transaction-meta">
-          <span class="transaction-category">${ingreso.categoria}</span>
+          <span class="transaction-category">${nombreCategoria}</span>
           <span class="transaction-date" aria-label="${fechaFormateada}">${fechaFormateada}</span>
         </div>
       </div>
 
-      <!-- Monto del ingreso (positivo en verde) -->
       <strong class="transaction-amount transaction-amount--income">+$${valorFormateado} COP</strong>
     </li>
   `;

@@ -1,0 +1,65 @@
+{
+  "metas": [
+    {
+      "id": 1,
+      "usuario_id": 1,
+      "tipo": "personal",
+      "nombre": "Comprar laptop nueva",
+      "icono": "💻",
+      "color_avatar": "amber",
+      "monto_objetivo": 4000000,
+      "monto_ahorrado": 1200000,
+      "fecha_creacion": "2026-03-01",
+      "fecha_limite": "2026-09-30"
+    },
+    {
+      "id": 2,
+      "usuario_id": 1,
+      "tipo": "personal",
+      "nombre": "Fondo de emergencia",
+      "icono": "🛡️",
+      "color_avatar": "emerald",
+      "monto_objetivo": 5000000,
+      "monto_ahorrado": 2100000,
+      "fecha_creacion": "2026-01-20",
+      "fecha_limite": "2026-12-31"
+    },
+    {
+      "id": 3,
+      "usuario_id": 1,
+      "tipo": "colaborativa",
+      "nombre": "Viaje a Cartagena",
+      "icono": "✈️",
+      "color_avatar": "rose",
+      "monto_objetivo": 3000000,
+      "monto_ahorrado": 2340000,
+      "fecha_creacion": "2026-02-10",
+      "fecha_limite": "2026-07-15",
+      "privacidad_montos": true,
+      "participantes": [
+        { "amigo_id": 1, "porcentaje_contribucion": 28 },
+        { "amigo_id": 2, "porcentaje_contribucion": 22 },
+        { "amigo_id": 3, "porcentaje_contribucion": 17 },
+        { "amigo_id": 0, "porcentaje_contribucion": 11 }
+      ]
+    },
+    {
+      "id": 4,
+      "usuario_id": 1,
+      "tipo": "colaborativa",
+      "nombre": "Fondo de emergencia grupal",
+      "icono": "🤝",
+      "color_avatar": "emerald",
+      "monto_objetivo": 6000000,
+      "monto_ahorrado": 2700000,
+      "fecha_creacion": "2026-03-15",
+      "fecha_limite": "2026-12-31",
+      "privacidad_montos": true,
+      "participantes": [
+        { "amigo_id": 0, "porcentaje_contribucion": 20 },
+        { "amigo_id": 5, "porcentaje_contribucion": 15 },
+        { "amigo_id": 6, "porcentaje_contribucion": 10 }
+      ]
+    }
+  ]
+}

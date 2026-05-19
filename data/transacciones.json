@@ -1,0 +1,33 @@
+{
+  "transacciones": [
+    { "id": 1,  "usuario_id": 1, "categoria_id": 20, "tipo": "ingreso", "nombre": "Salario mayo",          "valor": 2500000, "fecha": "2026-05-01", "recurrente": true,  "fijo": true  },
+    { "id": 2,  "usuario_id": 1, "categoria_id": 1,  "tipo": "gasto",   "nombre": "Mercado del mes",       "valor": 180000,  "fecha": "2026-05-03", "recurrente": false, "fijo": false },
+    { "id": 3,  "usuario_id": 1, "categoria_id": 6,  "tipo": "gasto",   "nombre": "Internet hogar",        "valor": 80000,   "fecha": "2026-05-04", "recurrente": true,  "fijo": true  },
+    { "id": 4,  "usuario_id": 1, "categoria_id": 4,  "tipo": "gasto",   "nombre": "Curso online React",    "valor": 150000,  "fecha": "2026-05-05", "recurrente": false, "fijo": false },
+    { "id": 5,  "usuario_id": 1, "categoria_id": 1,  "tipo": "gasto",   "nombre": "Almuerzo universidad",  "valor": 22000,   "fecha": "2026-05-07", "recurrente": false, "fijo": false },
+    { "id": 6,  "usuario_id": 1, "categoria_id": 2,  "tipo": "gasto",   "nombre": "Netflix",               "valor": 25000,   "fecha": "2026-05-09", "recurrente": true,  "fijo": true  },
+    { "id": 7,  "usuario_id": 1, "categoria_id": 3,  "tipo": "gasto",   "nombre": "Transporte semana",     "valor": 50000,   "fecha": "2026-05-10", "recurrente": false, "fijo": false },
+    { "id": 8,  "usuario_id": 1, "categoria_id": 1,  "tipo": "gasto",   "nombre": "Cena familiar",         "valor": 95000,   "fecha": "2026-05-12", "recurrente": false, "fijo": false },
+    { "id": 9,  "usuario_id": 1, "categoria_id": 2,  "tipo": "gasto",   "nombre": "Cine con amigos",       "valor": 40000,   "fecha": "2026-05-14", "recurrente": false, "fijo": false },
+    { "id": 10, "usuario_id": 1, "categoria_id": 21, "tipo": "ingreso", "nombre": "Proyecto freelance",    "valor": 400000,  "fecha": "2026-05-15", "recurrente": false, "fijo": false },
+    { "id": 11, "usuario_id": 1, "categoria_id": 1,  "tipo": "gasto",   "nombre": "Mercado quincenal",     "valor": 90000,   "fecha": "2026-05-16", "recurrente": false, "fijo": false },
+    { "id": 12, "usuario_id": 1, "categoria_id": 3,  "tipo": "gasto",   "nombre": "Transporte trabajo",    "valor": 35000,   "fecha": "2026-05-17", "recurrente": false, "fijo": false },
+    { "id": 13, "usuario_id": 1, "categoria_id": 4,  "tipo": "gasto",   "nombre": "Libros universidad",    "valor": 60000,   "fecha": "2026-05-18", "recurrente": false, "fijo": false },
+
+    { "id": 14, "usuario_id": 1, "categoria_id": 20, "tipo": "ingreso", "nombre": "Salario abril",         "valor": 2500000, "fecha": "2026-04-01", "recurrente": true,  "fijo": true  },
+    { "id": 15, "usuario_id": 1, "categoria_id": 6,  "tipo": "gasto",   "nombre": "Internet abril",        "valor": 80000,   "fecha": "2026-04-04", "recurrente": true,  "fijo": true  },
+    { "id": 16, "usuario_id": 1, "categoria_id": 1,  "tipo": "gasto",   "nombre": "Mercado abril",         "valor": 350000,  "fecha": "2026-04-05", "recurrente": false, "fijo": false },
+    { "id": 17, "usuario_id": 1, "categoria_id": 2,  "tipo": "gasto",   "nombre": "Netflix abril",         "valor": 25000,   "fecha": "2026-04-09", "recurrente": true,  "fijo": true  },
+    { "id": 18, "usuario_id": 1, "categoria_id": 3,  "tipo": "gasto",   "nombre": "Transporte abril",      "valor": 180000,  "fecha": "2026-04-12", "recurrente": false, "fijo": false },
+    { "id": 19, "usuario_id": 1, "categoria_id": 5,  "tipo": "gasto",   "nombre": "Ropa de temporada",     "valor": 120000,  "fecha": "2026-04-18", "recurrente": false, "fijo": false },
+    { "id": 20, "usuario_id": 1, "categoria_id": 4,  "tipo": "gasto",   "nombre": "Inscripción semestre",  "valor": 220000,  "fecha": "2026-04-20", "recurrente": false, "fijo": false },
+    { "id": 21, "usuario_id": 1, "categoria_id": 7,  "tipo": "gasto",   "nombre": "Consulta médica",       "valor": 70000,   "fecha": "2026-04-25", "recurrente": false, "fijo": false },
+
+    { "id": 22, "usuario_id": 1, "categoria_id": 20, "tipo": "ingreso", "nombre": "Salario marzo",         "valor": 2500000, "fecha": "2026-03-01", "recurrente": true,  "fijo": true  },
+    { "id": 23, "usuario_id": 1, "categoria_id": 6,  "tipo": "gasto",   "nombre": "Internet marzo",        "valor": 80000,   "fecha": "2026-03-04", "recurrente": true,  "fijo": true  },
+    { "id": 24, "usuario_id": 1, "categoria_id": 1,  "tipo": "gasto",   "nombre": "Mercado marzo",         "valor": 380000,  "fecha": "2026-03-06", "recurrente": false, "fijo": false },
+    { "id": 25, "usuario_id": 1, "categoria_id": 2,  "tipo": "gasto",   "nombre": "Netflix marzo",         "valor": 25000,   "fecha": "2026-03-09", "recurrente": true,  "fijo": true  },
+    { "id": 26, "usuario_id": 1, "categoria_id": 3,  "tipo": "gasto",   "nombre": "Transporte marzo",      "valor": 165000,  "fecha": "2026-03-15", "recurrente": false, "fijo": false },
+    { "id": 27, "usuario_id": 1, "categoria_id": 21, "tipo": "ingreso", "nombre": "Freelance marzo",       "valor": 500000,  "fecha": "2026-03-20", "recurrente": false, "fijo": false }
+  ]
+}

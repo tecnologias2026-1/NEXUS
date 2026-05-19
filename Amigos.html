@@ -923,12 +923,14 @@
   <!-- ============================================
        MÓDULOS JAVASCRIPT - ORDEN IMPORTANTE
        ============================================
-       1. auth.js          - Autenticación compartida
-       2. amigo.js         - Generación de HTML para cada amigo del ranking
-       3. lista_amigos.js  - Carga, ordena y renderiza el ranking completo
-       4. social.js        - Coordinador: modal de agregar amigo y eventos
-       5. navigation.js    - Navegación y cambio de moneda
+       1. datos.js         - Punto central de carga de JSONs + sesión
+       2. auth.js          - Autenticación compartida
+       3. amigo.js         - Generación de HTML para cada amigo del ranking
+       4. lista_amigos.js  - Carga, ordena y renderiza el ranking completo
+       5. social.js        - Coordinador: modal de agregar amigo y eventos
+       6. navigation.js    - Navegación y cambio de moneda
   -->
+  <script defer src="js/datos.js"></script>
   <script defer src="js/auth.js"></script>
   <script defer src="js/amigo.js"></script>
   <script defer src="js/lista_amigos.js"></script>
