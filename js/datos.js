@@ -374,29 +374,35 @@ if (typeof window !== 'undefined') {
 
 
 /* ============================================================
-   AUTO-SESIÓN DEMO (TEMPORAL)
+   INICIALIZACIÓN DE SESIÓN
    ============================================================
-   Mientras auth.js no esté refactorizado para usar iniciarSesion(),
-   las páginas internas (transacciones, amigos, metas, etc.) necesitan
-   un usuario activo para cargar datos. Esta función inicia sesión
-   automáticamente como David si no hay sesión activa.
+   En páginas internas (dashboard, transacciones, amigos, etc.)
+   se necesita un usuario activo para cargar datos. Si no hay sesión
+   activa y NO estamos en la página de auth (index.html), se hace
+   auto-login como David — fallback de demo para no romper el flujo
+   si el usuario abre directamente una página interior.
+
+   En la página de auth (donde existe #auth-modal), NO se auto-loguea,
+   para que el formulario de login funcione normalmente.
 
    Las páginas deben hacer `await window.nexusReady` antes de pedir
    datos, para asegurar que la sesión ya fue inicializada.
-
-   QUITAR este bloque cuando auth.js valide login contra usuarios.json
-   y el flujo natural sea login → dashboard.
 */
-window.nexusReady = (async function inicializarSesionDemo() {
+window.nexusReady = (async function inicializarSesion() {
   if (typeof window === 'undefined') return;
+
+  // Si estamos en la página de auth (tiene #auth-modal), no auto-login
+  const enPaginaDeAuth = !!document.getElementById('auth-modal');
+  if (enPaginaDeAuth) return;
 
   const usuarioActivo = await obtenerUsuarioActual();
   if (!usuarioActivo) {
     const usuario = await iniciarSesion('david@nexus.app', 'demo123');
     if (usuario) {
-      console.log(`🔐 Auto-login demo: ${usuario.nombre}`);
+      console.log(`🔐 Fallback demo: sesión iniciada como ${usuario.nombre}`);
     } else {
-      console.warn('⚠️ No se pudo iniciar sesión demo. Verifica usuarios.json');
+      console.warn('⚠️ No se pudo iniciar sesión. Redirigiendo a index...');
+      window.location.href = 'index.html';
     }
   }
 })();

@@ -482,3 +482,41 @@
     width: 100%;
   }
 }
+
+/* ============================================================
+   MENSAJES DE ERROR DE AUTENTICACIÓN
+   ============================================================
+   Se inyectan dinámicamente arriba del formulario cuando las
+   credenciales son inválidas o el email ya está registrado.
+*/
+.auth-error-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  background-color: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+  font-size: 14px;
+  line-height: 1.4;
+  animation: auth-error-slide-in 0.25s ease;
+}
+
+.auth-error-message svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: #dc2626;
+}
+
+@keyframes auth-error-slide-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-error-message {
+    animation: none;
+  }
+}
