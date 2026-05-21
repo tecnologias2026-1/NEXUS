@@ -26,6 +26,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('❌ lista_amigos.js no está cargado. Verifica el orden de los scripts.');
     }
 
+    // ── INICIALIZAR METAS COLABORATIVAS DEL USUARIO ──
+    if (typeof inicializarMetasColaborativasSocial === 'function') {
+        await inicializarMetasColaborativasSocial();
+    }
+
     // ── REFERENCIAS AL MODAL ──
     const modal        = document.getElementById('add-friend-modal');
     const openBtn      = document.querySelector('.btn-add-friend');

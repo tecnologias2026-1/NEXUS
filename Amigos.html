@@ -221,7 +221,7 @@
         </h2>
 
 
-        <!-- Lista de amigos: se llena dinámicamente desde data.json vía lista_amigos.js -->
+        <!-- Lista de amigos: se llena dinámicamente desde amigos.json vía lista_amigos.js -->
         <ol class="ranking-list" role="list" aria-label="Clasificación semanal de tu círculo">
           <!-- Estado de carga inicial (reemplazado por JS al renderizar) -->
           <li class="ranking-loading-state">
@@ -248,300 +248,13 @@
           Metas Colaborativas
         </h2>
 
-        <!-- Lista de metas colaborativas -->
+        <!-- Lista de metas colaborativas — se llena dinámicamente desde
+             metas.json filtrado por usuario vía metas_social.js -->
         <div class="collab-goals-list" role="list"
              aria-label="Tus metas de ahorro colaborativas activas">
-
-
-          <!-- ════════════════════════════════════════════════
-               META COLABORATIVA #1: Viaje a Cartagena
-          ════════════════════════════════════════════════ -->
-          <article class="collab-goal-card" role="listitem"
-                   aria-label="Meta colaborativa: Viaje a Cartagena, 78% completado">
-
-            <!-- Cabecera de la meta -->
-            <header class="goal-card-header">
-              <div class="goal-card-title-block">
-                <!-- Emoji decorativo de la meta (aria-hidden porque el nombre ya describe) -->
-                <span class="goal-emoji" aria-hidden="true">✈️</span>
-                <h3 class="goal-card-title">Viaje a Cartagena</h3>
-              </div>
-
-              <!-- Metadatos de la meta: participantes y fecha límite -->
-              <div class="goal-card-meta">
-                <!-- Ícono de personas: decorativo -->
-                <svg aria-hidden="true" focusable="false"
-                     width="13" height="13" viewBox="0 0 24 24" fill="none"
-                     stroke="currentColor" stroke-width="2"
-                     stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                  <circle cx="9" cy="7" r="4"/>
-                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                  <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                </svg>
-                <!-- aria-label con información legible para screen readers -->
-                <span aria-label="4 participantes">4 personas</span>
-
-                <!-- Separador decorativo -->
-                <span aria-hidden="true" class="meta-separator">·</span>
-
-                <!-- Ícono de calendario: decorativo -->
-                <svg aria-hidden="true" focusable="false"
-                     width="13" height="13" viewBox="0 0 24 24" fill="none"
-                     stroke="currentColor" stroke-width="2"
-                     stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                  <line x1="16" y1="2" x2="16" y2="6"/>
-                  <line x1="8"  y1="2" x2="8"  y2="6"/>
-                  <line x1="3"  y1="10" x2="21" y2="10"/>
-                </svg>
-                <!-- Fecha con elemento <time> para semántica máquina-legible -->
-                <time datetime="2026-07-15" aria-label="Fecha límite: 15 de julio de 2026">
-                  15d
-                </time>
-              </div>
-            </header>
-
-            <!-- Barra de progreso total del grupo -->
-            <div class="goal-progress-block">
-              <div class="goal-progress-header">
-                <span class="goal-progress-label">Progreso</span>
-                <!-- El porcentaje es la única cifra visible (RNF-06) -->
-                <span class="goal-progress-pct" aria-label="78 por ciento completado">78%</span>
-              </div>
-              <!--
-                role="progressbar" con aria-valuenow, aria-valuemin y aria-valuemax
-                permite que los lectores de pantalla anuncien el progreso.
-                WCAG 4.1.2 (Name, Role, Value)
-              -->
-              <div class="goal-progressbar" role="progressbar"
-                   aria-valuenow="78" aria-valuemin="0" aria-valuemax="100"
-                   aria-label="78% del objetivo alcanzado">
-                <div class="goal-progressbar-fill" style="width: 78%"></div>
-              </div>
-            </div>
-
-            <!-- Contribuciones individuales (RNF-06: sin montos reales) -->
-            <div class="goal-contributions">
-              <h4 class="contributions-title">Contribución individual</h4>
-
-              <ul class="contributions-list" role="list"
-                  aria-label="Progreso individual de cada participante">
-
-                <!-- ── TU CONTRIBUCIÓN ── -->
-                <li class="contribution-item">
-                  <svg class="contribution-avatar contribution-avatar--self" aria-hidden="true" focusable="false"
-                       width="28" height="28" viewBox="0 0 24 24" fill="none"
-                       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                    <circle cx="12" cy="7" r="4"/>
-                  </svg>
-                  <span class="contribution-name contribution-name--self">Tú</span>
-                  <!-- Barra mini de contribución individual -->
-                  <div class="contribution-bar-wrap" role="presentation">
-                    <div class="contribution-bar" aria-hidden="true">
-                      <div class="contribution-bar-fill contribution-bar-fill--self"
-                           style="width: 28%"></div>
-                    </div>
-                  </div>
-                  <span class="contribution-pct" aria-label="Tu contribución: 28%">28%</span>
-                </li>
-
-                <!-- ── CONTRIBUCIÓN: SOFÍA ── -->
-                <li class="contribution-item">
-                  <svg class="contribution-avatar" aria-hidden="true" focusable="false"
-                       width="28" height="28" viewBox="0 0 24 24" fill="none"
-                       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                    <circle cx="12" cy="7" r="4"/>
-                  </svg>
-                  <span class="contribution-name">Sofía</span>
-                  <div class="contribution-bar-wrap" role="presentation">
-                    <div class="contribution-bar" aria-hidden="true">
-                      <div class="contribution-bar-fill" style="width: 22%"></div>
-                    </div>
-                  </div>
-                  <span class="contribution-pct" aria-label="Contribución de Sofía: 22%">22%</span>
-                </li>
-
-                <!-- ── CONTRIBUCIÓN: CARLOS ── -->
-                <li class="contribution-item">
-                  <svg class="contribution-avatar" aria-hidden="true" focusable="false"
-                       width="28" height="28" viewBox="0 0 24 24" fill="none"
-                       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                    <circle cx="12" cy="7" r="4"/>
-                  </svg>
-                  <span class="contribution-name">Carlos</span>
-                  <div class="contribution-bar-wrap" role="presentation">
-                    <div class="contribution-bar" aria-hidden="true">
-                      <div class="contribution-bar-fill" style="width: 17%"></div>
-                    </div>
-                  </div>
-                  <span class="contribution-pct" aria-label="Contribución de Carlos: 17%">17%</span>
-                </li>
-
-                <!-- ── CONTRIBUCIÓN: LAURA ── -->
-                <li class="contribution-item">
-                  <svg class="contribution-avatar" aria-hidden="true" focusable="false"
-                       width="28" height="28" viewBox="0 0 24 24" fill="none"
-                       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                    <circle cx="12" cy="7" r="4"/>
-                  </svg>
-                  <span class="contribution-name">Laura</span>
-                  <div class="contribution-bar-wrap" role="presentation">
-                    <div class="contribution-bar" aria-hidden="true">
-                      <div class="contribution-bar-fill" style="width: 11%"></div>
-                    </div>
-                  </div>
-                  <span class="contribution-pct" aria-label="Contribución de Laura: 11%">11%</span>
-                </li>
-
-              </ul>
-            </div>
-
-            <footer class="goal-card-footer" role="note"
-                    aria-label="Nota de privacidad financiera">
-              <svg aria-hidden="true" focusable="false"
-                   width="13" height="13" viewBox="0 0 24 24" fill="none"
-                   stroke="currentColor" stroke-width="2"
-                   stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-              </svg>
-              Los montos individuales están ocultos
-            </footer>
-
-          </article>
-          <!-- /article.collab-goal-card (Meta 1) -->
-
-
-          <!-- ════════════════════════════════════════════════
-               META COLABORATIVA #2: Fondo de Emergencia Grupal
-          ════════════════════════════════════════════════ -->
-          <article class="collab-goal-card" role="listitem"
-                   aria-label="Meta colaborativa: Fondo de Emergencia Grupal, 45% completado">
-
-            <header class="goal-card-header">
-              <div class="goal-card-title-block">
-                <span class="goal-emoji" aria-hidden="true">🛡️</span>
-                <h3 class="goal-card-title">Fondo de Emergencia Grupal</h3>
-              </div>
-              <div class="goal-card-meta">
-                <svg aria-hidden="true" focusable="false"
-                     width="13" height="13" viewBox="0 0 24 24" fill="none"
-                     stroke="currentColor" stroke-width="2"
-                     stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                  <circle cx="9" cy="7" r="4"/>
-                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                  <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                </svg>
-                <span aria-label="3 participantes">3 personas</span>
-
-                <span aria-hidden="true" class="meta-separator">·</span>
-
-                <svg aria-hidden="true" focusable="false"
-                     width="13" height="13" viewBox="0 0 24 24" fill="none"
-                     stroke="currentColor" stroke-width="2"
-                     stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                  <line x1="16" y1="2" x2="16" y2="6"/>
-                  <line x1="8"  y1="2" x2="8"  y2="6"/>
-                  <line x1="3"  y1="10" x2="21" y2="10"/>
-                </svg>
-                <time datetime="2026-12-31" aria-label="Fecha límite: 31 de diciembre de 2026">
-                  90d
-                </time>
-              </div>
-            </header>
-
-            <div class="goal-progress-block">
-              <div class="goal-progress-header">
-                <span class="goal-progress-label">Progreso</span>
-                <span class="goal-progress-pct" aria-label="45 por ciento completado">45%</span>
-              </div>
-              <div class="goal-progressbar" role="progressbar"
-                   aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"
-                   aria-label="45% del objetivo alcanzado">
-                <div class="goal-progressbar-fill" style="width: 45%"></div>
-              </div>
-            </div>
-
-            <div class="goal-contributions">
-              <h4 class="contributions-title">Contribución individual</h4>
-
-              <ul class="contributions-list" role="list"
-                  aria-label="Progreso individual de cada participante">
-
-                <li class="contribution-item">
-                  <svg class="contribution-avatar contribution-avatar--self" aria-hidden="true" focusable="false"
-                       width="28" height="28" viewBox="0 0 24 24" fill="none"
-                       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                    <circle cx="12" cy="7" r="4"/>
-                  </svg>
-                  <span class="contribution-name contribution-name--self">Tú</span>
-                  <div class="contribution-bar-wrap" role="presentation">
-                    <div class="contribution-bar" aria-hidden="true">
-                      <div class="contribution-bar-fill contribution-bar-fill--self"
-                           style="width: 20%"></div>
-                    </div>
-                  </div>
-                  <span class="contribution-pct" aria-label="Tu contribución: 20%">20%</span>
-                </li>
-
-                <li class="contribution-item">
-                  <svg class="contribution-avatar" aria-hidden="true" focusable="false"
-                       width="28" height="28" viewBox="0 0 24 24" fill="none"
-                       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                    <circle cx="12" cy="7" r="4"/>
-                  </svg>
-                  <span class="contribution-name">Andrés</span>
-                  <div class="contribution-bar-wrap" role="presentation">
-                    <div class="contribution-bar" aria-hidden="true">
-                      <div class="contribution-bar-fill" style="width: 15%"></div>
-                    </div>
-                  </div>
-                  <span class="contribution-pct" aria-label="Contribución de Andrés: 15%">15%</span>
-                </li>
-
-                <li class="contribution-item">
-                  <svg class="contribution-avatar" aria-hidden="true" focusable="false"
-                       width="28" height="28" viewBox="0 0 24 24" fill="none"
-                       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                    <circle cx="12" cy="7" r="4"/>
-                  </svg>
-                  <span class="contribution-name">Valentina</span>
-                  <div class="contribution-bar-wrap" role="presentation">
-                    <div class="contribution-bar" aria-hidden="true">
-                      <div class="contribution-bar-fill" style="width: 10%"></div>
-                    </div>
-                  </div>
-                  <span class="contribution-pct" aria-label="Contribución de Valentina: 10%">10%</span>
-                </li>
-
-              </ul>
-            </div>
-
-            <footer class="goal-card-footer" role="note"
-                    aria-label="Nota de privacidad financiera">
-              <svg aria-hidden="true" focusable="false"
-                   width="13" height="13" viewBox="0 0 24 24" fill="none"
-                   stroke="currentColor" stroke-width="2"
-                   stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-              </svg>
-              Los montos individuales están ocultos
-            </footer>
-
-          </article>
-          <!-- /article.collab-goal-card (Meta 2) -->
-
+          <p class="collab-goals-loading" style="text-align: center; color: #94a3b8; padding: 2rem;">
+            Cargando metas...
+          </p>
         </div>
         <!-- /div.collab-goals-list -->
 
@@ -924,18 +637,18 @@
        MÓDULOS JAVASCRIPT - ORDEN IMPORTANTE
        ============================================
        1. datos.js         - Punto central de carga de JSONs + sesión
-       2. auth.js          - Autenticación compartida
-       3. amigo.js         - Generación de HTML para cada amigo del ranking
-       4. lista_amigos.js  - Carga, ordena y renderiza el ranking completo
+       2. amigo.js         - Genera HTML de cada amigo del ranking
+       3. lista_amigos.js  - Carga, ordena y renderiza el ranking
+       4. metas_social.js  - Renderiza metas colaborativas del usuario
        5. social.js        - Coordinador: modal de agregar amigo y eventos
-       6. navigation.js    - Navegación y cambio de moneda
+       6. navigation.js    - Cambio de moneda y logout
   -->
   <script defer src="js/datos.js"></script>
-  <script defer src="js/auth.js"></script>
   <script defer src="js/amigo.js"></script>
   <script defer src="js/lista_amigos.js"></script>
+  <script defer src="js/metas_social.js"></script>
   <script defer src="js/social.js"></script>
-  <script src="js/navigation.js"></script>
+  <script defer src="js/navigation.js"></script>
 
 </body>
 
