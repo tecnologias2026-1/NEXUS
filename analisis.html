@@ -258,50 +258,41 @@
           <!-- Contenedor Grid: Tus compañeros usarán CSS Grid aquí -->
           <div class="metrics-grid">
 
-            <!-- TARJETA 1: Ahorro (cambio porcentual) - COLOR PÚRPURA -->
+            <!-- TARJETA 1: Ahorro (cambio porcentual vs mes anterior) - PÚRPURA
+                 Valor calculado por analisis.js a partir de transacciones -->
             <article class="metric-card metric-card--savings">
-              <!-- Encabezado de la tarjeta (etiqueta + icono) -->
               <div class="metric-header">
-                <!-- Etiqueta: "Ahorro" -->
                 <h3 class="metric-label">Ahorro</h3>
-                <!-- Icono emoji: 📈 (flecha hacia arriba - símbolo de cambio) -->
                 <span class="metric-icon" aria-hidden="true">📈</span>
               </div>
-              <!-- Valor principal: -75% (en rojo porque es negativo) -->
-              <p class="metric-value metric-value--negative">-75%</p>
+              <p class="metric-value" id="metric-savings-change">—</p>
             </article>
 
-            <!-- TARJETA 2: Ahorros totales - COLOR VERDE -->
+            <!-- TARJETA 2: Balance del mes (ingresos - gastos) - VERDE -->
             <article class="metric-card metric-card--total-savings">
               <div class="metric-header">
                 <h3 class="metric-label">Ahorros</h3>
-                <!-- Icono emoji: 💰 (bolsa de dinero) -->
                 <span class="metric-icon" aria-hidden="true">💰</span>
               </div>
-              <!-- Valor: $225 COP -->
-              <p class="metric-value">$225 COP</p>
+              <p class="metric-value" id="metric-total-savings">$0 COP</p>
             </article>
 
-            <!-- TARJETA 3: Gastos totales - COLOR NARANJA -->
+            <!-- TARJETA 3: Gastos totales del mes - NARANJA -->
             <article class="metric-card metric-card--expenses">
               <div class="metric-header">
                 <h3 class="metric-label">Gastos</h3>
-                <!-- Icono emoji: 💸 (dinero volando - gasto) -->
                 <span class="metric-icon" aria-hidden="true">💸</span>
               </div>
-              <!-- Valor: $3300 COP -->
-              <p class="metric-value">$3300 COP</p>
+              <p class="metric-value" id="metric-total-expenses">$0 COP</p>
             </article>
 
-            <!-- TARJETA 4: Meta de ahorro - COLOR ROSA/MAGENTA -->
+            <!-- TARJETA 4: Suma de objetivos de metas activas - ROSA -->
             <article class="metric-card metric-card--goal">
               <div class="metric-header">
                 <h3 class="metric-label">Meta</h3>
-                <!-- Icono emoji: 🎯 (objetivo/blanco) -->
                 <span class="metric-icon" aria-hidden="true">🎯</span>
               </div>
-              <!-- Valor: $5255 COP -->
-              <p class="metric-value">$5255 COP</p>
+              <p class="metric-value" id="metric-goal-total">$0 COP</p>
             </article>
 
           </div>
@@ -331,45 +322,40 @@
             <!-- Lista de items de salud financiera -->
             <ul class="health-list" role="list">
 
-              <!-- ITEM 1: Ingresos totales -->
+              <!-- ITEM 1: Ingresos totales del mes -->
               <li class="health-item">
-                <!-- Parte izquierda: label + categoría -->
                 <div class="health-item-content">
-                  <!-- Nombre del ítem -->
                   <span class="health-label">Ingresos totales</span>
-                  <!-- Categoría/tipo -->
-                  <span class="health-category">Ingresos fijos</span>
+                  <span class="health-category">Este mes</span>
                 </div>
-                <!-- Parte derecha: valor (destacado) -->
-                <strong class="health-value health-value--income">$300 COP</strong>
+                <strong class="health-value health-value--income" id="health-income">$0 COP</strong>
               </li>
 
-              <!-- ITEM 2: Gastos totales -->
+              <!-- ITEM 2: Gastos totales del mes -->
               <li class="health-item">
                 <div class="health-item-content">
                   <span class="health-label">Gastos totales</span>
-                  <span class="health-category">Gastos fijos</span>
+                  <span class="health-category">Este mes</span>
                 </div>
-                <strong class="health-value health-value--expense">$525 COP</strong>
+                <strong class="health-value health-value--expense" id="health-expenses">$0 COP</strong>
               </li>
 
-              <!-- ITEM 3: Gastos fijo (esenciales) -->
+              <!-- ITEM 3: Gastos fijos (transacciones marcadas como fijas) -->
               <li class="health-item">
                 <div class="health-item-content">
-                  <span class="health-label">Gastos fijo</span>
-                  <span class="health-category">Gastos esenciales</span>
+                  <span class="health-label">Gastos fijos</span>
+                  <span class="health-category">Recurrentes esenciales</span>
                 </div>
-                <strong class="health-value health-value--fixed">$80 COP</strong>
+                <strong class="health-value health-value--fixed" id="health-fixed">$0 COP</strong>
               </li>
 
-              <!-- ITEM 4: Ratio gastos/ingresos -->
+              <!-- ITEM 4: Ratio gastos fijos / ingresos -->
               <li class="health-item">
                 <div class="health-item-content">
-                  <span class="health-label">Gastos fijo + ingreso</span>
-                  <span class="health-category">Últimos 30 días</span>
+                  <span class="health-label">Gastos fijos / ingreso</span>
+                  <span class="health-category">Indicador de salud</span>
                 </div>
-                <!-- Porcentaje mostrado en bold -->
-                <strong class="health-value health-value--ratio">27%</strong>
+                <strong class="health-value health-value--ratio" id="health-ratio">0%</strong>
               </li>
 
             </ul>
@@ -407,18 +393,12 @@
 
               <!-- PROYECCIÓN MES 1 -->
               <li class="projection-item">
-                <!-- Encabezado: Label y valor -->
                 <div class="projection-item-header">
-                  <!-- Texto: "Mes 1" -->
                   <span class="projection-label">Mes 1</span>
-                  <!-- Valor predicho -->
-                  <span class="projection-value">$0 COP</span>
+                  <span class="projection-value" id="projection-value-1">$0 COP</span>
                 </div>
-                <!-- Barra de progreso visual (accesible con role="progressbar") -->
-                <div class="projection-bar-container" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                  <!-- Barra interna con ancho basado en porcentaje (style="width: 0%") -->
-                  <!-- Clase de color: cyan (azul claro) -->
-                  <div class="projection-bar projection-bar--cyan" style="width: 0%"></div>
+                <div class="projection-bar-container" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="projection-bar-container-1">
+                  <div class="projection-bar projection-bar--cyan" id="projection-bar-1" style="width: 0%"></div>
                 </div>
               </li>
 
@@ -426,11 +406,10 @@
               <li class="projection-item">
                 <div class="projection-item-header">
                   <span class="projection-label">Mes 2</span>
-                  <span class="projection-value">$0 COP</span>
+                  <span class="projection-value" id="projection-value-2">$0 COP</span>
                 </div>
-                <!-- Barra de progreso con color púrpura -->
-                <div class="projection-bar-container" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                  <div class="projection-bar projection-bar--purple" style="width: 0%"></div>
+                <div class="projection-bar-container" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="projection-bar-container-2">
+                  <div class="projection-bar projection-bar--purple" id="projection-bar-2" style="width: 0%"></div>
                 </div>
               </li>
 
@@ -438,11 +417,10 @@
               <li class="projection-item">
                 <div class="projection-item-header">
                   <span class="projection-label">Mes 3</span>
-                  <span class="projection-value">$0 COP</span>
+                  <span class="projection-value" id="projection-value-3">$0 COP</span>
                 </div>
-                <!-- Barra de progreso con color naranja -->
-                <div class="projection-bar-container" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                  <div class="projection-bar projection-bar--orange" style="width: 0%"></div>
+                <div class="projection-bar-container" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="projection-bar-container-3">
+                  <div class="projection-bar projection-bar--orange" id="projection-bar-3" style="width: 0%"></div>
                 </div>
               </li>
 
@@ -479,11 +457,14 @@
        - Logout
        - Actualizar datos dinámicamente
   -->
-  <!-- datos.js: punto central de carga + sesión -->
+  <!-- datos.js: punto central de carga + sesión (debe ir primero) -->
   <script src="js/datos.js"></script>
-  <script src="js/dashboard.js"></script>
+  <!-- calculos.js: funciones puras de cálculo financiero -->
+  <script src="js/calculos.js"></script>
+  <!-- analisis.js: renderiza las 3 secciones con datos reales -->
+  <script src="js/analisis.js"></script>
 
-  <!-- Script de navegación: Maneja cambio de moneda en el análisis -->
+  <!-- Script de navegación: cambio de moneda y logout -->
   <script src="js/navigation.js"></script>
 
 </body>

@@ -255,146 +255,15 @@
           <!-- Título de la sección -->
           <h2 id="limits-title" class="section-title">Límites mensuales</h2>
 
-          <!-- Contenedor: Lista de categorías con límites -->
+          <!-- Contenedor: la lista se llena dinámicamente desde limites.json
+               cruzado con las transacciones del mes (limites.js) -->
           <div class="spending-limits-content">
-            <!-- Lista de límites de gasto por categoría -->
             <ul class="spending-limits-list" role="list">
-
-              <!-- CATEGORÍA 1: Alimentación -->
-              <li class="spending-limit-item">
-                <!-- Encabezado: Nombre categoría + icono toggleable -->
-                <div class="limit-item-header">
-                  <!-- Contenedor con nombre y subcategoría -->
-                  <div class="limit-item-info">
-                    <!-- Nombre de la categoría -->
-                    <h3 class="limit-category-name">Alimentación</h3>
-                    <!-- Balance: gasto actual vs límite -->
-                    <p class="limit-category-balance">$250 COP de $300 COP</p>
-                  </div>
-                  <!-- Icono toggle (expandir/contraer detalles) -->
-                  <button type="button" class="limit-item-toggle" aria-label="Ver detalles de Alimentación" aria-expanded="false">
-                    <!-- Icono SVG: Chevron derecha -->
-                    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <polyline points="9 18 15 12 9 6"/>
-                    </svg>
-                  </button>
-                </div>
-
-                <!-- Barra de progreso visual -->
-                <div class="limit-progress-container" role="progressbar" aria-valuenow="83" aria-valuemin="0" aria-valuemax="100" aria-label="Progreso: 83% del límite usado">
-                  <!-- Barra rellena (muestra cuánto se ha gastado) -->
-                  <div class="limit-progress-bar" style="width: 83%"></div>
-                </div>
-
-                <!-- Estadísticas: % usado y monto restante -->
-                <div class="limit-stats">
-                  <!-- Porcentaje del límite usado -->
-                  <span class="limit-percentage">83% usado</span>
-                  <!-- Dinero que queda para gastar en esta categoría -->
-                  <span class="limit-remaining">$50 COP restante</span>
-                </div>
+              <li class="spending-limit-loading">
+                <p style="text-align: center; color: #999; padding: 1rem;">
+                  Cargando límites...
+                </p>
               </li>
-
-              <!-- CATEGORÍA 2: Entretenimiento -->
-              <li class="spending-limit-item">
-                <div class="limit-item-header">
-                  <div class="limit-item-info">
-                    <h3 class="limit-category-name">Entretenimiento</h3>
-                    <p class="limit-category-balance">$45 COP de $100 COP</p>
-                  </div>
-                  <button type="button" class="limit-item-toggle" aria-label="Ver detalles de Entretenimiento" aria-expanded="false">
-                    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <polyline points="9 18 15 12 9 6"/>
-                    </svg>
-                  </button>
-                </div>
-
-                <!-- Barra de progreso: 45% -->
-                <div class="limit-progress-container" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" aria-label="Progreso: 45% del límite usado">
-                  <div class="limit-progress-bar" style="width: 45%"></div>
-                </div>
-
-                <div class="limit-stats">
-                  <span class="limit-percentage">45% usado</span>
-                  <span class="limit-remaining">$55 COP restante</span>
-                </div>
-              </li>
-
-              <!-- CATEGORÍA 3: Transporte -->
-              <li class="spending-limit-item">
-                <div class="limit-item-header">
-                  <div class="limit-item-info">
-                    <h3 class="limit-category-name">Transporte</h3>
-                    <p class="limit-category-balance">$80 COP de $100 COP</p>
-                  </div>
-                  <button type="button" class="limit-item-toggle" aria-label="Ver detalles de Transporte" aria-expanded="false">
-                    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <polyline points="9 18 15 12 9 6"/>
-                    </svg>
-                  </button>
-                </div>
-
-                <!-- Barra de progreso: 80% -->
-                <div class="limit-progress-container" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" aria-label="Progreso: 80% del límite usado">
-                  <div class="limit-progress-bar" style="width: 80%"></div>
-                </div>
-
-                <div class="limit-stats">
-                  <span class="limit-percentage">80% usado</span>
-                  <span class="limit-remaining">$20 COP restante</span>
-                </div>
-              </li>
-
-              <!-- CATEGORÍA 4: Estudios -->
-              <li class="spending-limit-item">
-                <div class="limit-item-header">
-                  <div class="limit-item-info">
-                    <h3 class="limit-category-name">Estudios</h3>
-                    <p class="limit-category-balance">$150 COP de $200 COP</p>
-                  </div>
-                  <button type="button" class="limit-item-toggle" aria-label="Ver detalles de Estudios" aria-expanded="false">
-                    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <polyline points="9 18 15 12 9 6"/>
-                    </svg>
-                  </button>
-                </div>
-
-                <!-- Barra de progreso: 75% -->
-                <div class="limit-progress-container" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" aria-label="Progreso: 75% del límite usado">
-                  <div class="limit-progress-bar" style="width: 75%"></div>
-                </div>
-
-                <div class="limit-stats">
-                  <span class="limit-percentage">75% usado</span>
-                  <span class="limit-remaining">$50 COP restante</span>
-                </div>
-              </li>
-
-              <!-- CATEGORÍA 5: Ropa -->
-              <li class="spending-limit-item">
-                <div class="limit-item-header">
-                  <div class="limit-item-info">
-                    <h3 class="limit-category-name">Ropa</h3>
-                    <p class="limit-category-balance">$0 COP de $150 COP</p>
-                  </div>
-                  <button type="button" class="limit-item-toggle" aria-label="Ver detalles de Ropa" aria-expanded="false">
-                    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <polyline points="9 18 15 12 9 6"/>
-                    </svg>
-                  </button>
-                </div>
-
-                <!-- Barra de progreso: 0% (no se ha gastado) -->
-                <div class="limit-progress-container" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Progreso: 0% del límite usado">
-                  <div class="limit-progress-bar" style="width: 0%"></div>
-                </div>
-
-                <div class="limit-stats">
-                  <span class="limit-percentage">0% usado</span>
-                  <span class="limit-remaining">$150 COP restante</span>
-                </div>
-              </li>
-
             </ul>
           </div>
         </section>
@@ -625,21 +494,23 @@
        MÓDULOS JAVASCRIPT - ORDEN IMPORTANTE
        ============================================
        1. datos.js        - Punto central de carga de JSONs + sesión
-       2. utils.js        - Funciones utilitarias compartidas (formatearFecha, etc.)
-       3. gastos.js       - Generación de HTML para gastos
-       4. ingresos.js     - Generación de HTML para ingresos
-       5. historial.js    - Gestión del historial completo
-       6. transacciones.js - Coordinador principal
-       7. dashboard.js    - Funcionalidad del dashboard
-       8. navigation.js   - Navegación y cambio de moneda
+       2. calculos.js     - Funciones puras de cálculo (usadas por limites.js)
+       3. utils.js        - Funciones utilitarias (formatearFecha, etc.)
+       4. gastos.js       - HTML para una transacción de gasto
+       5. ingresos.js     - HTML para una transacción de ingreso
+       6. historial.js    - Carga y renderiza la lista de transacciones
+       7. limites.js      - Calcula y renderiza los límites mensuales
+       8. transacciones.js - Coordinador del modal "Agregar transacción"
+       9. navigation.js   - Cambio de moneda y logout
   -->
   <script src="js/datos.js"></script>
+  <script src="js/calculos.js"></script>
   <script src="js/utils.js"></script>
   <script src="js/gastos.js"></script>
   <script src="js/ingresos.js"></script>
   <script src="js/historial.js"></script>
+  <script src="js/limites.js"></script>
   <script src="js/transacciones.js"></script>
-  <script src="js/dashboard.js"></script>
   <script src="js/navigation.js"></script>
 
 </body>

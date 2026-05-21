@@ -149,11 +149,11 @@
         </div>
 
         <div class="dashboard-header-user">
-          <!-- Avatar generado con iniciales; se reemplaza por imagen de perfil si está disponible -->
+          <!-- Avatar e identidad — los llena dashboard.js desde la sesión activa -->
           <div class="user-avatar" role="img" aria-label="Avatar del usuario">
-            <span class="user-avatar-initials" aria-hidden="true">NN</span>
+            <span class="user-avatar-initials" id="user-avatar-initials" aria-hidden="true">NN</span>
           </div>
-          <span class="user-name">Nombre Usuario</span>
+          <span class="user-name" id="user-name">Nombre Usuario</span>
         </div>
       </header>
 
@@ -183,7 +183,7 @@
                   <polyline points="17 6 23 6 23 12"/>
                 </svg>
                 <dt class="balance-stat-label">Ingresos</dt>
-                <dd class="balance-stat-value" aria-label="Ingresos: cero pesos colombianos">$0 COP</dd>
+                <dd class="balance-stat-value" id="balance-income">$0 COP</dd>
               </div>
               <div class="balance-stat balance-stat--expense">
                 <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -191,7 +191,7 @@
                   <polyline points="17 18 23 18 23 12"/>
                 </svg>
                 <dt class="balance-stat-label">Gastos</dt>
-                <dd class="balance-stat-value" aria-label="Gastos: cero pesos colombianos">$0 COP</dd>
+                <dd class="balance-stat-value" id="balance-expenses">$0 COP</dd>
               </div>
             </dl>
 
@@ -212,11 +212,11 @@
               </div>
             </div>
 
-            <!-- Barra de experiencia — valores actualizados dinámicamente por dashboard.js -->
+            <!-- Barra de experiencia — valores actualizados por dashboard.js desde usuarios.gamificacion -->
             <div class="gamification-xp">
               <div class="gamification-xp-header">
                 <span class="gamification-xp-label">Experiencia</span>
-                <span class="gamification-xp-value" aria-label="0 de 1000 puntos de experiencia">0 / 1000 XP</span>
+                <span class="gamification-xp-value" id="gamification-xp-value">0 / 1000 XP</span>
               </div>
               <div
                 class="gamification-xp-bar"
@@ -224,8 +224,8 @@
                 aria-valuenow="0"
                 aria-valuemin="0"
                 aria-valuemax="1000"
-                aria-label="Progreso de experiencia: 0 de 1000 XP">
-                <div class="gamification-xp-fill" style="width: 0%"></div>
+                id="gamification-xp-bar">
+                <div class="gamification-xp-fill" id="gamification-xp-fill" style="width: 0%"></div>
               </div>
             </div>
 
@@ -233,7 +233,7 @@
             <div class="gamification-streak">
               <span role="img" aria-label="fuego">🔥</span>
               <span class="gamification-streak-label">Racha</span>
-              <strong class="gamification-streak-value" aria-label="0 días de racha">0</strong>
+              <strong class="gamification-streak-value" id="gamification-streak-value">0</strong>
               <span class="gamification-streak-unit">días</span>
             </div>
 
@@ -286,11 +286,11 @@
             <dl class="emergency-totals">
               <div class="emergency-total-item">
                 <dt class="emergency-total-label">Ahorro acumulado</dt>
-                <dd class="emergency-total-value" aria-label="Ahorro acumulado: cero pesos colombianos">$0 COP</dd>
+                <dd class="emergency-total-value" id="emergency-saved">$0 COP</dd>
               </div>
               <div class="emergency-total-item">
                 <dt class="emergency-total-label">Meta</dt>
-                <dd class="emergency-total-value emergency-total-value--meta" aria-label="Meta: cero pesos colombianos">$0 COP</dd>
+                <dd class="emergency-total-value emergency-total-value--meta" id="emergency-target">$0 COP</dd>
               </div>
             </dl>
 
@@ -307,7 +307,7 @@
               <div class="metrics-item metrics-item--highlight">
                 <div class="metrics-item-info">
                   <dt class="metrics-item-label">Tasa de ahorro</dt>
-                  <dd class="metrics-item-value metrics-item-value--highlight" aria-label="Tasa de ahorro: 0 por ciento">0%</dd>
+                  <dd class="metrics-item-value metrics-item-value--highlight" id="metrics-savings-rate">0%</dd>
                 </div>
                 <div class="metrics-item-icon" aria-hidden="true">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -321,7 +321,7 @@
               <div class="metrics-item">
                 <div class="metrics-item-info">
                   <dt class="metrics-item-label">Gastos fijos / Ingreso</dt>
-                  <dd class="metrics-item-value" aria-label="Gastos fijos sobre ingreso: 0 por ciento">0%</dd>
+                  <dd class="metrics-item-value" id="metrics-fixed-ratio">0%</dd>
                 </div>
               </div>
 
@@ -332,7 +332,7 @@
                     Proyección anual
                     <span class="metrics-item-sublabel">Flujo de caja estimado</span>
                   </dt>
-                  <dd class="metrics-item-value metrics-item-value--accent" aria-label="Proyección anual: cero pesos colombianos">$0 COP</dd>
+                  <dd class="metrics-item-value metrics-item-value--accent" id="metrics-annual-projection">$0 COP</dd>
                 </div>
               </div>
 
@@ -353,6 +353,9 @@
 
   <!-- datos.js debe cargarse primero — define la sesión que las demás páginas consumen -->
   <script src="js/datos.js"></script>
+  <!-- calculos.js: funciones puras compartidas con análisis -->
+  <script src="js/calculos.js"></script>
+  <!-- dashboard.js: render del header, balance, gamificación, fondo emergencia, métricas -->
   <script defer src="js/dashboard.js"></script>
   <script src="js/navigation.js"></script>
 

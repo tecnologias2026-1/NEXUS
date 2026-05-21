@@ -34,6 +34,9 @@ async function inicializarTransacciones() {
     }
 
     await inicializarHistorial();
+    if (typeof inicializarLimites === 'function') {
+      await inicializarLimites();
+    }
     inicializarEventos();
     configurarBotonesDeTipo();
     await llenarSelectCategorias('gasto'); // arranca filtrado al tipo activo

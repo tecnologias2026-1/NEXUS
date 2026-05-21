@@ -111,6 +111,10 @@ async function agregarTransaccion(nuevaTransaccion) {
   try {
     await agregarTransaccionDatos(nuevaTransaccion);
     await inicializarHistorial();
+    // Re-renderizar los límites mensuales para reflejar el nuevo gasto/ingreso
+    if (typeof inicializarLimites === 'function') {
+      await inicializarLimites();
+    }
     console.log('✅ Transacción agregada:', nuevaTransaccion);
   } catch (error) {
     console.error('❌ Error al agregar transacción:', error);

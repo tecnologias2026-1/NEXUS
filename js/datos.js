@@ -401,32 +401,25 @@ if (typeof window !== 'undefined') {
    INICIALIZACIÓN DE SESIÓN
    ============================================================
    En páginas internas (dashboard, transacciones, amigos, etc.)
-   se necesita un usuario activo para cargar datos. Si no hay sesión
-   activa y NO estamos en la página de auth (index.html), se hace
-   auto-login como David — fallback de demo para no romper el flujo
-   si el usuario abre directamente una página interior.
+   se requiere un usuario activo. Si no hay sesión, se redirige
+   a index.html para que el usuario inicie sesión.
 
-   En la página de auth (donde existe #auth-modal), NO se auto-loguea,
-   para que el formulario de login funcione normalmente.
+   En la página de auth (donde existe #auth-modal), NO se valida
+   sesión, para que el formulario de login funcione normalmente.
 
    Las páginas deben hacer `await window.nexusReady` antes de pedir
-   datos, para asegurar que la sesión ya fue inicializada.
+   datos, para asegurar que la sesión ya fue verificada.
 */
 window.nexusReady = (async function inicializarSesion() {
   if (typeof window === 'undefined') return;
 
-  // Si estamos en la página de auth (tiene #auth-modal), no auto-login
+  // En la página de auth (tiene #auth-modal), no verificar sesión
   const enPaginaDeAuth = !!document.getElementById('auth-modal');
   if (enPaginaDeAuth) return;
 
   const usuarioActivo = await obtenerUsuarioActual();
   if (!usuarioActivo) {
-    const usuario = await iniciarSesion('david@nexus.app', 'demo123');
-    if (usuario) {
-      console.log(`🔐 Fallback demo: sesión iniciada como ${usuario.nombre}`);
-    } else {
-      console.warn('⚠️ No se pudo iniciar sesión. Redirigiendo a index...');
-      window.location.href = 'index.html';
-    }
+    console.warn('⚠️ Sin sesión activa. Redirigiendo a login...');
+    window.location.href = 'index.html';
   }
 })();
