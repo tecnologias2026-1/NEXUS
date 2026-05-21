@@ -7,7 +7,7 @@
  * CSS específicas de esa página (collab-goal-card, etc.).
  *
  * Esta sección antes estaba hardcodeada en el HTML — por eso aparecía
- * en CUALQUIER usuario (incluido demo, que no tiene metas). Ahora
+ * en cualquier usuario sin metas propias. Ahora
  * obtiene metas reales filtradas por usuario_id vía datos.js.
  *
  * Dependencias:

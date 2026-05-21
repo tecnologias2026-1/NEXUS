@@ -51,6 +51,16 @@ async function renderizarDashboard() {
   renderizarGamificacion(usuario);
   renderizarFondoEmergencia(metas, transacciones);
   renderizarMetricasClave(transacciones, mes);
+  aplicarMonedaSeleccionada(usuario);
+}
+
+function aplicarMonedaSeleccionada(usuario) {
+  const moneda = localStorage.getItem('selectedCurrency') || usuario.moneda_preferida || 'COP';
+  localStorage.setItem('selectedCurrency', moneda);
+
+  if (typeof updateAllMonetaryValues === 'function') {
+    updateAllMonetaryValues(moneda);
+  }
 }
 
 

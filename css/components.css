@@ -252,6 +252,8 @@ header {
 
 /* Iconos */
 .card-icon {
+  --icon-bg: rgba(97, 95, 255, 0.12);
+  --icon-color: var(--color-primary);
   width: 48px;
   height: 48px;
   margin-bottom: 14px;
@@ -259,30 +261,53 @@ header {
   align-items: center;
   justify-content: center;
   border-radius: 12px;
+  background: var(--icon-bg);
+  box-shadow: inset 0 0 0 1px rgba(97, 95, 255, 0.08);
+}
+
+.card-icon::before {
+  content: "";
+  width: 34px;
+  height: 34px;
+  background: var(--icon-color);
+  -webkit-mask: var(--icon-image) center / contain no-repeat;
+  mask: var(--icon-image) center / contain no-repeat;
 }
 
 .feature-card:nth-child(1) .card-icon {
-  background: url("../assets/icons/Personas.png") center/contain no-repeat;
+  --icon-image: url("../assets/icons/Personas.png");
+  --icon-bg: rgba(14, 165, 233, 0.14);
+  --icon-color: #0284C7;
 }
 
 .feature-card:nth-child(2) .card-icon {
-  background: url("../assets/icons/Circulo.png") center/contain no-repeat;
+  --icon-image: url("../assets/icons/Circulo.png");
+  --icon-bg: rgba(99, 102, 241, 0.14);
+  --icon-color: #4F46E5;
 }
 
 .feature-card:nth-child(3) .card-icon {
-  background: url("../assets/icons/Corona.png") center/contain no-repeat;
+  --icon-image: url("../assets/icons/Corona.png");
+  --icon-bg: rgba(245, 158, 11, 0.16);
+  --icon-color: #D97706;
 }
 
 .feature-card:nth-child(4) .card-icon {
-  background: url("../assets/icons/Escudo.png") center/contain no-repeat;
+  --icon-image: url("../assets/icons/Escudo.png");
+  --icon-bg: rgba(16, 185, 129, 0.15);
+  --icon-color: #059669;
 }
 
 .feature-card:nth-child(5) .card-icon {
-  background: url("../assets/icons/Estadisticas.png") center/contain no-repeat;
+  --icon-image: url("../assets/icons/Estadisticas.png");
+  --icon-bg: rgba(236, 72, 153, 0.14);
+  --icon-color: #DB2777;
 }
 
 .feature-card:nth-child(6) .card-icon {
-  background: url("../assets/icons/Flecha.png") center/contain no-repeat;
+  --icon-image: url("../assets/icons/Flecha.png");
+  --icon-bg: rgba(37, 99, 235, 0.14);
+  --icon-color: #2563EB;
 }
 
 /* Textos de cards */

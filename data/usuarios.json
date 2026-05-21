@@ -16,23 +16,6 @@
         "racha_dias": 5,
         "puntos_ranking": 1750
       }
-    },
-    {
-      "id": 2,
-      "nombre": "Demo Usuario",
-      "email": "demo@nexus.app",
-      "password": "demo",
-      "fecha_registro": "2026-04-01",
-      "frecuencia_ingreso": "mensual",
-      "ingreso_base": 1800000,
-      "moneda_preferida": "COP",
-      "gamificacion": {
-        "nivel": 2,
-        "xp_actual": 320,
-        "xp_siguiente_nivel": 500,
-        "racha_dias": 2,
-        "puntos_ranking": 800
-      }
     }
   ],
   "sesion_actual": {

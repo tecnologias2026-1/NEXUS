@@ -439,19 +439,52 @@
 /* Monto */
 .currency-input-group {
   position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  min-height: 42px;
+  border: 1px solid #dfe3ea;
+  border-radius: 10px;
+  background: #ffffff;
+  overflow: hidden;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.currency-input-group:focus-within {
+  border-color: #c4b5fd;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
 }
 
 .currency-symbol {
-  position: absolute;
-  top: 50%;
-  left: 12px;
-  transform: translateY(-50%);
+  padding-left: 14px;
   font-size: 13px;
   color: #9ca3af;
 }
 
 .currency-input {
-  padding-left: 28px;
+  height: 42px;
+  padding: 0 10px;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.currency-input:focus {
+  box-shadow: none;
+}
+
+.currency-select {
+  height: 42px;
+  min-width: 72px;
+  border: none;
+  border-left: 1px solid #e5e7eb;
+  background: #f9fafb;
+  color: #111827;
+  padding: 0 10px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  outline: none;
 }
 
 /* Responsive */
@@ -469,6 +502,17 @@
 
   .income-frequency-group {
     grid-template-columns: 1fr;
+  }
+
+  .currency-input-group {
+    grid-template-columns: auto 1fr;
+  }
+
+  .currency-select {
+    grid-column: 1 / -1;
+    width: 100%;
+    border-left: none;
+    border-top: 1px solid #e5e7eb;
   }
 
   .form-actions {

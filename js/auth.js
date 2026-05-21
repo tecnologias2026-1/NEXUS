@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const registerForm  = document.getElementById('register-form');
     const closeBtn      = document.getElementById('modal-close');
     const backdrop      = document.getElementById('modal-backdrop');
+    const registerIncomeInput = document.getElementById('register-income');
 
     /**
      * Muestra el formulario indicado dentro del modal
@@ -71,6 +72,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    if (registerIncomeInput) {
+        registerIncomeInput.addEventListener('input', () => {
+            const valorLimpio = limpiarMonto(registerIncomeInput.value);
+            registerIncomeInput.dataset.rawValue = valorLimpio;
+            registerIncomeInput.value = formatearMiles(valorLimpio);
+        });
+    }
+
 
     // ──────────────────────────────────────────────────────────
     // LOGIN: valida email + password contra usuarios.json
@@ -91,6 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const usuario = await iniciarSesion(email, password);
 
             if (usuario) {
+                localStorage.setItem('selectedCurrency', usuario.moneda_preferida || 'COP');
                 console.log(`✅ Login exitoso: ${usuario.nombre}`);
                 window.location.href = 'dashboard.html';
             } else {
@@ -165,7 +175,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const frecuencia = document.querySelector('input[name="frequency"]:checked')?.value;
-            const ingreso    = parseFloat(document.getElementById('register-income').value || 0);
+            const moneda     = document.getElementById('register-currency')?.value || 'COP';
+            const ingreso    = parseInt(limpiarMonto(document.getElementById('register-income').value), 10) || 0;
 
             const mapaFrecuencia = {
                 'monthly':  'mensual',
@@ -176,7 +187,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const usuarioNuevo = await registrarUsuario({
                 ...datosRegistroPaso1,
                 frecuencia_ingreso: mapaFrecuencia[frecuencia] || 'mensual',
-                ingreso_base: ingreso
+                ingreso_base: ingreso,
+                moneda_preferida: moneda
             });
 
             if (!usuarioNuevo) {
@@ -187,6 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Login automático del usuario recién creado
             await iniciarSesion(usuarioNuevo.email, usuarioNuevo.password);
+            localStorage.setItem('selectedCurrency', moneda);
             console.log(`✅ Registro + login: ${usuarioNuevo.nombre}`);
             window.location.href = 'dashboard.html';
         });
@@ -253,5 +266,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function limpiarErrores() {
         document.querySelectorAll('.auth-error-message').forEach(el => el.remove());
+    }
+
+    function limpiarMonto(valor) {
+        return String(valor || '').replace(/\D/g, '');
+    }
+
+    function formatearMiles(valor) {
+        const limpio = limpiarMonto(valor);
+        if (!limpio) return '';
+        return limpio.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     }
 });

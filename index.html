@@ -36,6 +36,9 @@
 
     <!-- Estilos específicos para login y registro de usuarios -->
     <link rel="stylesheet" href="css/auth.css">
+
+    <!-- Ajustes responsive generales -->
+    <link rel="stylesheet" href="css/responsive.css">
 </head>
 
 <body class="home-page">
@@ -84,16 +87,12 @@
                     que comparte tus objetivos.
                 </p>
 
-                <!-- BOTONES DE ACCIÓN: Incentivan al usuario a registrarse o ver demo
+                <!-- BOTONES DE ACCIÓN: Incentivan al usuario a registrarse
                      CAMBIO: Se agregaron IDs únicos para manejar eventos con JavaScript.
-                     - btn-start-free: Abre modal de registro
-                     - btn-view-demo: Redirige al dashboard (demo) -->
+                     - btn-start-free: Abre modal de registro -->
                 <div class="hero-buttons">
                     <!-- Botón lleno (primario): Llama a acción principal -->
-                    <button id="btn-start-free" class="btn btn-primary btn-cta">Comenzar Gratis -></button>
-                    
-                    <!-- Botón vacío (secundario): Opción alternativa para ver demo -->
-                    <button id="btn-view-demo" class="btn btn-outline">Ver Demo</button>
+                    <button id="btn-start-free" class="btn btn-primary btn-cta">Comenzar Gratis &rarr;</button>
                 </div>
 
                 <!-- BARRA DE ESTADÍSTICAS: Muestra números impresionantes para generar confianza -->
@@ -196,7 +195,7 @@
                     <!-- Botón de registro final
                          CAMBIO: Se agregó ID btn-start-free-bottom para manejar el mismo evento
                          que el botón principal (abrir modal de registro) -->
-                    <button id="btn-start-free-bottom" class="btn btn-primary btn-cta">Comenzar Gratis -></button>
+                    <button id="btn-start-free-bottom" class="btn btn-primary btn-cta">Comenzar Gratis &rarr;</button>
                 </div>
             </section>
         </main>
@@ -386,10 +385,15 @@
                         <div class="form-group">
                             <label for="register-income" class="form-label">Monto estimado de ingreso base</label>
 
-                            <!-- Grupo de entrada con símbolo de moneda -->
+                            <!-- Grupo de entrada con símbolo y selector de moneda -->
                             <div class="currency-input-group">
                                 <span class="currency-symbol">$</span>
-                                <input type="number" id="register-income" name="income" class="form-input currency-input" placeholder="0.00" step="0.01" min="0" required>
+                                <input type="text" id="register-income" name="income" class="form-input currency-input" placeholder="0" inputmode="numeric" autocomplete="off" required>
+                                <label for="register-currency" class="sr-only">Moneda del ingreso</label>
+                                <select id="register-currency" name="currency" class="currency-select" aria-label="Moneda del ingreso">
+                                    <option value="COP" selected>COP</option>
+                                    <option value="USD">USD</option>
+                                </select>
                             </div>
                         </div>
 

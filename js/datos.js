@@ -52,7 +52,8 @@ async function _cargarRecurso(nombre) {
   const guardado = localStorage.getItem(`nexus_${nombre}`);
   if (guardado) {
     try {
-      _cacheDatos[nombre] = JSON.parse(guardado);
+      _cacheDatos[nombre] = _normalizarRecurso(nombre, JSON.parse(guardado));
+      localStorage.setItem(`nexus_${nombre}`, JSON.stringify(_cacheDatos[nombre]));
       return _cacheDatos[nombre];
     } catch (error) {
       console.warn(`⚠️ Cache corrupto para ${nombre}, recargando del JSON`);
@@ -65,7 +66,7 @@ async function _cargarRecurso(nombre) {
     if (!respuesta.ok) {
       throw new Error(`HTTP ${respuesta.status} cargando ${nombre}.json`);
     }
-    const datos = await respuesta.json();
+    const datos = _normalizarRecurso(nombre, await respuesta.json());
     _cacheDatos[nombre] = datos;
     localStorage.setItem(`nexus_${nombre}`, JSON.stringify(datos));
     return datos;
@@ -86,6 +87,33 @@ async function _cargarRecurso(nombre) {
 function _guardarRecurso(nombre, datos) {
   _cacheDatos[nombre] = datos;
   localStorage.setItem(`nexus_${nombre}`, JSON.stringify(datos));
+}
+
+/**
+ * Ajustes de compatibilidad para datos guardados en navegadores antiguos.
+ * La cuenta demo ya no debe existir como forma de acceso.
+ *
+ * @param {string} nombre
+ * @param {Object} datos
+ * @returns {Object}
+ */
+function _normalizarRecurso(nombre, datos) {
+  if (nombre !== 'usuarios' || !datos?.usuarios) return datos;
+
+  const usuariosSinDemo = datos.usuarios.filter(usuario =>
+    usuario.email?.toLowerCase() !== 'demo@nexus.app'
+  );
+
+  if (usuariosSinDemo.length === datos.usuarios.length) return datos;
+
+  const sesionActual = datos.sesion_actual || { usuario_id: null };
+  const sesionSigueValida = usuariosSinDemo.some(usuario => usuario.id === sesionActual.usuario_id);
+
+  return {
+    ...datos,
+    usuarios: usuariosSinDemo,
+    sesion_actual: sesionSigueValida ? sesionActual : { usuario_id: null }
+  };
 }
 
 
@@ -171,7 +199,7 @@ async function cerrarSesion() {
 
 /**
  * Registra un usuario nuevo (sin loguearlo automáticamente)
- * @param {Object} nuevoUsuario - { nombre, email, password, ingreso_base, frecuencia_ingreso }
+ * @param {Object} nuevoUsuario - { nombre, email, password, ingreso_base, frecuencia_ingreso, moneda_preferida }
  * @returns {Promise<Object|null>} Usuario creado o null si el email ya existe
  */
 async function registrarUsuario(nuevoUsuario) {
@@ -191,7 +219,7 @@ async function registrarUsuario(nuevoUsuario) {
     fecha_registro: new Date().toISOString().split('T')[0],
     frecuencia_ingreso: nuevoUsuario.frecuencia_ingreso || 'mensual',
     ingreso_base: nuevoUsuario.ingreso_base || 0,
-    moneda_preferida: 'COP',
+    moneda_preferida: nuevoUsuario.moneda_preferida || 'COP',
     gamificacion: {
       nivel: 1,
       xp_actual: 0,

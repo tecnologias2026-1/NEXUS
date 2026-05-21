@@ -5,7 +5,7 @@
  * Responsabilidad: Navegación global compartida entre páginas
  *
  * Este módulo se encarga de:
- * - Botones de la página principal (Comenzar Gratis, Ver Demo)
+ * - Botones de la página principal (Comenzar Gratis)
  * - Logout funcional (cerrarSesion + redirect)
  * - Cambio de moneda (COP / USD / EUR)
  *
@@ -63,7 +63,6 @@ document.addEventListener('DOMContentLoaded', () => {
 /**
  * Conecta los CTA de la página principal con el modal de auth.
  * "Comenzar Gratis" abre el modal en modo registro.
- * "Ver Demo" entra directo al dashboard (modo demo).
  */
 function initializeHomeButtons() {
     const modal              = document.getElementById('auth-modal');
@@ -73,7 +72,6 @@ function initializeHomeButtons() {
     const registerStep2      = document.querySelector('.register-step-2');
     const startFreeBtn       = document.getElementById('btn-start-free');
     const startFreeBottomBtn = document.getElementById('btn-start-free-bottom');
-    const viewDemoBtn        = document.getElementById('btn-view-demo');
 
     function abrirModalRegistro() {
         modal.classList.add('active');
@@ -94,11 +92,6 @@ function initializeHomeButtons() {
     if (startFreeBtn)       startFreeBtn.addEventListener('click',       abrirModalRegistro);
     if (startFreeBottomBtn) startFreeBottomBtn.addEventListener('click', abrirModalRegistro);
 
-    if (viewDemoBtn) {
-        viewDemoBtn.addEventListener('click', () => {
-            window.location.href = 'dashboard.html';
-        });
-    }
 }
 
 
@@ -154,14 +147,15 @@ function updateAllMonetaryValues(targetCurrency) {
 }
 
 function updateMonetaryText(element, targetCurrency) {
-    const text = element.textContent;
+    let text = element.textContent;
+    text = text.replace(/\.(?=\d{3}\b)/g, ',');
     if (!text.includes('$') && !text.includes('€')) return;
 
     const currentCurrencyMatch = text.match(/\b(COP|USD|EUR)\b/);
     const fromCurrency = currentCurrencyMatch ? currentCurrencyMatch[1] : 'COP';
 
     const newText = text.replace(/([+-]?)([€$])([0-9,]+)/g, (match, sign, symbol, digits) => {
-        const amount = parseInt(digits.replace(/,/g, ''), 10);
+        const amount = parseInt(digits.replace(/[.,]/g, ''), 10);
         const converted = convertCurrency(amount, fromCurrency, targetCurrency);
         return sign + formatCurrency(converted, targetCurrency);
     });
@@ -177,5 +171,5 @@ function convertCurrency(amount, fromCurrency, toCurrency) {
 
 function formatCurrency(amount, currency) {
     const symbol = CURRENCY_SYMBOLS[currency] || '$';
-    return symbol + amount.toLocaleString();
+    return symbol + amount.toLocaleString('es-CO');
 }
