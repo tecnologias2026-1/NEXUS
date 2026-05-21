@@ -1,12 +1,31 @@
-/** @type {Array<{id:number, name:string, initial:string, color:string}>} */
-const MOCK_FRIENDS = [
-  { id: 1, name: 'Natalia López',  initial: 'N', color: '#F59E0B' },
-  { id: 2, name: 'Camilo Torres',  initial: 'C', color: '#10B981' },
-  { id: 3, name: 'Sara Martínez',  initial: 'S', color: '#EF4444' },
-  { id: 4, name: 'Andrés Gómez',   initial: 'A', color: '#3B82F6' },
-  { id: 5, name: 'Laura Herrera',  initial: 'L', color: '#8B5CF6' },
-  { id: 6, name: 'Felipe Vargas',  initial: 'F', color: '#EC4899' },
-];
+/**
+ * Cache de amigos del usuario actual. Se llena al abrir el modal de
+ * creación de meta colaborativa, llamando a obtenerAmigos() de datos.js.
+ * Cada amigo tiene la forma { id, nombre, ...gamificación }.
+ *
+ * Para mantener compatibilidad con la lógica existente del modal
+ * (que espera { id, name, initial, color }), se mapea al cargar.
+ *
+ * @type {Array<{id:number, name:string, initial:string, color:string}>}
+ */
+let AMIGOS_DEL_USUARIO = [];
+
+// Paleta rotativa para asignar colores a los avatares de amigos
+const _coloresAvatar = ['#F59E0B', '#10B981', '#EF4444', '#3B82F6', '#8B5CF6', '#EC4899', '#0EA5E9', '#84CC16'];
+
+/**
+ * Carga los amigos del usuario actual desde datos.js y los normaliza
+ * al formato que espera el modal (name, initial, color).
+ */
+async function cargarAmigosDelUsuario() {
+  const amigos = await obtenerAmigos();
+  AMIGOS_DEL_USUARIO = amigos.map((a, i) => ({
+    id: a.id,
+    name: a.nombre,
+    initial: a.nombre.trim().charAt(0).toUpperCase() || 'A',
+    color: _coloresAvatar[i % _coloresAvatar.length]
+  }));
+}
 
 // Estado del modal — se reinicia en cada apertura
 const state = {
@@ -120,8 +139,8 @@ function getDaysText(fechaISO) {
 }
 
 function getProgress(meta) {
-  const objetivo = Number(meta.objetivo) || 0;
-  const ahorrado = Number(meta.ahorrado) || 0;
+  const objetivo = Number(meta.monto_objetivo ?? meta.objetivo) || 0;
+  const ahorrado = Number(meta.monto_ahorrado ?? meta.ahorrado) || 0;
   if (objetivo <= 0) return 0;
   return Math.min(100, Math.max(0, Math.round((ahorrado / objetivo) * 100)));
 }
@@ -194,21 +213,20 @@ function getPrivacyIconSVG() {
   `;
 }
 
-function cargarMetas() {
+/**
+ * Carga las metas del usuario actual desde datos.js.
+ * Reemplaza la lectura directa de localStorage para que el back
+ * solo tenga que cambiar la fuente en datos.js cuando exista.
+ *
+ * @returns {Promise<Array>}
+ */
+async function cargarMetas() {
   try {
-    const metasGuardadas = localStorage.getItem(METAS_STORAGE_KEY);
-    if (!metasGuardadas) return [];
-
-    const metas = JSON.parse(metasGuardadas);
-    return Array.isArray(metas) ? metas : [];
+    return await obtenerMetas();
   } catch (error) {
     console.error('Error al cargar metas:', error);
     return [];
   }
-}
-
-function guardarMetas(metas) {
-  localStorage.setItem(METAS_STORAGE_KEY, JSON.stringify(metas));
 }
 
 function renderGoalProgress(meta, label) {
@@ -232,20 +250,22 @@ function renderGoalProgress(meta, label) {
 }
 
 function renderGoalAmounts(meta) {
+  const ahorrado = meta.monto_ahorrado ?? meta.ahorrado;
+  const objetivo = meta.monto_objetivo ?? meta.objetivo;
   return `
     <div class="meta-montos">
       <div class="meta-monto-grupo">
         <span class="meta-monto-etiqueta">Ahorrado</span>
         <p class="meta-monto-valor meta-monto-ahorrado"
-          data-meta-ahorrado aria-label="Monto ahorrado: ${escapeHTML(formatCurrencyCOP(meta.ahorrado))}">
-          ${escapeHTML(formatCurrencyCOP(meta.ahorrado))}
+          data-meta-ahorrado aria-label="Monto ahorrado: ${escapeHTML(formatCurrencyCOP(ahorrado))}">
+          ${escapeHTML(formatCurrencyCOP(ahorrado))}
         </p>
       </div>
       <div class="meta-monto-grupo meta-monto-grupo--derecha">
         <span class="meta-monto-etiqueta">Meta</span>
         <p class="meta-monto-valor meta-monto-objetivo"
-          data-meta-objetivo aria-label="Monto objetivo: ${escapeHTML(formatCurrencyCOP(meta.objetivo))}">
-          ${escapeHTML(formatCurrencyCOP(meta.objetivo))}
+          data-meta-objetivo aria-label="Monto objetivo: ${escapeHTML(formatCurrencyCOP(objetivo))}">
+          ${escapeHTML(formatCurrencyCOP(objetivo))}
         </p>
       </div>
     </div>
@@ -255,7 +275,7 @@ function renderGoalAmounts(meta) {
 function renderPersonalGoal(meta) {
   const titleId = getSafeTitleId(meta);
   const safeName = escapeHTML(meta.nombre);
-  const daysText = getDaysText(meta.fechaLimite || meta.fecha);
+  const daysText = getDaysText(meta.fecha_limite || meta.fechaLimite || meta.fecha);
 
   return `
     <li class="meta-item" data-meta-id="${escapeHTML(meta.id)}">
@@ -289,13 +309,40 @@ function renderPersonalGoal(meta) {
   `;
 }
 
+/**
+ * Convierte un participante del schema { amigo_id, porcentaje_contribucion }
+ * al formato que esperan los renderizadores ({ id, name, initial, color, esUsuarioActual, porcentaje }).
+ * El amigo_id se resuelve buscando en AMIGOS_DEL_USUARIO; amigo_id=0 representa al usuario actual.
+ */
+function normalizarParticipante(p) {
+  // Si ya viene en formato viejo (tiene 'name' o 'aporte'), devolverlo tal cual con porcentaje calculado
+  if (p.name || p.nombre || p.aporte != null) {
+    return {
+      id: p.id || p.amigo_id,
+      name: p.name || p.nombre || 'Participante',
+      initial: p.initial || getInitial(p.name || p.nombre),
+      color: p.color || '#64748B',
+      esUsuarioActual: Boolean(p.esUsuarioActual),
+      porcentaje: Number(p.porcentaje_contribucion ?? p.porcentaje) || 0
+    };
+  }
+  // Formato del schema: { amigo_id, porcentaje_contribucion }
+  const esYo = p.amigo_id === 0;
+  const amigo = esYo ? null : AMIGOS_DEL_USUARIO.find(a => a.id === p.amigo_id);
+  return {
+    id: p.amigo_id,
+    name: esYo ? 'Tú' : (amigo?.name || 'Amigo'),
+    initial: esYo ? 'T' : (amigo?.initial || 'A'),
+    color: esYo ? '#5B3DF5' : (amigo?.color || '#64748B'),
+    esUsuarioActual: esYo,
+    porcentaje: Number(p.porcentaje_contribucion) || 0
+  };
+}
+
 function renderContributionItem(participant, meta) {
   const isCurrentUser = Boolean(participant.esUsuarioActual);
   const participantName = participant.name || participant.nombre || 'Participante';
-  const aporte = Number(participant.aporte) || 0;
-  const percent = Number(meta.objetivo) > 0
-    ? Math.min(100, Math.max(0, Math.round((aporte / Number(meta.objetivo)) * 100)))
-    : 0;
+  const percent = Number(participant.porcentaje) || 0;
   const avatarClass = isCurrentUser
     ? 'meta-contribucion-avatar meta-contribucion-avatar--tu'
     : 'meta-contribucion-avatar';
@@ -326,10 +373,10 @@ function renderContributionItem(participant, meta) {
 function renderColabGoal(meta) {
   const titleId = getSafeTitleId(meta);
   const safeName = escapeHTML(meta.nombre);
-  const daysText = getDaysText(meta.fechaLimite || meta.fecha);
+  const daysText = getDaysText(meta.fecha_limite || meta.fechaLimite || meta.fecha);
   const participantes = Array.isArray(meta.participantes) && meta.participantes.length
-    ? meta.participantes
-    : [{ id: 'usuario-actual', name: 'Tu', initial: 'T', esUsuarioActual: true, aporte: 0 }];
+    ? meta.participantes.map(p => normalizarParticipante(p))
+    : [{ id: 'usuario-actual', name: 'Tu', initial: 'T', esUsuarioActual: true, porcentaje: 0 }];
   const participantCount = participantes.length;
 
   return `
@@ -378,7 +425,7 @@ function renderColabGoal(meta) {
             ${participantes.map(participant => renderContributionItem(participant, meta)).join('')}
           </ul>
 
-          ${meta.privacidad ? `
+          ${(meta.privacidad_montos ?? meta.privacidad) ? `
             <p class="meta-privacidad-nota" role="note">
               ${getPrivacyIconSVG()}
               Los montos individuales estan ocultos
@@ -415,8 +462,13 @@ function renderGoalsList(listElement, goals, type) {
     .join('');
 }
 
-function renderGoals() {
-  const metas = cargarMetas();
+async function renderGoals() {
+  // Asegurar que la sesión esté inicializada antes de leer metas
+  if (window.nexusReady) await window.nexusReady;
+  // Cargar amigos para que renderColabGoal pueda resolver participantes
+  await cargarAmigosDelUsuario();
+
+  const metas = await cargarMetas();
   const personalGoals = metas.filter(meta => meta.tipo === 'personal');
   const colabGoals = metas.filter(meta => meta.tipo === 'colaborativa');
 
@@ -424,37 +476,43 @@ function renderGoals() {
   renderGoalsList(colabGoalsList, colabGoals, 'colaborativa');
 }
 
+/**
+ * Construye los participantes de una meta colaborativa en formato del schema:
+ * [{ amigo_id, porcentaje_contribucion }, ...].
+ * El usuario actual se representa con amigo_id=0.
+ *
+ * Las contribuciones iniciales se reparten equitativamente entre todos
+ * los participantes (incluyendo al usuario actual).
+ */
 function buildParticipants(amigos) {
+  const totalParticipantes = amigos.length + 1; // +1 por el usuario actual
+  const porcentajeBase = Math.floor(100 / totalParticipantes);
   return [
-    { id: 'usuario-actual', name: 'Tu', initial: 'T', color: '#5B3DF5', esUsuarioActual: true, aporte: 0 },
+    { amigo_id: 0, porcentaje_contribucion: porcentajeBase },
     ...amigos.map(friend => ({
-      id: friend.id,
-      name: friend.name,
-      initial: friend.initial || getInitial(friend.name),
-      color: friend.color || '#64748B',
-      esUsuarioActual: false,
-      aporte: 0,
-    })),
+      amigo_id: friend.id,
+      porcentaje_contribucion: porcentajeBase
+    }))
   ];
 }
 
-function deleteMeta(metaId) {
-  const metas = cargarMetas();
+async function deleteMeta(metaId) {
+  const metas = await cargarMetas();
   const meta = metas.find(item => String(item.id) === String(metaId));
   if (!meta) return;
 
   const shouldDelete = confirm(`Eliminar la meta "${meta.nombre}"?`);
   if (!shouldDelete) return;
 
-  guardarMetas(metas.filter(item => String(item.id) !== String(metaId)));
-  renderGoals();
+  await eliminarMetaDatos(metaId);
+  await renderGoals();
   setStatusMessage(`Meta "${meta.nombre}" eliminada.`);
 }
 
 
 // GESTIÓN DEL MODAL
 
-function openModal() {
+async function openModal() {
   state.lastFocusedElement = document.activeElement;
   state.currentStep = 1;
   state.selectedFriendIds.clear();
@@ -463,7 +521,11 @@ function openModal() {
   modalOverlay.classList.add('is-open');
   modalOverlay.setAttribute('aria-hidden', 'false');
 
-  renderFriendsList(MOCK_FRIENDS);
+  // Asegurar amigos cargados antes de renderizar el paso 2
+  if (window.nexusReady) await window.nexusReady;
+  await cargarAmigosDelUsuario();
+
+  renderFriendsList(AMIGOS_DEL_USUARIO);
   goToStep(1);
 
   requestAnimationFrame(() => inputNombre.focus());
@@ -602,7 +664,7 @@ function renderFriendsList(friends) {
 }
 
 function toggleFriendSelection(friendId) {
-  const friend = MOCK_FRIENDS.find(f => f.id === friendId);
+  const friend = AMIGOS_DEL_USUARIO.find(f => f.id === friendId);
   if (!friend) return;
 
   if (state.selectedFriendIds.has(friendId)) {
@@ -615,7 +677,7 @@ function toggleFriendSelection(friendId) {
 
   // Re-renderiza con el filtro de búsqueda activo
   const query    = friendsSearchInput.value.toLowerCase().trim();
-  const filtered = MOCK_FRIENDS.filter(f => f.name.toLowerCase().includes(query));
+  const filtered = AMIGOS_DEL_USUARIO.filter(f => f.name.toLowerCase().includes(query));
   renderFriendsList(filtered);
 
   renderSelectedChips();
@@ -626,7 +688,7 @@ function toggleFriendSelection(friendId) {
 function renderSelectedChips() {
   selectedFriendsEl.innerHTML = '';
   state.selectedFriendIds.forEach(id => {
-    const friend = MOCK_FRIENDS.find(f => f.id === id);
+    const friend = AMIGOS_DEL_USUARIO.find(f => f.id === id);
     if (!friend) return;
 
     const chip = document.createElement('div');
@@ -656,7 +718,7 @@ function createMetaLegacyForConsole() {
   const icono      = document.querySelector('input[name="meta-icono"]:checked')?.value ?? '⭐';
   const privacidad = tipo === 'colaborativa' ? togglePrivacidad.checked : false;
   const amigos     = tipo === 'colaborativa'
-    ? MOCK_FRIENDS.filter(f => state.selectedFriendIds.has(f.id))
+    ? AMIGOS_DEL_USUARIO.filter(f => state.selectedFriendIds.has(f.id))
     : [];
 
   // TODO: reemplazar por POST /api/metas cuando exista el backend
@@ -670,34 +732,41 @@ function createMetaLegacyForConsole() {
 }
 
 */
-function createMeta() {
+async function createMeta() {
   const tipo       = getSelectedType();
   const nombre     = inputNombre.value.trim();
   const objetivo   = parseFloat(inputObjetivo.value);
   const fecha      = inputFecha.value;
-  const icono      = document.querySelector('input[name="meta-icono"]:checked')?.value ?? 'laptop';
+  const iconoRaw   = document.querySelector('input[name="meta-icono"]:checked')?.value ?? 'laptop';
   const privacidad = tipo === 'colaborativa' ? togglePrivacidad.checked : false;
   const amigos     = tipo === 'colaborativa'
-    ? MOCK_FRIENDS.filter(f => state.selectedFriendIds.has(f.id))
+    ? AMIGOS_DEL_USUARIO.filter(f => state.selectedFriendIds.has(f.id))
     : [];
 
+  // Mapear el valor del radio a emoji (alineado con metas.json existentes)
+  const MAPA_ICONOS = { laptop: '💻', escudo: '🛡️', avion: '✈️', regalo: '🎁', casa: '🏠', auto: '🚗' };
+  const icono = MAPA_ICONOS[iconoRaw] || '⭐';
+
+  const usuario = await obtenerUsuarioActual();
   const nuevaMeta = {
-    id: `meta-${Date.now()}`,
+    id: Date.now(),
+    usuario_id: usuario ? usuario.id : null,
     tipo,
     nombre,
-    objetivo,
-    ahorrado: 0,
-    fechaLimite: fecha,
     icono,
-    privacidad,
-    participantes: tipo === 'colaborativa' ? buildParticipants(amigos) : [],
-    creadaEn: new Date().toISOString(),
+    color_avatar: 'amber',
+    monto_objetivo: objetivo,
+    monto_ahorrado: 0,
+    fecha_creacion: new Date().toISOString().split('T')[0],
+    fecha_limite: fecha,
+    ...(tipo === 'colaborativa' && {
+      privacidad_montos: privacidad,
+      participantes: buildParticipants(amigos)
+    })
   };
 
-  const metas = cargarMetas();
-  metas.push(nuevaMeta);
-  guardarMetas(metas);
-  renderGoals();
+  await agregarMetaDatos(nuevaMeta);
+  await renderGoals();
 
   closeModal();
   setStatusMessage(`Meta "${nombre}" creada exitosamente.`);
@@ -738,11 +807,11 @@ function resetForm() {
 
 // EVENT LISTENERS
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
 
-  renderGoals();
+  await renderGoals();
 
-  btnOpenModal.addEventListener('click', openModal);
+  btnOpenModal.addEventListener('click', () => { openModal(); });
   btnCloseModal.addEventListener('click', closeModal);
   btnCancel.addEventListener('click', closeModal);
 
@@ -769,14 +838,14 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Botón principal del paso 1: valida y avanza o crea
-  btnStep1Next.addEventListener('click', () => {
+  btnStep1Next.addEventListener('click', async () => {
     if (!validateStep1()) return;
 
     if (getSelectedType() === 'colaborativa') {
       goToStep(2);
       announce('Paso 2 de 2: Agrega amigos y configura la privacidad.');
     } else {
-      createMeta();
+      await createMeta();
     }
   });
 
@@ -785,13 +854,13 @@ document.addEventListener('DOMContentLoaded', () => {
     announce('Volviste al paso 1.');
   });
 
-  btnStep2Create.addEventListener('click', () => {
+  btnStep2Create.addEventListener('click', async () => {
     if (!state.selectedFriendIds.size) {
       announce('Debes agregar al menos un amigo para crear una meta colaborativa.');
       friendsSearchInput.focus();
       return;
     }
-    createMeta();
+    await createMeta();
   });
 
   // Event delegation para la lista de amigos (click y teclado)
@@ -816,7 +885,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Filtrado de amigos en tiempo real
   friendsSearchInput.addEventListener('input', () => {
     const query    = friendsSearchInput.value.toLowerCase().trim();
-    const filtered = MOCK_FRIENDS.filter(f => f.name.toLowerCase().includes(query));
+    const filtered = AMIGOS_DEL_USUARIO.filter(f => f.name.toLowerCase().includes(query));
     renderFriendsList(filtered);
   });
 
@@ -830,10 +899,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   [personalGoalsList, colabGoalsList].forEach(list => {
     if (!list) return;
-    list.addEventListener('click', (e) => {
+    list.addEventListener('click', async (e) => {
       const deleteButton = e.target.closest('[data-delete-meta-id]');
       if (!deleteButton) return;
-      deleteMeta(deleteButton.getAttribute('data-delete-meta-id'));
+      await deleteMeta(deleteButton.getAttribute('data-delete-meta-id'));
     });
   });
 

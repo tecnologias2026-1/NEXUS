@@ -344,6 +344,30 @@ async function obtenerMetas() {
   return (datos?.metas || []).filter(m => m.usuario_id === usuario.id);
 }
 
+/**
+ * Agrega una meta nueva al storage
+ * @param {Object} nuevaMeta - Meta con campos del schema (monto_objetivo, etc.)
+ * @returns {Promise<void>}
+ */
+async function agregarMetaDatos(nuevaMeta) {
+  const datos = await _cargarRecurso('metas');
+  if (!datos) return;
+  datos.metas.push(nuevaMeta);
+  _guardarRecurso('metas', datos);
+}
+
+/**
+ * Elimina una meta por ID
+ * @param {number|string} metaId
+ * @returns {Promise<void>}
+ */
+async function eliminarMetaDatos(metaId) {
+  const datos = await _cargarRecurso('metas');
+  if (!datos) return;
+  datos.metas = datos.metas.filter(m => String(m.id) !== String(metaId));
+  _guardarRecurso('metas', datos);
+}
+
 
 /* ============================================================
    UTILIDADES DE DESARROLLO
