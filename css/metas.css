@@ -405,7 +405,10 @@ body.dashboard-page .btn-meta-opciones {
 }
 
 body.dashboard-page .btn-meta-opciones--delete {
+  border: 1px solid #fee2e2;
   border-radius: 8px;
+  background: #ffffff;
+  color: #dc2626;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
@@ -942,5 +945,204 @@ body.dashboard-page .btn-primary {
   body.dashboard-page .dashboard-main {
     min-width: 0;
   }
+}
+
+/* Visual refresh: metas mas centradas y coherentes con el dashboard */
+body.dashboard-page .dashboard-main {
+  padding: 36px 44px 40px;
+}
+
+body.dashboard-page .page-header,
+body.dashboard-page .metas-actions-bar,
+body.dashboard-page .metas-seccion,
+body.dashboard-page .metas-privacidad-global {
+  width: 100%;
+  max-width: 1080px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+body.dashboard-page .page-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+body.dashboard-page .page-title {
+  font-size: 36px;
+  line-height: 1.1;
+  letter-spacing: 0;
+}
+
+body.dashboard-page .page-subtitle {
+  max-width: 560px;
+  line-height: 1.55;
+}
+
+body.dashboard-page .metas-actions-bar {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 34px;
+}
+
+body.dashboard-page .btn-agregar-meta {
+  max-width: 620px;
+  height: 58px;
+  border: none;
+  background: linear-gradient(135deg, #5b3df5, #8b5cf6);
+  color: #ffffff;
+  box-shadow: 0 16px 34px rgba(91, 61, 245, 0.22);
+}
+
+body.dashboard-page .btn-agregar-meta:hover,
+body.dashboard-page .btn-agregar-meta:focus-visible {
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  transform: translateY(-1px);
+}
+
+body.dashboard-page .metas-seccion {
+  margin-bottom: 40px;
+}
+
+body.dashboard-page .metas-seccion-titulo {
+  justify-content: center;
+  margin-bottom: 22px;
+  font-size: 24px;
+}
+
+body.dashboard-page .metas-seccion-icono {
+  width: 22px;
+  height: 22px;
+  color: #5b3df5;
+}
+
+body.dashboard-page .metas-lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 18px;
+  align-items: stretch;
+}
+
+body.dashboard-page .metas-seccion:first-of-type {
+  max-width: 760px;
+}
+
+body.dashboard-page .metas-seccion:first-of-type .metas-lista,
+body.dashboard-page .metas-seccion:first-of-type .meta-item {
+  display: grid;
+  align-items: stretch;
+  justify-content: stretch;
+}
+
+body.dashboard-page .meta-card--personal {
+  max-width: none;
+}
+
+body.dashboard-page .meta-card {
+  position: relative;
+  overflow: hidden;
+  padding: 24px;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  border-radius: 22px;
+  background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+body.dashboard-page .meta-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 4px;
+  background: linear-gradient(90deg, #5b3df5, #22c55e, #38bdf8);
+}
+
+body.dashboard-page .meta-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(91, 61, 245, 0.24);
+  box-shadow: 0 22px 52px rgba(15, 23, 42, 0.12);
+}
+
+body.dashboard-page .meta-card-header {
+  grid-template-columns: 48px 1fr 34px;
+  gap: 16px;
+  align-items: center;
+}
+
+body.dashboard-page .meta-card-icono,
+body.dashboard-page .meta-card-avatar-grupo {
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 15px;
+  background: #eef2ff;
+  color: #4f46e5;
+}
+
+body.dashboard-page .meta-card-titulo {
+  font-size: 19px;
+  line-height: 1.25;
+}
+
+body.dashboard-page .meta-card-dias,
+body.dashboard-page .meta-card-meta-item {
+  color: #64748b;
+}
+
+body.dashboard-page .btn-meta-opciones {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+}
+
+body.dashboard-page .meta-progreso-wrapper {
+  margin-top: 24px;
+}
+
+body.dashboard-page .meta-progreso-barra {
+  height: 10px;
+  background: #e2e8f0;
+}
+
+body.dashboard-page .meta-progreso-relleno {
+  background: linear-gradient(90deg, #5b3df5, #22c55e);
+}
+
+body.dashboard-page .meta-montos {
+  gap: 14px;
+}
+
+body.dashboard-page .meta-monto-grupo {
+  flex: 1;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: #f8fafc;
+  border: 1px solid #edf2f7;
+}
+
+body.dashboard-page .meta-monto-etiqueta {
+  color: #94a3b8;
+}
+
+body.dashboard-page .meta-monto-valor {
+  color: #334155;
+  font-size: 16px;
+}
+
+body.dashboard-page .metas-empty-state {
+  padding: 28px;
+  border-radius: 20px;
+  background: #ffffff;
+  border: 1px dashed #cbd5e1;
+}
+
+body.dashboard-page .metas-privacidad-global {
+  margin-top: 10px;
+  justify-content: center;
+  border-radius: 18px;
+  background: #eef6ff;
 }
 

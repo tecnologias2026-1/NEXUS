@@ -61,7 +61,6 @@ const btnStep2Back       = document.getElementById('btn-step2-back');
 const btnStep2Create     = document.getElementById('btn-step2-create');
 
 const srAnnouncer        = document.getElementById('sr-announcer');
-const METAS_STORAGE_KEY  = 'metas';
 const personalGoalsList  = document.querySelector('[aria-label="Lista de metas personales"]');
 const colabGoalsList     = document.querySelector('[aria-label="Lista de metas colaborativas"]');
 const statusRegion       = document.getElementById('metas-status-region');
@@ -709,29 +708,6 @@ function renderSelectedChips() {
 
 // CREACIÓN DE META
 
-/*
-function createMetaLegacyForConsole() {
-  const tipo       = getSelectedType();
-  const nombre     = inputNombre.value.trim();
-  const objetivo   = parseFloat(inputObjetivo.value);
-  const fecha      = inputFecha.value;
-  const icono      = document.querySelector('input[name="meta-icono"]:checked')?.value ?? '⭐';
-  const privacidad = tipo === 'colaborativa' ? togglePrivacidad.checked : false;
-  const amigos     = tipo === 'colaborativa'
-    ? AMIGOS_DEL_USUARIO.filter(f => state.selectedFriendIds.has(f.id))
-    : [];
-
-  // TODO: reemplazar por POST /api/metas cuando exista el backend
-  console.group('[NEXUS] Nueva meta creada');
-  console.table({ tipo, nombre, objetivo, fecha, icono, privacidad });
-  if (amigos.length) console.log('Amigos:', amigos.map(a => a.name).join(', '));
-  console.groupEnd();
-
-  closeModal();
-  announce(`Meta "${nombre}" creada exitosamente.`);
-}
-
-*/
 async function createMeta() {
   const tipo       = getSelectedType();
   const nombre     = inputNombre.value.trim();

@@ -36,6 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
         initializeHomeButtons();
     }
 
+    initializeMobileSidebarMenu();
+
     // ── 2. CAMBIO DE MONEDA ──
     if (document.getElementById('currency-select') || document.querySelector('.sidebar-currency-btn')) {
         initializeCurrencyChange();
@@ -54,6 +56,77 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+
+
+/* ============================================================
+   MENU RESPONSIVE DEL DASHBOARD
+   ============================================================ */
+
+function initializeMobileSidebarMenu() {
+    const sidebars = document.querySelectorAll('body.dashboard-page .sidebar');
+
+    sidebars.forEach((sidebar, index) => {
+        if (sidebar.querySelector('.sidebar-menu-toggle')) return;
+
+        const brand = sidebar.querySelector('.sidebar-logo, .sidebar-brand');
+        const nav = sidebar.querySelector('.sidebar-nav') ||
+            Array.from(sidebar.children).find(child => child.classList.contains('sidebar-nav-list'));
+
+        if (!brand || !nav) return;
+
+        if (!nav.id) {
+            nav.id = `sidebar-mobile-menu-${index + 1}`;
+        }
+
+        const toggleButton = document.createElement('button');
+        toggleButton.type = 'button';
+        toggleButton.className = 'sidebar-menu-toggle';
+        toggleButton.setAttribute('aria-controls', nav.id);
+        toggleButton.setAttribute('aria-expanded', 'false');
+        toggleButton.setAttribute('aria-label', 'Abrir menu de navegacion');
+        toggleButton.innerHTML = `
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        `;
+
+        sidebar.classList.add('sidebar-has-toggle');
+        brand.insertAdjacentElement('afterend', toggleButton);
+
+        const setMenuOpen = (isOpen) => {
+            sidebar.classList.toggle('sidebar-menu-open', isOpen);
+            toggleButton.setAttribute('aria-expanded', String(isOpen));
+            toggleButton.setAttribute(
+                'aria-label',
+                isOpen ? 'Cerrar menu de navegacion' : 'Abrir menu de navegacion'
+            );
+        };
+
+        toggleButton.addEventListener('click', () => {
+            setMenuOpen(!sidebar.classList.contains('sidebar-menu-open'));
+        });
+
+        sidebar.querySelectorAll('.sidebar-nav-link, a.sidebar-nav-item').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.matchMedia('(max-width: 820px)').matches) {
+                    setMenuOpen(false);
+                }
+            });
+        });
+
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape') {
+                setMenuOpen(false);
+            }
+        });
+
+        window.addEventListener('resize', () => {
+            if (!window.matchMedia('(max-width: 820px)').matches) {
+                setMenuOpen(false);
+            }
+        });
+    });
+}
 
 
 /* ============================================================

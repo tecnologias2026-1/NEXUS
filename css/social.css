@@ -145,12 +145,12 @@ body.dashboard-page {
 }
 
 .sidebar-nav-item--active {
-  background-color: #f3e8ff;
-  color: #a855f7;
+  background-color: #eaf4ff;
+  color: #60a5fa;
 }
 
 .sidebar-nav-item--active .nav-icon {
-  color: #a855f7;
+  color: #60a5fa;
 }
 
 .nav-icon {
@@ -308,7 +308,7 @@ body.dashboard-page {
 /*TARJETA DE RANKING*/
 .ranking-card {
   display: grid;
-  grid-template-columns: 36px 36px 1fr auto;
+  grid-template-columns: 36px 36px minmax(0, 1fr) auto 36px;
   align-items: center;
   gap: 14px;
   padding: 16px;
@@ -430,6 +430,26 @@ body.dashboard-page {
 .ranking-pts-label {
   font-size: 13px;
   color: var(--text-secondary);
+}
+
+.btn-amigo-eliminar {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #fee2e2;
+  border-radius: 12px;
+  background-color: #ffffff;
+  color: #dc2626;
+  cursor: pointer;
+  transition: background-color 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+}
+
+.btn-amigo-eliminar:hover {
+  background-color: #fef2f2;
+  border-color: #fecaca;
+  transform: translateY(-1px);
 }
 
 
@@ -829,7 +849,8 @@ body.dashboard-page {
 .modal-close:focus,
 .sidebar-nav-item:focus,
 .sidebar-currency-btn:focus,
-.sidebar-logout-btn:focus {
+.sidebar-logout-btn:focus,
+.btn-amigo-eliminar:focus {
   outline: 2px solid #111827;
   outline-offset: 3px;
 }
@@ -842,7 +863,7 @@ body.dashboard-page {
   }
 
   .ranking-card {
-    grid-template-columns: 32px 36px 1fr;
+    grid-template-columns: 32px 36px minmax(0, 1fr) 36px;
     gap: 12px;
   }
 
@@ -850,6 +871,12 @@ body.dashboard-page {
     grid-column: 2 / 4;
     justify-content: flex-start;
     margin-top: 4px;
+  }
+
+  .btn-amigo-eliminar {
+    grid-column: 4;
+    grid-row: 1;
+    justify-self: end;
   }
 
   .goal-card-header {
@@ -918,7 +945,7 @@ body.dashboard-page {
   }
 
   .ranking-card {
-    grid-template-columns: 28px 36px 1fr;
+    grid-template-columns: 28px 36px minmax(0, 1fr) 36px;
     padding: 14px;
   }
 
@@ -932,6 +959,11 @@ body.dashboard-page {
     grid-column: 1 / -1;
     justify-content: flex-start;
     padding-left: 42px;
+  }
+
+  .btn-amigo-eliminar {
+    width: 34px;
+    height: 34px;
   }
 
   .contribution-item {

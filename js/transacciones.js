@@ -39,12 +39,44 @@ async function inicializarTransacciones() {
     }
     inicializarEventos();
     configurarBotonesDeTipo();
-    await llenarSelectCategorias('gasto'); // arranca filtrado al tipo activo
+    await llenarSelectCategorias(document.querySelector('#transaction-type')?.value || 'ingreso');
 
     console.log('✅ Sistema de transacciones inicializado correctamente');
   } catch (error) {
     console.error('❌ Error al inicializar transacciones:', error);
   }
+}
+
+function limpiarMontoTransaccion(valor) {
+  return String(valor || '').replace(/\D/g, '');
+}
+
+function formatearMilesTransaccion(valor) {
+  const limpio = limpiarMontoTransaccion(valor);
+  if (!limpio) return '';
+  return limpio.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+}
+
+function enfocarHistorialTransacciones() {
+  const historial = document.querySelector('.transaction-history-section');
+  if (!historial) return;
+  historial.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function mostrarConfirmacionTransaccion(mensaje, tipo = 'success') {
+  const anterior = document.querySelector('.transaction-toast');
+  if (anterior) anterior.remove();
+
+  const toast = document.createElement('div');
+  toast.className = `transaction-toast transaction-toast--${tipo}`;
+  toast.setAttribute('role', 'status');
+  toast.textContent = mensaje;
+  document.body.appendChild(toast);
+
+  window.setTimeout(() => {
+    toast.classList.add('transaction-toast--hide');
+    window.setTimeout(() => toast.remove(), 220);
+  }, 2400);
 }
 
 /**
@@ -77,6 +109,8 @@ function inicializarEventos() {
   const btnAgregar = document.querySelector('#btn-add-transaction');
   const formTransaccion = document.querySelector('#form-nueva-transaccion');
   const btnCerrarModal = document.querySelector('#modal-close-btn');
+  const btnCancelarModal = document.querySelector('#modal-cancel-btn');
+  const inputMonto = document.querySelector('#transaction-amount');
 
   if (btnAgregar) {
     btnAgregar.addEventListener('click', () => {
@@ -91,6 +125,17 @@ function inicializarEventos() {
 
   if (btnCerrarModal) {
     btnCerrarModal.addEventListener('click', cerrarModalNuevaTransaccion);
+  }
+
+  if (btnCancelarModal) {
+    btnCancelarModal.addEventListener('click', cerrarModalNuevaTransaccion);
+  }
+
+  if (inputMonto) {
+    inputMonto.addEventListener('input', () => {
+      const valorLimpio = limpiarMontoTransaccion(inputMonto.value);
+      inputMonto.value = formatearMilesTransaccion(valorLimpio);
+    });
   }
 
   // Cerrar modal al hacer click fuera del contenido
@@ -177,7 +222,7 @@ async function manejarSubmitNuevaTransaccion(evento) {
 
     const tipo = document.querySelector('#transaction-type')?.value;
     const categoriaIdRaw = document.querySelector('#transaction-category')?.value;
-    const monto = parseFloat(document.querySelector('#transaction-amount')?.value || 0);
+    const monto = parseInt(limpiarMontoTransaccion(document.querySelector('#transaction-amount')?.value), 10) || 0;
     const descripcion = document.querySelector('#transaction-description')?.value;
     const recurrente = document.querySelector('#transaction-recurring')?.checked || false;
     const fijo = document.querySelector('#transaction-fixed')?.checked || false;
@@ -217,16 +262,18 @@ async function manejarSubmitNuevaTransaccion(evento) {
     document.querySelector('#transaction-type').value = 'ingreso';
     const botonIngreso = document.querySelector('[data-type="ingreso"]');
     if (botonIngreso) botonIngreso.click();
+    await llenarSelectCategorias('ingreso');
 
     // Cerrar modal
     cerrarModalNuevaTransaccion();
 
     // Mostrar confirmación
-    alert('✅ Transacción agregada correctamente');
+    mostrarConfirmacionTransaccion('Transacción agregada correctamente');
+    enfocarHistorialTransacciones();
 
   } catch (error) {
     console.error('❌ Error al procesar transacción:', error);
-    alert('❌ Error al agregar la transacción. Intenta de nuevo.');
+    mostrarConfirmacionTransaccion('No se pudo agregar la transacción. Intenta de nuevo.', 'error');
   }
 }
 

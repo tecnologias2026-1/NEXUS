@@ -68,6 +68,61 @@ function renderizarRanking(html) {
 }
 
 /**
+ * Elimina un amigo del ranking y actualiza la vista
+ * @param {number|string} amigoId
+ * @returns {Promise<void>}
+ */
+async function eliminarAmigo(amigoId) {
+  if (String(amigoId) === '0') return;
+
+  try {
+    const amigos = await obtenerAmigos();
+    const amigo = amigos.find(item => String(item.id) === String(amigoId));
+    const nombre = amigo?.nombre || 'este amigo';
+
+    if (!confirm(`Eliminar a ${nombre} de tu circulo?`)) return;
+
+    const eliminado = await eliminarAmigoDatos(amigoId);
+    if (!eliminado) {
+      throw new Error('No se encontro el amigo seleccionado.');
+    }
+
+    await inicializarListaAmigos();
+
+    if (typeof inicializarMetasColaborativasSocial === 'function') {
+      await inicializarMetasColaborativasSocial();
+    }
+
+    if (typeof mostrarToast === 'function') {
+      mostrarToast('Amigo eliminado', `${nombre} ya no esta en tu ranking`);
+    }
+
+    console.log('Amigo eliminado:', amigoId);
+  } catch (error) {
+    console.error('Error al eliminar amigo:', error);
+    alert('No se pudo eliminar el amigo. Intenta de nuevo.');
+  }
+}
+
+/**
+ * Activa la delegacion de eventos para botones de eliminar amigo
+ * @returns {void}
+ */
+function inicializarEventosEliminarAmigos() {
+  const contenedor = document.querySelector('.ranking-list');
+  if (!contenedor || contenedor.dataset.deleteEventsBound === 'true') return;
+
+  contenedor.dataset.deleteEventsBound = 'true';
+  contenedor.addEventListener('click', async event => {
+    const botonEliminar = event.target.closest('[data-delete-amigo-id]');
+    if (!botonEliminar) return;
+
+    event.preventDefault();
+    await eliminarAmigo(botonEliminar.getAttribute('data-delete-amigo-id'));
+  });
+}
+
+/**
  * Función principal: carga, ordena y renderiza el ranking
  * @returns {Promise<void>}
  */
@@ -83,6 +138,7 @@ async function inicializarListaAmigos() {
     const ordenados = ordenarPorPuntos(amigos);
     const html = generarHTMLRanking(ordenados);
     renderizarRanking(html);
+    inicializarEventosEliminarAmigos();
   } catch (error) {
     console.error('❌ Error al inicializar ranking:', error);
     renderizarRanking(`
@@ -123,6 +179,8 @@ if (typeof module !== 'undefined' && module.exports) {
     generarHTMLRanking,
     renderizarRanking,
     inicializarListaAmigos,
-    agregarAmigo
+    agregarAmigo,
+    eliminarAmigo,
+    inicializarEventosEliminarAmigos
   };
 }

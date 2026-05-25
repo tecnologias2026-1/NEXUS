@@ -275,6 +275,28 @@ async function agregarTransaccionDatos(nuevaTransaccion) {
   _guardarRecurso('transacciones', datos);
 }
 
+/**
+ * Elimina una transaccion del usuario actual por ID
+ * @param {number|string} transaccionId
+ * @returns {Promise<boolean>} true si se elimino una transaccion
+ */
+async function eliminarTransaccionDatos(transaccionId) {
+  const usuario = await obtenerUsuarioActual();
+  const datos = await _cargarRecurso('transacciones');
+  if (!usuario || !datos) return false;
+
+  const totalAntes = datos.transacciones.length;
+  datos.transacciones = datos.transacciones.filter(transaccion => {
+    const esTransaccion = String(transaccion.id) === String(transaccionId);
+    const esDelUsuario = transaccion.usuario_id === usuario.id;
+    return !(esTransaccion && esDelUsuario);
+  });
+
+  const eliminado = datos.transacciones.length !== totalAntes;
+  if (eliminado) _guardarRecurso('transacciones', datos);
+  return eliminado;
+}
+
 
 /* ============================================================
    AMIGOS (con "Yo" insertado desde usuarios.json)
@@ -341,6 +363,30 @@ async function agregarAmigoDatos(nuevoAmigo) {
 
   datos.amigos.push(nuevoAmigo);
   _guardarRecurso('amigos', datos);
+}
+
+/**
+ * Elimina un amigo del usuario actual por ID
+ * @param {number|string} amigoId
+ * @returns {Promise<boolean>} true si se elimino un amigo
+ */
+async function eliminarAmigoDatos(amigoId) {
+  if (String(amigoId) === '0') return false;
+
+  const usuario = await obtenerUsuarioActual();
+  const datos = await _cargarRecurso('amigos');
+  if (!usuario || !datos) return false;
+
+  const totalAntes = datos.amigos.length;
+  datos.amigos = datos.amigos.filter(amigo => {
+    const esAmigo = String(amigo.id) === String(amigoId);
+    const esDelUsuario = amigo.usuario_id === usuario.id;
+    return !(esAmigo && esDelUsuario);
+  });
+
+  const eliminado = datos.amigos.length !== totalAntes;
+  if (eliminado) _guardarRecurso('amigos', datos);
+  return eliminado;
 }
 
 

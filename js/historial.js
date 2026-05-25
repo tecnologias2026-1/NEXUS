@@ -80,6 +80,70 @@ function renderizarHistorial(html) {
 }
 
 /**
+ * Muestra un mensaje breve asociado al historial
+ * @param {string} mensaje
+ * @param {string} tipo
+ * @returns {void}
+ */
+function mostrarMensajeHistorial(mensaje, tipo = 'success') {
+  if (typeof mostrarConfirmacionTransaccion === 'function') {
+    mostrarConfirmacionTransaccion(mensaje, tipo);
+    return;
+  }
+
+  console.log(mensaje);
+}
+
+/**
+ * Elimina una transaccion y actualiza el historial
+ * @param {number|string} transaccionId
+ * @returns {Promise<void>}
+ */
+async function eliminarTransaccion(transaccionId) {
+  try {
+    const transacciones = await cargarTransacciones();
+    const transaccion = transacciones.find(item => String(item.id) === String(transaccionId));
+    const nombre = transaccion?.nombre || 'esta transaccion';
+
+    if (!confirm(`Eliminar ${nombre} del historial?`)) return;
+
+    const eliminada = await eliminarTransaccionDatos(transaccionId);
+    if (!eliminada) {
+      throw new Error('No se encontro la transaccion seleccionada.');
+    }
+
+    await inicializarHistorial();
+
+    if (typeof inicializarLimites === 'function') {
+      await inicializarLimites();
+    }
+
+    mostrarMensajeHistorial('Transaccion eliminada correctamente');
+  } catch (error) {
+    console.error('Error al eliminar transaccion:', error);
+    mostrarMensajeHistorial('No se pudo eliminar la transaccion. Intenta de nuevo.', 'error');
+  }
+}
+
+/**
+ * Activa la delegacion de eventos para eliminar transacciones
+ * @returns {void}
+ */
+function inicializarEventosHistorial() {
+  const contenedor = document.querySelector('.transaction-history-content');
+  if (!contenedor || contenedor.dataset.deleteEventsBound === 'true') return;
+
+  contenedor.dataset.deleteEventsBound = 'true';
+  contenedor.addEventListener('click', async event => {
+    const botonEliminar = event.target.closest('[data-delete-transaction-id]');
+    if (!botonEliminar) return;
+
+    event.preventDefault();
+    await eliminarTransaccion(botonEliminar.getAttribute('data-delete-transaction-id'));
+  });
+}
+
+/**
  * Función principal: Carga, ordena y renderiza el historial
  * @returns {Promise<void>}
  */
@@ -91,6 +155,7 @@ async function inicializarHistorial() {
     const ordenadas = ordenarPorFecha(transacciones);
     const html = generarHTMLHistorial(ordenadas);
     renderizarHistorial(html);
+    inicializarEventosHistorial();
   } catch (error) {
     console.error('❌ Error al inicializar historial:', error);
     renderizarHistorial(`
@@ -116,8 +181,10 @@ async function agregarTransaccion(nuevaTransaccion) {
       await inicializarLimites();
     }
     console.log('✅ Transacción agregada:', nuevaTransaccion);
+    return true;
   } catch (error) {
     console.error('❌ Error al agregar transacción:', error);
+    throw error;
   }
 }
 
@@ -128,6 +195,8 @@ if (typeof module !== 'undefined' && module.exports) {
     generarHTMLHistorial,
     renderizarHistorial,
     inicializarHistorial,
-    agregarTransaccion
+    agregarTransaccion,
+    eliminarTransaccion,
+    inicializarEventosHistorial
   };
 }
