@@ -4,7 +4,11 @@
       "Bash(grep -rn \"MOCK_FRIENDS\" js/)",
       "Bash(grep -rn \"localStorage.getItem\\('metas'\\\\|localStorage.setItem\\('metas'\\\\|localStorage.getItem\\('amigos'\\\\|localStorage.setItem\\('amigos'\" js/)",
       "Bash(grep -v \"//\")",
-      "Bash(node -e 'JSON.parse\\(require\\('\\\\''fs'\\\\''\\).readFileSync\\('\\\\''__TRACKED_VAR__'\\\\'','\\\\''utf8'\\\\''\\)\\)')"
+      "Bash(node -e 'JSON.parse\\(require\\('\\\\''fs'\\\\''\\).readFileSync\\('\\\\''__TRACKED_VAR__'\\\\'','\\\\''utf8'\\\\''\\)\\)')",
+      "Bash(git checkout *)",
+      "Bash(git status *)",
+      "Bash(git push *)",
+      "Bash(git branch *)"
     ]
   }
 }
