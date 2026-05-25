@@ -1376,7 +1376,10 @@ body.dashboard-page .metas-privacidad-global {
   position: relative;
   width: 90%;
   max-width: 420px;
-  margin: 80px auto;
+  margin: 5vh auto;
+  max-height: 90vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   background-color: #ffffff;
   border-radius: 20px;
   padding: 24px;
@@ -1500,4 +1503,142 @@ body.dashboard-page .metas-privacidad-global {
 
 #modal-aportar-meta .btn-modal-confirm:hover {
   background-color: #1f2937;
+}
+
+/* ============================================================
+   RESPONSIVE — MODAL DE APORTE / RETIRO
+   ============================================================
+   Ajustes específicos para que el sub-modal y la vista de
+   confirmación se vean correctos en pantallas medianas y pequeñas.
+*/
+
+/* Texto del confirm-retiro puede tener nombres/montos largos */
+#vista-confirmar-retiro .modal-subtitle,
+#vista-confirmar-retiro .modal-subtitle strong {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+/* Mobile mediano (tablets y celulares grandes) */
+@media (max-width: 560px) {
+  #modal-aportar-meta .modal-content {
+    width: calc(100% - 24px);
+    max-width: none;
+    margin: 12px auto;
+    max-height: calc(100vh - 24px);
+    padding: 20px 18px;
+    border-radius: 16px;
+  }
+
+  #modal-aportar-meta .modal-close {
+    width: 40px;
+    height: 40px;
+    top: 10px;
+    left: 10px;
+  }
+
+  #modal-aportar-meta .modal-icon-hero,
+  #modal-aportar-meta .modal-icon-confirm {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 12px;
+  }
+
+  #modal-aportar-meta .modal-title {
+    font-size: 20px;
+  }
+
+  #modal-aportar-meta .modal-subtitle {
+    font-size: 13px;
+  }
+
+  #modal-aportar-meta .modal-actions {
+    gap: 8px;
+  }
+
+  #modal-aportar-meta .btn-modal-cancel,
+  #modal-aportar-meta .btn-modal-confirm {
+    min-height: 44px;
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+
+  .btn-retirar-modal {
+    min-height: 44px;
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+
+  .modal-separator {
+    margin: 16px 0 12px 0;
+  }
+
+  .retirar-confirmacion-detalle {
+    font-size: 12px;
+    padding: 10px 12px;
+  }
+}
+
+/* Mobile muy pequeño (<=360px: iPhone SE, Android compactos) */
+@media (max-width: 360px) {
+  #modal-aportar-meta .modal-content {
+    padding: 18px 14px;
+  }
+
+  #modal-aportar-meta .modal-title {
+    font-size: 18px;
+  }
+
+  #modal-aportar-meta .form-field-input {
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+}
+
+/* Altura corta (landscape mobile, pantallas comprimidas con teclado) */
+@media (max-height: 600px) {
+  #modal-aportar-meta .modal-content {
+    margin: 8px auto;
+    max-height: calc(100vh - 16px);
+  }
+
+  #modal-aportar-meta .modal-icon-hero,
+  #modal-aportar-meta .modal-icon-confirm {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 8px;
+  }
+
+  #modal-aportar-meta .modal-header {
+    margin-bottom: 12px;
+  }
+}
+
+/* El modal principal de "Nueva Meta" también gana scroll y altura controlada */
+body.dashboard-page #modal-add-meta .modal-content {
+  max-height: 90vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+@media (max-width: 560px) {
+  body.dashboard-page #modal-add-meta .modal-content {
+    margin: 12px auto;
+    max-height: calc(100vh - 24px);
+  }
+}
+
+/* Disclaimer en cards: más legible en mobile pequeño */
+@media (max-width: 360px) {
+  .meta-disclaimer {
+    font-size: 12px;
+    padding: 8px 10px;
+  }
+}
+
+/* Grid de metas: evita desbordamiento horizontal en pantallas muy estrechas */
+@media (max-width: 360px) {
+  body.dashboard-page .metas-lista {
+    grid-template-columns: 1fr;
+  }
 }
