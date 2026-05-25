@@ -1,23 +1,5 @@
 {
-  "usuarios": [
-    {
-      "id": 1,
-      "nombre": "David Alvarado",
-      "email": "david@nexus.app",
-      "password": "demo123",
-      "fecha_registro": "2026-01-15",
-      "frecuencia_ingreso": "mensual",
-      "ingreso_base": 2500000,
-      "moneda_preferida": "COP",
-      "gamificacion": {
-        "nivel": 5,
-        "xp_actual": 750,
-        "xp_siguiente_nivel": 1000,
-        "racha_dias": 5,
-        "puntos_ranking": 1750
-      }
-    }
-  ],
+  "usuarios": [],
   "sesion_actual": {
     "usuario_id": null
   }

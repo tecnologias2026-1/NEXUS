@@ -1,11 +1,3 @@
 {
-  "limites": [
-    { "id": 1, "usuario_id": 1, "categoria_id": 1, "monto_limite": 500000, "mes": "2026-05" },
-    { "id": 2, "usuario_id": 1, "categoria_id": 2, "monto_limite": 150000, "mes": "2026-05" },
-    { "id": 3, "usuario_id": 1, "categoria_id": 3, "monto_limite": 250000, "mes": "2026-05" },
-    { "id": 4, "usuario_id": 1, "categoria_id": 4, "monto_limite": 300000, "mes": "2026-05" },
-    { "id": 5, "usuario_id": 1, "categoria_id": 5, "monto_limite": 150000, "mes": "2026-05" },
-    { "id": 6, "usuario_id": 1, "categoria_id": 6, "monto_limite": 120000, "mes": "2026-05" },
-    { "id": 7, "usuario_id": 1, "categoria_id": 7, "monto_limite": 100000, "mes": "2026-05" }
-  ]
+  "limites": []
 }
