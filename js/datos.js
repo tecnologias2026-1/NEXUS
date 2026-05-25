@@ -450,6 +450,15 @@ const CATEGORIA_AHORRO_A_META = 9;
 const CATEGORIA_RETIRO_DE_META = 23;
 
 /**
+ * Formatea un número como moneda COP — duplicado mínimo para que datos.js
+ * pueda generar mensajes sin depender de calculos.js (no siempre cargado).
+ */
+function formatearMontoCOP(valor) {
+  const n = Number(valor) || 0;
+  return `$${n.toLocaleString('es-CO')} COP`;
+}
+
+/**
  * Indica si una meta puede ser retirada.
  * Se permite retirar SOLO si:
  *   - El monto ahorrado alcanzó o superó el objetivo, O
@@ -507,6 +516,23 @@ async function aportarAMeta(metaId, monto) {
   if (!meta) return { exito: false, mensaje: 'Meta no encontrada.' };
 
   const montoAhorradoAnterior = Number(meta.monto_ahorrado) || 0;
+  const montoObjetivo = Number(meta.monto_objetivo) || 0;
+  const restante = Math.max(0, montoObjetivo - montoAhorradoAnterior);
+
+  // Validación: no permitir que el aporte exceda el objetivo
+  if (montoObjetivo > 0 && montoNumerico > restante) {
+    if (restante === 0) {
+      return {
+        exito: false,
+        mensaje: 'Esta meta ya alcanzó el monto objetivo. Puedes retirar los ahorros.'
+      };
+    }
+    return {
+      exito: false,
+      mensaje: `Solo puedes aportar hasta ${formatearMontoCOP(restante)} para alcanzar el objetivo.`
+    };
+  }
+
   const montoAhorradoNuevo = montoAhorradoAnterior + montoNumerico;
   meta.monto_ahorrado = montoAhorradoNuevo;
 

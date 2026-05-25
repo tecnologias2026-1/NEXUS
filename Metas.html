@@ -1057,16 +1057,17 @@
               step="1"
               required
               autocomplete="off">
-            <p class="form-field-hint">
+            <p class="form-field-hint" id="aportar-hint-faltante">
               Este aporte se registrará como un gasto en tu balance.
             </p>
+            <p class="form-field-error" id="aportar-error" role="alert" hidden></p>
           </div>
 
           <div class="modal-actions">
             <button type="button" class="btn-modal-cancel" id="modal-aportar-cancel">
               Cancelar
             </button>
-            <button type="submit" class="btn-modal-confirm">
+            <button type="submit" class="btn-modal-confirm" id="btn-aportar-confirmar">
               Confirmar aporte
             </button>
           </div>

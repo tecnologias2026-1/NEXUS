@@ -1024,12 +1024,46 @@ async function abrirModalAportar(metaId) {
 
   _metaIdAportandoActual = metaId;
 
-  const modal     = document.getElementById('modal-aportar-meta');
-  const nombreEl  = document.getElementById('modal-aportar-nombre-meta');
-  const inputEl   = document.getElementById('input-aportar-monto');
+  const modal      = document.getElementById('modal-aportar-meta');
+  const nombreEl   = document.getElementById('modal-aportar-nombre-meta');
+  const inputEl    = document.getElementById('input-aportar-monto');
+  const hintEl     = document.getElementById('aportar-hint-faltante');
+  const errorEl    = document.getElementById('aportar-error');
+  const btnConfirm = document.getElementById('btn-aportar-confirmar');
 
   if (nombreEl) nombreEl.textContent = meta.nombre;
   if (inputEl) inputEl.value = '';
+  if (errorEl) { errorEl.hidden = true; errorEl.textContent = ''; }
+
+  // Configurar el input y el hint según cuánto falta para completar la meta
+  const ahorrado = Number(meta.monto_ahorrado) || 0;
+  const objetivo = Number(meta.monto_objetivo) || 0;
+  const restante = Math.max(0, objetivo - ahorrado);
+  const metaCumplida = objetivo > 0 && ahorrado >= objetivo;
+
+  if (inputEl) {
+    if (metaCumplida) {
+      inputEl.disabled = true;
+      inputEl.placeholder = 'Meta ya cumplida';
+      inputEl.removeAttribute('max');
+    } else {
+      inputEl.disabled = false;
+      inputEl.placeholder = 'Ej: 100000';
+      inputEl.max = restante;
+    }
+  }
+
+  if (hintEl) {
+    if (metaCumplida) {
+      hintEl.textContent = '🎉 Esta meta ya está cumplida. Puedes retirar los ahorros.';
+    } else {
+      hintEl.textContent = `Te faltan ${formatCurrencyCOP(restante)} para completar esta meta. El aporte se registrará como un gasto en tu balance.`;
+    }
+  }
+
+  if (btnConfirm) {
+    btnConfirm.disabled = metaCumplida;
+  }
 
   // Configurar el botón Retirar según la condición de la meta
   configurarBotonRetirarEnModal(meta);
@@ -1039,7 +1073,9 @@ async function abrirModalAportar(metaId) {
 
   modal.classList.add('active');
   modal.setAttribute('aria-hidden', 'false');
-  setTimeout(() => inputEl?.focus(), 50);
+  setTimeout(() => {
+    if (!metaCumplida) inputEl?.focus();
+  }, 50);
 }
 
 function cerrarModalAportar() {
@@ -1156,24 +1192,57 @@ async function handleSubmitAporte(e) {
   if (!_metaIdAportandoActual) return;
 
   const inputEl = document.getElementById('input-aportar-monto');
+  const errorEl = document.getElementById('aportar-error');
   const monto = parseFloat(inputEl?.value || 0);
 
+  // Limpiar error previo
+  if (errorEl) { errorEl.hidden = true; errorEl.textContent = ''; }
+
   if (!monto || monto <= 0) {
-    announce('El monto debe ser mayor a 0.');
+    mostrarErrorAportar('El monto debe ser mayor a 0.');
     inputEl?.focus();
     return;
+  }
+
+  // Validación client-side: no permitir aportar más de lo que falta
+  // (mejor UX — el usuario ve el error antes de enviar; aportarAMeta
+  // también valida por seguridad).
+  const metas = await cargarMetas();
+  const meta = metas.find(m => String(m.id) === String(_metaIdAportandoActual));
+  if (meta) {
+    const ahorrado = Number(meta.monto_ahorrado) || 0;
+    const objetivo = Number(meta.monto_objetivo) || 0;
+    const restante = Math.max(0, objetivo - ahorrado);
+
+    if (objetivo > 0 && monto > restante) {
+      if (restante === 0) {
+        mostrarErrorAportar('Esta meta ya alcanzó el monto objetivo. Puedes retirar los ahorros.');
+      } else {
+        mostrarErrorAportar(`Solo puedes aportar hasta ${formatCurrencyCOP(restante)} para alcanzar el objetivo.`);
+      }
+      inputEl?.focus();
+      return;
+    }
   }
 
   const resultado = await aportarAMeta(_metaIdAportandoActual, monto);
 
   if (!resultado.exito) {
-    setStatusMessage(resultado.mensaje || 'No se pudo registrar el aporte.');
+    mostrarErrorAportar(resultado.mensaje || 'No se pudo registrar el aporte.');
     return;
   }
 
   cerrarModalAportar();
   await renderGoals();
   setStatusMessage(`Aporte de ${formatCurrencyCOP(monto)} registrado correctamente.`);
+}
+
+function mostrarErrorAportar(mensaje) {
+  const errorEl = document.getElementById('aportar-error');
+  if (!errorEl) return;
+  errorEl.textContent = mensaje;
+  errorEl.hidden = false;
+  announce(mensaje);
 }
 
 

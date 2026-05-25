@@ -1298,6 +1298,34 @@ body.dashboard-page .metas-privacidad-global {
   .btn-retirar-modal--habilitado:hover { transform: none; }
 }
 
+/* Mensaje de error inline en el formulario de aporte */
+.form-field-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 8px 0 0 0;
+  padding: 10px 12px;
+  background-color: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* Input deshabilitado cuando la meta ya está cumplida */
+#modal-aportar-meta .form-field-input:disabled {
+  background-color: #f3f4f6;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+#modal-aportar-meta .btn-modal-confirm:disabled {
+  background-color: #d1d5db;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
 /* Disclaimer pequeño dentro de cada card: aviso sobre el bloqueo del aporte */
 .meta-disclaimer {
   display: flex;
