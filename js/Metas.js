@@ -189,34 +189,17 @@ function getWithdrawIconSVG() {
 }
 
 /**
- * Genera el bloque HTML de acciones de una meta:
- * - Botón "Retirar" SIEMPRE visible (gris si no se puede, verde si se puede).
- * - Botón "Eliminar".
+ * Genera el bloque HTML de acciones de una meta.
  *
- * El aporte ya no tiene botón propio — se hace clickeando la card entera.
+ * Solo deja el botón Eliminar — el aporte se hace clickeando la card
+ * (abre el modal), y dentro del modal está la opción de Retirar.
  */
 function renderGoalActions(meta) {
-  const puedeRetirar = typeof puedeRetirarseMeta === 'function' && puedeRetirarseMeta(meta);
   const safeName = escapeHTML(meta.nombre);
   const safeId = escapeHTML(meta.id);
 
-  const claseRetirar = puedeRetirar
-    ? 'btn-meta-opciones--retirar btn-meta-opciones--retirar--habilitado'
-    : 'btn-meta-opciones--retirar btn-meta-opciones--retirar--bloqueado';
-
-  const ariaRetirar = puedeRetirar
-    ? `Retirar ahorro de la meta ${safeName}`
-    : `Retiro bloqueado para ${safeName}. Cumple la fecha o el monto objetivo para habilitarlo`;
-
   return `
     <div class="meta-card-acciones">
-      <button type="button" class="btn-meta-opciones ${claseRetirar}"
-        aria-label="${ariaRetirar}"
-        data-retirar-meta-id="${safeId}"
-        data-puede-retirar="${puedeRetirar}">
-        ${getWithdrawIconSVG()}
-        <span class="btn-meta-retirar-label">Retirar</span>
-      </button>
       <button type="button" class="btn-meta-opciones btn-meta-opciones--delete"
         aria-label="Eliminar meta ${safeName}"
         data-delete-meta-id="${safeId}">
@@ -960,19 +943,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!list) return;
 
     list.addEventListener('click', async (e) => {
-      // Botón Retirar: si está habilitado, retira; si está bloqueado, avisa.
-      const retirarButton = e.target.closest('[data-retirar-meta-id]');
-      if (retirarButton) {
-        e.stopPropagation();
-        const puedeRetirar = retirarButton.getAttribute('data-puede-retirar') === 'true';
-        if (!puedeRetirar) {
-          setStatusMessage('Solo se puede retirar al cumplir la fecha o el monto objetivo.');
-          return;
-        }
-        await handleRetirarMeta(retirarButton.getAttribute('data-retirar-meta-id'));
-        return;
-      }
-
       // Botón Eliminar
       const deleteButton = e.target.closest('[data-delete-meta-id]');
       if (deleteButton) {
@@ -1013,11 +983,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 let _metaIdAportandoActual = null;
 
 function inicializarModalAportar() {
-  const modalAportar    = document.getElementById('modal-aportar-meta');
-  const backdrop        = document.getElementById('modal-aportar-backdrop');
-  const btnClose        = document.getElementById('modal-aportar-close');
-  const btnCancel       = document.getElementById('modal-aportar-cancel');
-  const form            = document.getElementById('form-aportar-meta');
+  const modalAportar = document.getElementById('modal-aportar-meta');
+  const backdrop     = document.getElementById('modal-aportar-backdrop');
+  const btnClose     = document.getElementById('modal-aportar-close');
+  const btnCancel    = document.getElementById('modal-aportar-cancel');
+  const form         = document.getElementById('form-aportar-meta');
+
+  // Sección retiro dentro del modal
+  const btnRetirar          = document.getElementById('btn-retirar-en-modal');
+  const btnConfirmarAceptar = document.getElementById('btn-confirmar-retiro-aceptar');
+  const btnConfirmarCancel  = document.getElementById('btn-confirmar-retiro-cancelar');
 
   if (!modalAportar || !form) return;
 
@@ -1032,6 +1007,14 @@ function inicializarModalAportar() {
   });
 
   form.addEventListener('submit', handleSubmitAporte);
+
+  // Click en el botón Retirar del modal: si está habilitado, pasa a vista
+  // de confirmación; si está bloqueado, solo enfatiza el mensaje informativo.
+  btnRetirar?.addEventListener('click', handleClickRetirarEnModal);
+
+  // Confirmación inline del retiro
+  btnConfirmarAceptar?.addEventListener('click', handleConfirmarRetiro);
+  btnConfirmarCancel?.addEventListener('click', volverAVistaAportar);
 }
 
 async function abrirModalAportar(metaId) {
@@ -1048,6 +1031,12 @@ async function abrirModalAportar(metaId) {
   if (nombreEl) nombreEl.textContent = meta.nombre;
   if (inputEl) inputEl.value = '';
 
+  // Configurar el botón Retirar según la condición de la meta
+  configurarBotonRetirarEnModal(meta);
+
+  // Asegurar que arranca en la vista de aporte (por si quedó en confirmación)
+  mostrarVistaModal('vista-aportar');
+
   modal.classList.add('active');
   modal.setAttribute('aria-hidden', 'false');
   setTimeout(() => inputEl?.focus(), 50);
@@ -1061,7 +1050,105 @@ function cerrarModalAportar() {
   modal.classList.remove('active');
   modal.setAttribute('aria-hidden', 'true');
   if (form) form.reset();
+  mostrarVistaModal('vista-aportar'); // reset visual
   _metaIdAportandoActual = null;
+}
+
+/**
+ * Configura el botón Retirar dentro del modal según el estado de la meta.
+ * Cuando la meta cumple el monto u objetivo, el botón se ve verde y activo.
+ * Cuando no, el botón se ve gris y aparece un mensaje explicativo debajo.
+ */
+function configurarBotonRetirarEnModal(meta) {
+  const btn      = document.getElementById('btn-retirar-en-modal');
+  const mensaje  = document.getElementById('retirar-mensaje-bloqueado');
+  if (!btn) return;
+
+  const puedeRetirar = puedeRetirarseMeta(meta);
+
+  btn.classList.toggle('btn-retirar-modal--habilitado', puedeRetirar);
+  btn.classList.toggle('btn-retirar-modal--bloqueado', !puedeRetirar);
+  btn.setAttribute('data-puede-retirar', String(puedeRetirar));
+  btn.setAttribute(
+    'aria-label',
+    puedeRetirar
+      ? `Retirar el ahorro de la meta ${meta.nombre}`
+      : `Retiro bloqueado para ${meta.nombre}. Cumple la fecha o el monto objetivo`
+  );
+
+  if (mensaje) {
+    mensaje.hidden = puedeRetirar; // solo se muestra si está bloqueado
+  }
+}
+
+/**
+ * Cambia la vista visible dentro del modal entre 'vista-aportar' y
+ * 'vista-confirmar-retiro' (subdivs del mismo modal).
+ */
+function mostrarVistaModal(idVista) {
+  document.querySelectorAll('#modal-aportar-meta .vista-modal').forEach(el => {
+    const esActiva = el.id === idVista;
+    el.classList.toggle('vista-modal--activa', esActiva);
+    el.hidden = !esActiva;
+  });
+}
+
+/**
+ * Handler del botón Retirar dentro del modal.
+ * - Si la meta NO puede retirarse: enfatiza visualmente el mensaje informativo
+ *   (con una animación corta).
+ * - Si SÍ puede retirarse: cambia a la vista de confirmación.
+ */
+async function handleClickRetirarEnModal() {
+  const btn = document.getElementById('btn-retirar-en-modal');
+  if (!btn) return;
+
+  const puedeRetirar = btn.getAttribute('data-puede-retirar') === 'true';
+
+  if (!puedeRetirar) {
+    const mensaje = document.getElementById('retirar-mensaje-bloqueado');
+    if (mensaje) {
+      mensaje.classList.remove('retirar-mensaje-bloqueado--pulse');
+      // Forzar reflow para reiniciar la animación
+      void mensaje.offsetWidth;
+      mensaje.classList.add('retirar-mensaje-bloqueado--pulse');
+    }
+    return;
+  }
+
+  // Habilitado: pasar a vista de confirmación
+  const metas = await cargarMetas();
+  const meta = metas.find(m => String(m.id) === String(_metaIdAportandoActual));
+  if (!meta) return;
+
+  const elMonto  = document.getElementById('confirmar-retiro-monto');
+  const elNombre = document.getElementById('confirmar-retiro-nombre');
+  if (elMonto)  elMonto.textContent  = formatCurrencyCOP(meta.monto_ahorrado);
+  if (elNombre) elNombre.textContent = meta.nombre;
+
+  mostrarVistaModal('vista-confirmar-retiro');
+}
+
+function volverAVistaAportar() {
+  mostrarVistaModal('vista-aportar');
+}
+
+async function handleConfirmarRetiro() {
+  if (!_metaIdAportandoActual) return;
+
+  const resultado = await retirarDeMeta(_metaIdAportandoActual);
+
+  if (!resultado.exito) {
+    setStatusMessage(resultado.mensaje || 'No se pudo procesar el retiro.');
+    volverAVistaAportar();
+    return;
+  }
+
+  cerrarModalAportar();
+  await renderGoals();
+  setStatusMessage(
+    `Retiraste ${formatCurrencyCOP(resultado.monto)}. La meta fue cerrada.`
+  );
 }
 
 async function handleSubmitAporte(e) {
@@ -1090,31 +1177,5 @@ async function handleSubmitAporte(e) {
 }
 
 
-/* ============================================================
-   RETIRAR DE META — confirmación + ejecución
-   ============================================================ */
-
-async function handleRetirarMeta(metaId) {
-  const metas = await cargarMetas();
-  const meta = metas.find(m => String(m.id) === String(metaId));
-  if (!meta) return;
-
-  const montoRetirar = Number(meta.monto_ahorrado) || 0;
-  const confirmar = confirm(
-    `Vas a retirar ${formatCurrencyCOP(montoRetirar)} de la meta "${meta.nombre}".\n\n` +
-    `El monto se sumará a tu balance como ingreso, y la meta será eliminada.\n\n¿Continuar?`
-  );
-  if (!confirmar) return;
-
-  const resultado = await retirarDeMeta(metaId);
-
-  if (!resultado.exito) {
-    setStatusMessage(resultado.mensaje || 'No se pudo procesar el retiro.');
-    return;
-  }
-
-  await renderGoals();
-  setStatusMessage(
-    `Retiraste ${formatCurrencyCOP(resultado.monto)} de "${meta.nombre}". Meta cerrada.`
-  );
-}
+/* La función handleRetirarMeta (con confirm() nativo) fue reemplazada
+   por handleConfirmarRetiro + vista de confirmación inline en el modal. */

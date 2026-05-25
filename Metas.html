@@ -1034,41 +1034,107 @@
         </svg>
       </div>
 
-      <div class="modal-header">
-        <h2 id="modal-aportar-titulo" class="modal-title">Aportar a meta</h2>
-        <p class="modal-subtitle">
-          <span id="modal-aportar-nombre-meta">—</span>
-        </p>
-      </div>
-
-      <form id="form-aportar-meta" class="add-friend-manual-form" novalidate>
-        <div class="form-field">
-          <label for="input-aportar-monto" class="form-field-label">
-            Monto del aporte
-          </label>
-          <input
-            type="number"
-            id="input-aportar-monto"
-            class="form-field-input"
-            placeholder="Ej: 100000"
-            min="1"
-            step="1"
-            required
-            autocomplete="off">
-          <p class="form-field-hint">
-            Este aporte se registrará como un gasto en tu balance.
+      <!-- VISTA PRINCIPAL: aporte + sección de retiro -->
+      <div id="vista-aportar" class="vista-modal vista-modal--activa">
+        <div class="modal-header">
+          <h2 id="modal-aportar-titulo" class="modal-title">Aportar a meta</h2>
+          <p class="modal-subtitle">
+            <span id="modal-aportar-nombre-meta">—</span>
           </p>
         </div>
 
+        <form id="form-aportar-meta" class="add-friend-manual-form" novalidate>
+          <div class="form-field">
+            <label for="input-aportar-monto" class="form-field-label">
+              Monto del aporte
+            </label>
+            <input
+              type="number"
+              id="input-aportar-monto"
+              class="form-field-input"
+              placeholder="Ej: 100000"
+              min="1"
+              step="1"
+              required
+              autocomplete="off">
+            <p class="form-field-hint">
+              Este aporte se registrará como un gasto en tu balance.
+            </p>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn-modal-cancel" id="modal-aportar-cancel">
+              Cancelar
+            </button>
+            <button type="submit" class="btn-modal-confirm">
+              Confirmar aporte
+            </button>
+          </div>
+        </form>
+
+        <!-- Separador entre aporte y retiro -->
+        <div class="modal-separator" aria-hidden="true">
+          <span>o</span>
+        </div>
+
+        <!-- Sección RETIRAR — siempre visible, estado depende de la meta -->
+        <div class="modal-retiro-section">
+          <button
+            type="button"
+            id="btn-retirar-en-modal"
+            class="btn-retirar-modal btn-retirar-modal--bloqueado">
+            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 19V5"/>
+              <polyline points="5 12 12 5 19 12"/>
+            </svg>
+            <span>Retirar ahorros</span>
+          </button>
+          <p
+            id="retirar-mensaje-bloqueado"
+            class="retirar-mensaje-bloqueado"
+            role="status"
+            aria-live="polite">
+            Solo se puede retirar cuando se cumpla la fecha o el monto objetivo.
+          </p>
+        </div>
+      </div>
+
+      <!-- VISTA DE CONFIRMACIÓN DE RETIRO — oculta por defecto -->
+      <div id="vista-confirmar-retiro" class="vista-modal" hidden>
+        <div class="modal-icon-confirm" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 19V5"/>
+            <polyline points="5 12 12 5 19 12"/>
+          </svg>
+        </div>
+
+        <div class="modal-header">
+          <h2 class="modal-title">Confirmar retiro</h2>
+          <p class="modal-subtitle">
+            Vas a retirar
+            <strong id="confirmar-retiro-monto">$0 COP</strong>
+            de la meta
+            <strong id="confirmar-retiro-nombre">—</strong>.
+          </p>
+        </div>
+
+        <p class="retirar-confirmacion-detalle">
+          El monto se sumará a tu balance como ingreso, y la meta será eliminada.
+        </p>
+
         <div class="modal-actions">
-          <button type="button" class="btn-modal-cancel" id="modal-aportar-cancel">
+          <button type="button" class="btn-modal-cancel" id="btn-confirmar-retiro-cancelar">
             Cancelar
           </button>
-          <button type="submit" class="btn-modal-confirm">
-            Confirmar aporte
+          <button type="button" class="btn-modal-confirm btn-modal-confirm--retiro" id="btn-confirmar-retiro-aceptar">
+            Sí, retirar
           </button>
         </div>
-      </form>
+      </div>
 
     </div>
   </div>

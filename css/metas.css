@@ -1170,46 +1170,132 @@ body.dashboard-page .metas-privacidad-global {
   outline-offset: 3px;
 }
 
-/* Botón Retirar: siempre visible, con dos estados (bloqueado / habilitado) */
-.btn-meta-opciones--retirar {
-  border: none;
-  border-radius: 999px;
-  padding: 6px 12px;
+/* ============================================================
+   MODAL DE APORTAR: SECCIÓN DE RETIRO + VISTA DE CONFIRMACIÓN
+   ============================================================ */
+
+/* Vistas dentro del modal (aportar | confirmar retiro) */
+.vista-modal {
+  display: none;
+}
+.vista-modal--activa {
+  display: block;
+}
+
+/* Separador entre formulario de aporte y sección de retiro */
+.modal-separator {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0 16px 0;
+  color: #9ca3af;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.modal-separator::before,
+.modal-separator::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background-color: #e5e7eb;
+}
+
+/* Botón Retirar dentro del modal — siempre visible, con dos estados */
+.btn-retirar-modal {
+  width: 100%;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  font-weight: 700;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 18px;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
   cursor: pointer;
   transition: background-color 0.15s ease, transform 0.15s ease;
 }
 
-/* Estado HABILITADO: la meta cumplió monto o fecha → verde, llamativo */
-.btn-meta-opciones--retirar--habilitado {
+/* Estado HABILITADO: meta cumplió monto o fecha → verde llamativo */
+.btn-retirar-modal--habilitado {
   background-color: #10b981;
   color: #ffffff;
 }
-
-.btn-meta-opciones--retirar--habilitado:hover {
+.btn-retirar-modal--habilitado:hover {
   background-color: #059669;
   transform: translateY(-1px);
 }
 
-/* Estado BLOQUEADO: gris, no se ve como acción primaria
-   (pero sigue siendo clickeable para mostrar el mensaje informativo) */
-.btn-meta-opciones--retirar--bloqueado {
-  background-color: #e5e7eb;
-  color: #94a3b8;
+/* Estado BLOQUEADO: gris, no se ve como acción primaria,
+   pero sigue siendo clickeable para enfatizar el mensaje */
+.btn-retirar-modal--bloqueado {
+  background-color: #f3f4f6;
+  color: #9ca3af;
   cursor: not-allowed;
 }
-
-.btn-meta-opciones--retirar--bloqueado:hover {
-  background-color: #d1d5db;
+.btn-retirar-modal--bloqueado:hover {
+  background-color: #e5e7eb;
 }
 
-.btn-meta-retirar-label {
+/* Mensaje informativo bajo el botón Retirar (visible solo si está bloqueado) */
+.retirar-mensaje-bloqueado {
+  margin: 10px 0 0 0;
+  padding: 0 4px;
   font-size: 12px;
-  font-weight: 700;
+  color: #6b7280;
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* Animación de "pulso" cuando el usuario click el botón bloqueado:
+   resalta el mensaje informativo para que sea evidente por qué no funciona */
+.retirar-mensaje-bloqueado--pulse {
+  animation: retirar-mensaje-pulse 0.5s ease;
+}
+
+@keyframes retirar-mensaje-pulse {
+  0%   { color: #6b7280; transform: scale(1); }
+  50%  { color: #dc2626; transform: scale(1.04); font-weight: 600; }
+  100% { color: #6b7280; transform: scale(1); }
+}
+
+/* Vista de confirmación de retiro: icono superior verde + texto */
+.modal-icon-confirm {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 16px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #10b981;
+  color: #ffffff;
+  border-radius: 14px;
+}
+
+.retirar-confirmacion-detalle {
+  font-size: 13px;
+  color: #6b7280;
+  text-align: center;
+  margin: 0 0 18px 0;
+  padding: 10px 14px;
+  background-color: #f9fafb;
+  border-radius: 10px;
+  line-height: 1.5;
+}
+
+/* El botón "Sí, retirar" en la vista de confirmación es verde */
+.btn-modal-confirm--retiro {
+  background-color: #10b981 !important;
+}
+.btn-modal-confirm--retiro:hover {
+  background-color: #059669 !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .retirar-mensaje-bloqueado--pulse { animation: none; }
+  .btn-retirar-modal--habilitado:hover { transform: none; }
 }
 
 /* Disclaimer pequeño dentro de cada card: aviso sobre el bloqueo del aporte */
