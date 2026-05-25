@@ -1005,6 +1005,76 @@
   <!-- /modal-add-meta -->
 
 
+  <!-- ════════════════════════════════════════════════════════════
+       SUB-MODAL: APORTAR A META
+       ════════════════════════════════════════════════════════════
+       Se abre al hacer click en el botón "+" de cualquier card de
+       meta. Permite ingresar un monto y aportar; el aporte crea
+       una transacción tipo gasto en categoría "Ahorro a meta".
+  -->
+  <div id="modal-aportar-meta" class="modal modal-overlay" role="dialog"
+       aria-labelledby="modal-aportar-titulo"
+       aria-modal="true"
+       aria-hidden="true">
+    <div class="modal-backdrop" id="modal-aportar-backdrop"></div>
+
+    <div class="modal-content modal-content--small">
+
+      <button type="button" class="modal-close" id="modal-aportar-close"
+              aria-label="Cerrar formulario de aporte">
+        <span aria-hidden="true">&times;</span>
+      </button>
+
+      <div class="modal-icon-hero" aria-hidden="true">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+      </div>
+
+      <div class="modal-header">
+        <h2 id="modal-aportar-titulo" class="modal-title">Aportar a meta</h2>
+        <p class="modal-subtitle">
+          <span id="modal-aportar-nombre-meta">—</span>
+        </p>
+      </div>
+
+      <form id="form-aportar-meta" class="add-friend-manual-form" novalidate>
+        <div class="form-field">
+          <label for="input-aportar-monto" class="form-field-label">
+            Monto del aporte
+          </label>
+          <input
+            type="number"
+            id="input-aportar-monto"
+            class="form-field-input"
+            placeholder="Ej: 100000"
+            min="1"
+            step="1"
+            required
+            autocomplete="off">
+          <p class="form-field-hint">
+            Este aporte se registrará como un gasto en tu balance.
+          </p>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-modal-cancel" id="modal-aportar-cancel">
+            Cancelar
+          </button>
+          <button type="submit" class="btn-modal-confirm">
+            Confirmar aporte
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+  <!-- /modal-aportar-meta -->
+
+
   <!-- datos.js: punto central de carga + sesión, debe ir antes que los módulos -->
   <script src="js/datos.js"></script>
   <script src="js/Metas.js" defer></script>

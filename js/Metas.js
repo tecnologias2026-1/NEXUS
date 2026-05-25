@@ -166,6 +166,63 @@ function getDeleteIconSVG() {
   `;
 }
 
+function getPlusIconSVG() {
+  return `
+    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" stroke-width="2.5"
+      stroke-linecap="round" stroke-linejoin="round">
+      <line x1="12" y1="5" x2="12" y2="19" />
+      <line x1="5" y1="12" x2="19" y2="12" />
+    </svg>
+  `;
+}
+
+function getWithdrawIconSVG() {
+  return `
+    <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 19V5" />
+      <polyline points="5 12 12 5 19 12" />
+    </svg>
+  `;
+}
+
+/**
+ * Genera el bloque HTML de acciones de una meta:
+ * - Botón "+" Aportar (siempre visible)
+ * - Botón "Retirar" (visible solo si la meta puede retirarse)
+ * - Botón "Eliminar"
+ */
+function renderGoalActions(meta) {
+  const puedeRetirar = typeof puedeRetirarseMeta === 'function' && puedeRetirarseMeta(meta);
+  const safeName = escapeHTML(meta.nombre);
+  const safeId = escapeHTML(meta.id);
+
+  return `
+    <div class="meta-card-acciones">
+      <button type="button" class="btn-meta-opciones btn-meta-opciones--aportar"
+        aria-label="Aportar a meta ${safeName}"
+        data-aportar-meta-id="${safeId}">
+        ${getPlusIconSVG()}
+      </button>
+      ${puedeRetirar ? `
+        <button type="button" class="btn-meta-opciones btn-meta-opciones--retirar"
+          aria-label="Retirar ahorro de la meta ${safeName}"
+          data-retirar-meta-id="${safeId}">
+          ${getWithdrawIconSVG()}
+          <span class="btn-meta-retirar-label">Retirar</span>
+        </button>
+      ` : ''}
+      <button type="button" class="btn-meta-opciones btn-meta-opciones--delete"
+        aria-label="Eliminar meta ${safeName}"
+        data-delete-meta-id="${safeId}">
+        ${getDeleteIconSVG()}
+      </button>
+    </div>
+  `;
+}
+
 function getCalendarIconSVG() {
   return `
     <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24"
@@ -292,13 +349,7 @@ function renderPersonalGoal(meta) {
             </p>
           </div>
 
-          <div class="meta-card-acciones">
-            <button type="button" class="btn-meta-opciones btn-meta-opciones--delete"
-              aria-label="Eliminar meta ${safeName}"
-              data-delete-meta-id="${escapeHTML(meta.id)}">
-              ${getDeleteIconSVG()}
-            </button>
-          </div>
+          ${renderGoalActions(meta)}
         </header>
 
         ${renderGoalProgress(meta, `Progreso de ${meta.nombre}`)}
@@ -405,13 +456,7 @@ function renderColabGoal(meta) {
             </div>
           </div>
 
-          <div class="meta-card-acciones">
-            <button type="button" class="btn-meta-opciones btn-meta-opciones--delete"
-              aria-label="Eliminar meta ${safeName}"
-              data-delete-meta-id="${escapeHTML(meta.id)}">
-              ${getDeleteIconSVG()}
-            </button>
-          </div>
+          ${renderGoalActions(meta)}
         </header>
 
         ${renderGoalProgress(meta, `Progreso grupal de ${meta.nombre}`)}
@@ -873,13 +918,145 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Fija la fecha mínima del picker (hoy)
   inputFecha.setAttribute('min', new Date().toISOString().split('T')[0]);
 
+  // Delegación de eventos en las listas de metas: capturamos clicks
+  // en los 3 tipos de acción (aportar, retirar, eliminar) sobre los items.
   [personalGoalsList, colabGoalsList].forEach(list => {
     if (!list) return;
     list.addEventListener('click', async (e) => {
+      const aportarButton = e.target.closest('[data-aportar-meta-id]');
+      if (aportarButton) {
+        abrirModalAportar(aportarButton.getAttribute('data-aportar-meta-id'));
+        return;
+      }
+
+      const retirarButton = e.target.closest('[data-retirar-meta-id]');
+      if (retirarButton) {
+        await handleRetirarMeta(retirarButton.getAttribute('data-retirar-meta-id'));
+        return;
+      }
+
       const deleteButton = e.target.closest('[data-delete-meta-id]');
-      if (!deleteButton) return;
-      await deleteMeta(deleteButton.getAttribute('data-delete-meta-id'));
+      if (deleteButton) {
+        await deleteMeta(deleteButton.getAttribute('data-delete-meta-id'));
+      }
     });
   });
 
+  // ── SUB-MODAL: APORTAR A META ──
+  inicializarModalAportar();
+
 });
+
+
+/* ============================================================
+   APORTAR A META — sub-modal y handler
+   ============================================================ */
+
+let _metaIdAportandoActual = null;
+
+function inicializarModalAportar() {
+  const modalAportar    = document.getElementById('modal-aportar-meta');
+  const backdrop        = document.getElementById('modal-aportar-backdrop');
+  const btnClose        = document.getElementById('modal-aportar-close');
+  const btnCancel       = document.getElementById('modal-aportar-cancel');
+  const form            = document.getElementById('form-aportar-meta');
+
+  if (!modalAportar || !form) return;
+
+  btnClose?.addEventListener('click', cerrarModalAportar);
+  btnCancel?.addEventListener('click', cerrarModalAportar);
+  backdrop?.addEventListener('click', cerrarModalAportar);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modalAportar.classList.contains('active')) {
+      cerrarModalAportar();
+    }
+  });
+
+  form.addEventListener('submit', handleSubmitAporte);
+}
+
+async function abrirModalAportar(metaId) {
+  const metas = await cargarMetas();
+  const meta = metas.find(m => String(m.id) === String(metaId));
+  if (!meta) return;
+
+  _metaIdAportandoActual = metaId;
+
+  const modal     = document.getElementById('modal-aportar-meta');
+  const nombreEl  = document.getElementById('modal-aportar-nombre-meta');
+  const inputEl   = document.getElementById('input-aportar-monto');
+
+  if (nombreEl) nombreEl.textContent = meta.nombre;
+  if (inputEl) inputEl.value = '';
+
+  modal.classList.add('active');
+  modal.setAttribute('aria-hidden', 'false');
+  setTimeout(() => inputEl?.focus(), 50);
+}
+
+function cerrarModalAportar() {
+  const modal = document.getElementById('modal-aportar-meta');
+  const form  = document.getElementById('form-aportar-meta');
+  if (!modal) return;
+
+  modal.classList.remove('active');
+  modal.setAttribute('aria-hidden', 'true');
+  if (form) form.reset();
+  _metaIdAportandoActual = null;
+}
+
+async function handleSubmitAporte(e) {
+  e.preventDefault();
+  if (!_metaIdAportandoActual) return;
+
+  const inputEl = document.getElementById('input-aportar-monto');
+  const monto = parseFloat(inputEl?.value || 0);
+
+  if (!monto || monto <= 0) {
+    announce('El monto debe ser mayor a 0.');
+    inputEl?.focus();
+    return;
+  }
+
+  const resultado = await aportarAMeta(_metaIdAportandoActual, monto);
+
+  if (!resultado.exito) {
+    setStatusMessage(resultado.mensaje || 'No se pudo registrar el aporte.');
+    return;
+  }
+
+  cerrarModalAportar();
+  await renderGoals();
+  setStatusMessage(`Aporte de ${formatCurrencyCOP(monto)} registrado correctamente.`);
+}
+
+
+/* ============================================================
+   RETIRAR DE META — confirmación + ejecución
+   ============================================================ */
+
+async function handleRetirarMeta(metaId) {
+  const metas = await cargarMetas();
+  const meta = metas.find(m => String(m.id) === String(metaId));
+  if (!meta) return;
+
+  const montoRetirar = Number(meta.monto_ahorrado) || 0;
+  const confirmar = confirm(
+    `Vas a retirar ${formatCurrencyCOP(montoRetirar)} de la meta "${meta.nombre}".\n\n` +
+    `El monto se sumará a tu balance como ingreso, y la meta será eliminada.\n\n¿Continuar?`
+  );
+  if (!confirmar) return;
+
+  const resultado = await retirarDeMeta(metaId);
+
+  if (!resultado.exito) {
+    setStatusMessage(resultado.mensaje || 'No se pudo procesar el retiro.');
+    return;
+  }
+
+  await renderGoals();
+  setStatusMessage(
+    `Retiraste ${formatCurrencyCOP(resultado.monto)} de "${meta.nombre}". Meta cerrada.`
+  );
+}

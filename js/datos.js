@@ -442,6 +442,193 @@ async function eliminarMetaDatos(metaId) {
   _guardarRecurso('metas', datos);
 }
 
+/**
+ * IDs reservados de las categorías "Ahorro a meta" y "Retiro de meta"
+ * Definidos en categorias.json con sistema:true.
+ */
+const CATEGORIA_AHORRO_A_META = 9;
+const CATEGORIA_RETIRO_DE_META = 23;
+
+/**
+ * Indica si una meta puede ser retirada.
+ * Se permite retirar SOLO si:
+ *   - El monto ahorrado alcanzó o superó el objetivo, O
+ *   - La fecha límite ya pasó.
+ *
+ * @param {Object} meta
+ * @returns {boolean}
+ */
+function puedeRetirarseMeta(meta) {
+  if (!meta) return false;
+  const ahorrado = Number(meta.monto_ahorrado) || 0;
+  const objetivo = Number(meta.monto_objetivo) || 0;
+  if (objetivo > 0 && ahorrado >= objetivo) return true;
+
+  if (meta.fecha_limite) {
+    const [year, month, day] = String(meta.fecha_limite).split('-').map(Number);
+    if (year && month && day) {
+      const limite = new Date(year, month - 1, day);
+      const hoy = new Date();
+      hoy.setHours(0, 0, 0, 0);
+      limite.setHours(0, 0, 0, 0);
+      if (hoy >= limite) return true;
+    }
+  }
+
+  return false;
+}
+
+/**
+ * Aporta un monto a una meta. Genera además una transacción de tipo
+ * gasto en la categoría "Ahorro a meta", para que el aporte impacte
+ * el balance del usuario (coherencia con dashboard y análisis).
+ *
+ * En metas colaborativas, también recalcula los porcentajes de
+ * contribución: la parte del usuario (amigo_id: 0) sube y los demás
+ * bajan proporcionalmente al nuevo total.
+ *
+ * @param {number|string} metaId
+ * @param {number} monto - Monto positivo en COP
+ * @returns {Promise<{exito: boolean, mensaje?: string}>}
+ */
+async function aportarAMeta(metaId, monto) {
+  const montoNumerico = Number(monto);
+  if (!montoNumerico || montoNumerico <= 0) {
+    return { exito: false, mensaje: 'El monto debe ser mayor a 0.' };
+  }
+
+  const usuario = await obtenerUsuarioActual();
+  if (!usuario) return { exito: false, mensaje: 'Sin sesión activa.' };
+
+  const datosMetas = await _cargarRecurso('metas');
+  if (!datosMetas) return { exito: false, mensaje: 'No se pudo cargar metas.' };
+
+  const meta = datosMetas.metas.find(m => String(m.id) === String(metaId));
+  if (!meta) return { exito: false, mensaje: 'Meta no encontrada.' };
+
+  const montoAhorradoAnterior = Number(meta.monto_ahorrado) || 0;
+  const montoAhorradoNuevo = montoAhorradoAnterior + montoNumerico;
+  meta.monto_ahorrado = montoAhorradoNuevo;
+
+  // Para metas colaborativas, recalcular el porcentaje del usuario
+  // (amigo_id: 0) en función de su aporte sobre el nuevo total
+  if (meta.tipo === 'colaborativa' && Array.isArray(meta.participantes)) {
+    recalcularPorcentajesColaborativa(meta, montoNumerico);
+  }
+
+  _guardarRecurso('metas', datosMetas);
+
+  // Crear transacción tipo gasto que refleja el aporte en el balance
+  const datosTransacciones = await _cargarRecurso('transacciones');
+  if (datosTransacciones) {
+    datosTransacciones.transacciones.push({
+      id: Date.now(),
+      usuario_id: usuario.id,
+      categoria_id: CATEGORIA_AHORRO_A_META,
+      tipo: 'gasto',
+      nombre: `Aporte a meta: ${meta.nombre}`,
+      valor: montoNumerico,
+      fecha: new Date().toISOString().split('T')[0],
+      recurrente: false,
+      fijo: false,
+      meta_id: meta.id
+    });
+    _guardarRecurso('transacciones', datosTransacciones);
+  }
+
+  return { exito: true };
+}
+
+/**
+ * Recalcula los porcentajes de contribución de una meta colaborativa
+ * después de que el usuario (amigo_id: 0) aporte un nuevo monto.
+ *
+ * El criterio: el porcentaje del usuario sube proporcionalmente y
+ * los demás bajan manteniendo su proporción relativa, hasta sumar 100.
+ */
+function recalcularPorcentajesColaborativa(meta, montoAporte) {
+  const objetivo = Number(meta.monto_objetivo) || 0;
+  if (objetivo <= 0) return;
+
+  const porcentajeAporte = Math.round((montoAporte / objetivo) * 100);
+  const participanteYo = meta.participantes.find(p => p.amigo_id === 0);
+
+  if (!participanteYo) {
+    // Si por alguna razón no estás en la lista, agrégate con el porcentaje del aporte
+    meta.participantes.push({ amigo_id: 0, porcentaje_contribucion: porcentajeAporte });
+  } else {
+    participanteYo.porcentaje_contribucion =
+      (Number(participanteYo.porcentaje_contribucion) || 0) + porcentajeAporte;
+  }
+
+  // Normalizar: que la suma no pase de 100 (capar al usuario si rebasa)
+  const total = meta.participantes.reduce(
+    (s, p) => s + (Number(p.porcentaje_contribucion) || 0), 0
+  );
+  if (total > 100) {
+    const exceso = total - 100;
+    participanteYo.porcentaje_contribucion =
+      Math.max(0, (Number(participanteYo.porcentaje_contribucion) || 0) - exceso);
+  }
+}
+
+/**
+ * Retira el monto ahorrado de una meta cumplida.
+ * Crea una transacción tipo ingreso en categoría "Retiro de meta"
+ * con el valor total ahorrado, y elimina la meta del storage.
+ *
+ * Falla si la meta no cumple condiciones (puedeRetirarseMeta).
+ *
+ * @param {number|string} metaId
+ * @returns {Promise<{exito: boolean, mensaje?: string, monto?: number}>}
+ */
+async function retirarDeMeta(metaId) {
+  const usuario = await obtenerUsuarioActual();
+  if (!usuario) return { exito: false, mensaje: 'Sin sesión activa.' };
+
+  const datosMetas = await _cargarRecurso('metas');
+  if (!datosMetas) return { exito: false, mensaje: 'No se pudo cargar metas.' };
+
+  const meta = datosMetas.metas.find(m => String(m.id) === String(metaId));
+  if (!meta) return { exito: false, mensaje: 'Meta no encontrada.' };
+
+  if (!puedeRetirarseMeta(meta)) {
+    return {
+      exito: false,
+      mensaje: 'Esta meta todavía no se puede retirar (no llegó al objetivo ni venció la fecha).'
+    };
+  }
+
+  const montoRetirar = Number(meta.monto_ahorrado) || 0;
+  const nombreMeta = meta.nombre;
+
+  // Crear transacción de retiro (ingreso)
+  if (montoRetirar > 0) {
+    const datosTransacciones = await _cargarRecurso('transacciones');
+    if (datosTransacciones) {
+      datosTransacciones.transacciones.push({
+        id: Date.now(),
+        usuario_id: usuario.id,
+        categoria_id: CATEGORIA_RETIRO_DE_META,
+        tipo: 'ingreso',
+        nombre: `Retiro de meta: ${nombreMeta}`,
+        valor: montoRetirar,
+        fecha: new Date().toISOString().split('T')[0],
+        recurrente: false,
+        fijo: false,
+        meta_id: meta.id
+      });
+      _guardarRecurso('transacciones', datosTransacciones);
+    }
+  }
+
+  // Eliminar la meta — su propósito se cumplió
+  datosMetas.metas = datosMetas.metas.filter(m => String(m.id) !== String(metaId));
+  _guardarRecurso('metas', datosMetas);
+
+  return { exito: true, monto: montoRetirar };
+}
+
 
 /* ============================================================
    UTILIDADES DE DESARROLLO

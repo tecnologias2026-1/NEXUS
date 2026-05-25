@@ -1146,3 +1146,211 @@ body.dashboard-page .metas-privacidad-global {
   background: #eef6ff;
 }
 
+
+
+/* ============================================================
+   ACCIONES DE META: APORTAR Y RETIRAR
+   ============================================================
+   Estilos mínimos funcionales — el diseñador puede repulirlos.
+*/
+
+.btn-meta-opciones--aportar {
+  background-color: #111827;
+  color: #ffffff;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.btn-meta-opciones--aportar:hover {
+  background-color: #1f2937;
+  transform: scale(1.08);
+}
+
+.btn-meta-opciones--retirar {
+  background-color: #10b981;
+  color: #ffffff;
+  border: none;
+  border-radius: 999px;
+  padding: 6px 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.btn-meta-opciones--retirar:hover {
+  background-color: #059669;
+  transform: translateY(-1px);
+}
+
+.btn-meta-retirar-label {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+
+/* ============================================================
+   SUB-MODAL DE APORTE (reutiliza estructura del modal principal)
+   ============================================================ */
+
+.modal-content--small {
+  max-width: 420px !important;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  display: none;
+  z-index: 1000;
+}
+
+.modal-overlay.is-open,
+.modal-overlay.active {
+  display: block;
+}
+
+#modal-aportar-meta .modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.55);
+}
+
+#modal-aportar-meta .modal-content {
+  position: relative;
+  width: 90%;
+  max-width: 420px;
+  margin: 80px auto;
+  background-color: #ffffff;
+  border-radius: 20px;
+  padding: 24px;
+  box-sizing: border-box;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.22);
+  z-index: 2;
+}
+
+#modal-aportar-meta .modal-close {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background-color: #f3f4f6;
+  color: #111827;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+#modal-aportar-meta .modal-icon-hero {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 16px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #111827;
+  color: #ffffff;
+  border-radius: 14px;
+}
+
+#modal-aportar-meta .modal-header {
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+#modal-aportar-meta .modal-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+#modal-aportar-meta .modal-subtitle {
+  margin-top: 6px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+#modal-aportar-meta .add-friend-manual-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+#modal-aportar-meta .form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+#modal-aportar-meta .form-field-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+#modal-aportar-meta .form-field-input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  font-size: 15px;
+  color: #111827;
+  background-color: #ffffff;
+  box-sizing: border-box;
+}
+
+#modal-aportar-meta .form-field-input:focus {
+  outline: none;
+  border-color: #111827;
+  box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.08);
+}
+
+#modal-aportar-meta .form-field-hint {
+  margin: 0;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+#modal-aportar-meta .modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+#modal-aportar-meta .btn-modal-cancel,
+#modal-aportar-meta .btn-modal-confirm {
+  flex: 1;
+  padding: 14px 18px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+}
+
+#modal-aportar-meta .btn-modal-cancel {
+  background-color: #ffffff;
+  color: #111827;
+  border: 1px solid #e5e7eb;
+}
+
+#modal-aportar-meta .btn-modal-confirm {
+  background-color: #111827;
+  color: #ffffff;
+}
+
+#modal-aportar-meta .btn-modal-confirm:hover {
+  background-color: #1f2937;
+}

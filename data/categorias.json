@@ -8,8 +8,10 @@
     { "id": 6,  "nombre": "Servicios",      "tipo": "gasto",   "icono": "💡", "color": "#0ea5e9" },
     { "id": 7,  "nombre": "Salud",          "tipo": "gasto",   "icono": "🏥", "color": "#ef4444" },
     { "id": 8,  "nombre": "Otros",          "tipo": "gasto",   "icono": "📦", "color": "#64748b" },
+    { "id": 9,  "nombre": "Ahorro a meta",  "tipo": "gasto",   "icono": "🎯", "color": "#7c3aed", "sistema": true },
     { "id": 20, "nombre": "Salario",        "tipo": "ingreso", "icono": "💼", "color": "#16a34a" },
     { "id": 21, "nombre": "Freelancia",     "tipo": "ingreso", "icono": "💻", "color": "#0891b2" },
-    { "id": 22, "nombre": "Otros ingresos", "tipo": "ingreso", "icono": "💰", "color": "#84cc16" }
+    { "id": 22, "nombre": "Otros ingresos", "tipo": "ingreso", "icono": "💰", "color": "#84cc16" },
+    { "id": 23, "nombre": "Retiro de meta", "tipo": "ingreso", "icono": "💵", "color": "#059669", "sistema": true }
   ]
 }

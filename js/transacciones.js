@@ -92,7 +92,9 @@ async function llenarSelectCategorias(tipo) {
   if (!select) return;
 
   const categorias = await obtenerCategorias();
-  const filtradas = categorias.filter(c => c.tipo === tipo);
+  // Filtrar por tipo y excluir categorías de sistema (Ahorro/Retiro a meta),
+  // que se crean automáticamente desde el módulo de Metas, no manualmente.
+  const filtradas = categorias.filter(c => c.tipo === tipo && !c.sistema);
 
   select.innerHTML = `
     <option value="" disabled selected>Selecciona una categoría</option>
