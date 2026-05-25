@@ -1149,33 +1149,29 @@ body.dashboard-page .metas-privacidad-global {
 
 
 /* ============================================================
-   ACCIONES DE META: APORTAR Y RETIRAR
+   ACCIONES DE META: CARD CLICKEABLE + BOTÓN RETIRAR
    ============================================================
    Estilos mínimos funcionales — el diseñador puede repulirlos.
 */
 
-.btn-meta-opciones--aportar {
-  background-color: #111827;
-  color: #ffffff;
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
+/* La card entera abre el modal de aportar al hacer click */
+.meta-card--clickable {
   cursor: pointer;
-  transition: transform 0.15s ease, background-color 0.15s ease;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
 
-.btn-meta-opciones--aportar:hover {
-  background-color: #1f2937;
-  transform: scale(1.08);
+.meta-card--clickable:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
 }
 
+.meta-card--clickable:focus-visible {
+  outline: 2px solid #111827;
+  outline-offset: 3px;
+}
+
+/* Botón Retirar: siempre visible, con dos estados (bloqueado / habilitado) */
 .btn-meta-opciones--retirar {
-  background-color: #10b981;
-  color: #ffffff;
   border: none;
   border-radius: 999px;
   padding: 6px 12px;
@@ -1188,14 +1184,51 @@ body.dashboard-page .metas-privacidad-global {
   transition: background-color 0.15s ease, transform 0.15s ease;
 }
 
-.btn-meta-opciones--retirar:hover {
+/* Estado HABILITADO: la meta cumplió monto o fecha → verde, llamativo */
+.btn-meta-opciones--retirar--habilitado {
+  background-color: #10b981;
+  color: #ffffff;
+}
+
+.btn-meta-opciones--retirar--habilitado:hover {
   background-color: #059669;
   transform: translateY(-1px);
+}
+
+/* Estado BLOQUEADO: gris, no se ve como acción primaria
+   (pero sigue siendo clickeable para mostrar el mensaje informativo) */
+.btn-meta-opciones--retirar--bloqueado {
+  background-color: #e5e7eb;
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
+.btn-meta-opciones--retirar--bloqueado:hover {
+  background-color: #d1d5db;
 }
 
 .btn-meta-retirar-label {
   font-size: 12px;
   font-weight: 700;
+}
+
+/* Disclaimer pequeño dentro de cada card: aviso sobre el bloqueo del aporte */
+.meta-disclaimer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 12px 0 0 0;
+  padding: 8px 10px;
+  background-color: #f9fafb;
+  border-radius: 8px;
+  font-size: 11px;
+  color: #6b7280;
+  line-height: 1.35;
+}
+
+.meta-disclaimer svg {
+  flex-shrink: 0;
+  color: #9ca3af;
 }
 
 

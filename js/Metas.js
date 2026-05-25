@@ -190,36 +190,58 @@ function getWithdrawIconSVG() {
 
 /**
  * Genera el bloque HTML de acciones de una meta:
- * - Botón "+" Aportar (siempre visible)
- * - Botón "Retirar" (visible solo si la meta puede retirarse)
- * - Botón "Eliminar"
+ * - Botón "Retirar" SIEMPRE visible (gris si no se puede, verde si se puede).
+ * - Botón "Eliminar".
+ *
+ * El aporte ya no tiene botón propio — se hace clickeando la card entera.
  */
 function renderGoalActions(meta) {
   const puedeRetirar = typeof puedeRetirarseMeta === 'function' && puedeRetirarseMeta(meta);
   const safeName = escapeHTML(meta.nombre);
   const safeId = escapeHTML(meta.id);
 
+  const claseRetirar = puedeRetirar
+    ? 'btn-meta-opciones--retirar btn-meta-opciones--retirar--habilitado'
+    : 'btn-meta-opciones--retirar btn-meta-opciones--retirar--bloqueado';
+
+  const ariaRetirar = puedeRetirar
+    ? `Retirar ahorro de la meta ${safeName}`
+    : `Retiro bloqueado para ${safeName}. Cumple la fecha o el monto objetivo para habilitarlo`;
+
   return `
     <div class="meta-card-acciones">
-      <button type="button" class="btn-meta-opciones btn-meta-opciones--aportar"
-        aria-label="Aportar a meta ${safeName}"
-        data-aportar-meta-id="${safeId}">
-        ${getPlusIconSVG()}
+      <button type="button" class="btn-meta-opciones ${claseRetirar}"
+        aria-label="${ariaRetirar}"
+        data-retirar-meta-id="${safeId}"
+        data-puede-retirar="${puedeRetirar}">
+        ${getWithdrawIconSVG()}
+        <span class="btn-meta-retirar-label">Retirar</span>
       </button>
-      ${puedeRetirar ? `
-        <button type="button" class="btn-meta-opciones btn-meta-opciones--retirar"
-          aria-label="Retirar ahorro de la meta ${safeName}"
-          data-retirar-meta-id="${safeId}">
-          ${getWithdrawIconSVG()}
-          <span class="btn-meta-retirar-label">Retirar</span>
-        </button>
-      ` : ''}
       <button type="button" class="btn-meta-opciones btn-meta-opciones--delete"
         aria-label="Eliminar meta ${safeName}"
         data-delete-meta-id="${safeId}">
         ${getDeleteIconSVG()}
       </button>
     </div>
+  `;
+}
+
+/**
+ * Disclaimer pequeño que aparece dentro de cada card de meta.
+ * Avisa que el dinero aportado no se puede retirar hasta cumplir.
+ */
+function renderGoalDisclaimer() {
+  return `
+    <p class="meta-disclaimer" role="note">
+      <svg aria-hidden="true" width="11" height="11" viewBox="0 0 24 24"
+        fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="8" x2="12" y2="12"/>
+        <line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <span>Al aportar, el dinero queda bloqueado hasta cumplir la fecha o el monto objetivo.</span>
+    </p>
   `;
 }
 
@@ -335,7 +357,12 @@ function renderPersonalGoal(meta) {
 
   return `
     <li class="meta-item" data-meta-id="${escapeHTML(meta.id)}">
-      <article class="meta-card meta-card--personal" aria-labelledby="${escapeHTML(titleId)}">
+      <article class="meta-card meta-card--personal meta-card--clickable"
+        role="button"
+        tabindex="0"
+        aria-labelledby="${escapeHTML(titleId)}"
+        aria-label="Aportar a la meta ${safeName}"
+        data-aportar-meta-id="${escapeHTML(meta.id)}">
         <header class="meta-card-header">
           <div class="meta-card-icono" aria-hidden="true">
             ${getPersonalIconSVG()}
@@ -354,6 +381,7 @@ function renderPersonalGoal(meta) {
 
         ${renderGoalProgress(meta, `Progreso de ${meta.nombre}`)}
         ${renderGoalAmounts(meta)}
+        ${renderGoalDisclaimer()}
       </article>
     </li>
   `;
@@ -431,7 +459,12 @@ function renderColabGoal(meta) {
 
   return `
     <li class="meta-item" data-meta-id="${escapeHTML(meta.id)}">
-      <article class="meta-card meta-card--colaborativa" aria-labelledby="${escapeHTML(titleId)}">
+      <article class="meta-card meta-card--colaborativa meta-card--clickable"
+        role="button"
+        tabindex="0"
+        aria-labelledby="${escapeHTML(titleId)}"
+        aria-label="Aportar a la meta colaborativa ${safeName}"
+        data-aportar-meta-id="${escapeHTML(meta.id)}">
         <header class="meta-card-header">
           <div class="meta-card-avatar-grupo" aria-hidden="true">
             <span class="meta-card-avatar-inicial">${escapeHTML(getInitial(meta.nombre))}</span>
@@ -476,6 +509,7 @@ function renderColabGoal(meta) {
             </p>
           ` : ''}
         </div>
+        ${renderGoalDisclaimer()}
       </article>
     </li>
   `;
@@ -918,27 +952,51 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Fija la fecha mínima del picker (hoy)
   inputFecha.setAttribute('min', new Date().toISOString().split('T')[0]);
 
-  // Delegación de eventos en las listas de metas: capturamos clicks
-  // en los 3 tipos de acción (aportar, retirar, eliminar) sobre los items.
+  // Delegación de eventos en las listas de metas.
+  // ORDEN IMPORTANTE: primero detectamos clicks en los botones de acción
+  // (retirar, eliminar). Si el click NO cayó en ninguno de ellos pero sí
+  // dentro de una card con data-aportar-meta-id, abrimos el modal de aportar.
   [personalGoalsList, colabGoalsList].forEach(list => {
     if (!list) return;
-    list.addEventListener('click', async (e) => {
-      const aportarButton = e.target.closest('[data-aportar-meta-id]');
-      if (aportarButton) {
-        abrirModalAportar(aportarButton.getAttribute('data-aportar-meta-id'));
-        return;
-      }
 
+    list.addEventListener('click', async (e) => {
+      // Botón Retirar: si está habilitado, retira; si está bloqueado, avisa.
       const retirarButton = e.target.closest('[data-retirar-meta-id]');
       if (retirarButton) {
+        e.stopPropagation();
+        const puedeRetirar = retirarButton.getAttribute('data-puede-retirar') === 'true';
+        if (!puedeRetirar) {
+          setStatusMessage('Solo se puede retirar al cumplir la fecha o el monto objetivo.');
+          return;
+        }
         await handleRetirarMeta(retirarButton.getAttribute('data-retirar-meta-id'));
         return;
       }
 
+      // Botón Eliminar
       const deleteButton = e.target.closest('[data-delete-meta-id]');
       if (deleteButton) {
+        e.stopPropagation();
         await deleteMeta(deleteButton.getAttribute('data-delete-meta-id'));
+        return;
       }
+
+      // Click en cualquier otra parte de la card → abrir modal de aportar
+      const cardAportar = e.target.closest('[data-aportar-meta-id]');
+      if (cardAportar) {
+        abrirModalAportar(cardAportar.getAttribute('data-aportar-meta-id'));
+      }
+    });
+
+    // Accesibilidad por teclado: Enter o Espacio sobre la card abren aportar
+    list.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      const card = e.target.closest('[data-aportar-meta-id]');
+      if (!card) return;
+      // Solo si el foco está en la card misma, no en un botón interno
+      if (e.target.closest('button')) return;
+      e.preventDefault();
+      abrirModalAportar(card.getAttribute('data-aportar-meta-id'));
     });
   });
 
