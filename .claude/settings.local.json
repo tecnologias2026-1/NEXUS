@@ -8,7 +8,8 @@
       "Bash(git checkout *)",
       "Bash(git status *)",
       "Bash(git push *)",
-      "Bash(git branch *)"
+      "Bash(git branch *)",
+      "Bash(npx skills *)"
     ]
   }
 }
