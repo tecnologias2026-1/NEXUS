@@ -352,12 +352,18 @@
   </div>
   <!-- /DASHBOARD LAYOUT -->
 
-  <!-- datos.js debe cargarse primero — define la sesión que las demás páginas consumen -->
-  <script src="js/datos.js"></script>
+  <!-- ★ CAPA DE CONFIGURACIÓN E INTEGRACIÓN API ★ -->
+  <!-- Estos scripts deben cargarse primero, EN ORDEN -->
+  <script src="js/config.js"></script>
+  <script src="js/api-client.js"></script>
+  <script src="js/datos-api.js"></script>
+  
+  <!-- SCRIPTS DE NEGOCIO -->
   <!-- calculos.js: funciones puras compartidas con análisis -->
   <script src="js/calculos.js"></script>
   <!-- dashboard.js: render del header, balance, gamificación, fondo emergencia, métricas -->
   <script defer src="js/dashboard.js"></script>
+  <!-- navigation.js: navegación y cambio de moneda -->
   <script src="js/navigation.js"></script>
 
 </body>

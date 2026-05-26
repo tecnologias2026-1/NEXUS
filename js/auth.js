@@ -2,17 +2,19 @@
  * ============================================================
  * MÓDULO: auth.js
  * ============================================================
- * Responsabilidad: Autenticación de usuarios contra usuarios.json
+ * Responsabilidad: Autenticación contra Backend API
  *
  * Este módulo se encarga de:
  * - Abrir y cerrar el modal de login/registro
- * - Validar credenciales reales contra usuarios.json (vía datos.js)
+ * - Conectar con los endpoints de autenticación del backend
  * - Registrar usuarios nuevos en flujo de 2 pasos
  * - Mostrar errores claros si las credenciales fallan o el email ya existe
+ * - Guardar sesión de usuario en localStorage
  * - Redirigir al dashboard tras autenticación exitosa
  *
  * Dependencias:
- * - datos.js → iniciarSesion(), registrarUsuario(), obtenerUsuarioActual()
+ * - config.js → Configuración global
+ * - api-client.js → apiLoginUsuario(), apiRegistroUsuario()
  * ============================================================
  */
 
@@ -82,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // ──────────────────────────────────────────────────────────
-    // LOGIN: valida email + password contra usuarios.json
+    // LOGIN: Valida credenciales contra el Backend API
     // ──────────────────────────────────────────────────────────
     const loginFormElement = document.getElementById('login-form-element');
     if (loginFormElement) {
@@ -97,15 +99,42 @@ document.addEventListener('DOMContentLoaded', () => {
             const email    = document.getElementById('login-email').value.trim();
             const password = document.getElementById('login-password').value;
 
-            const usuario = await iniciarSesion(email, password);
+            // Mostrar estado de carga
+            const submitBtn = loginFormElement.querySelector('button[type="submit"]');
+            const originalText = submitBtn?.textContent;
+            if (submitBtn) submitBtn.disabled = true;
+            if (submitBtn) submitBtn.textContent = 'Verificando...';
 
-            if (usuario) {
-                localStorage.setItem('selectedCurrency', usuario.moneda_preferida || 'COP');
-                console.log(`✅ Login exitoso: ${usuario.nombre}`);
-                window.location.href = 'dashboard.html';
-            } else {
+            try {
+                // Llamar a la API de login
+                const respuesta = await apiLoginUsuario(email, password);
+
+                if (respuesta.ok && respuesta.usuario) {
+                    // Guardar datos de sesión
+                    guardarUsuarioSesion(respuesta.usuario);
+                    localStorage.setItem('selectedCurrency', respuesta.usuario.moneda_preferida || 'COP');
+                    
+                    debugLog(`✅ Login exitoso: ${respuesta.usuario.nombre}`);
+                    console.log('✅ Login exitoso:', respuesta.usuario);
+                    
+                    // Redirigir al dashboard
+                    window.location.href = 'dashboard.html';
+                } else {
+                    // Error en autenticación
+                    mostrarError(loginFormElement,
+                        respuesta.error || 'Email o contraseña incorrectos. Verifica tus datos.');
+                    debugLog('Login fallido', respuesta, 'warn');
+                }
+            } catch (error) {
                 mostrarError(loginFormElement,
-                    'Email o contraseña incorrectos. Verifica tus datos.');
+                    'Error al conectar con el servidor. Intenta nuevamente.');
+                debugLog('Error en login', error, 'error');
+            } finally {
+                // Restaurar botón
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalText;
+                }
             }
         });
     }
@@ -157,7 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // ──────────────────────────────────────────────────────────
-    // REGISTRO PASO 2 → FINALIZAR (registrarUsuario + auto-login)
+    // REGISTRO PASO 2 → FINALIZAR (Registro en Backend + auto-login)
     // ──────────────────────────────────────────────────────────
     const btnFinalizar = document.getElementById('register-next-step2');
     if (btnFinalizar) {
@@ -184,24 +213,53 @@ document.addEventListener('DOMContentLoaded', () => {
                 'weekly':   'semanal'
             };
 
-            const usuarioNuevo = await registrarUsuario({
-                ...datosRegistroPaso1,
-                frecuencia_ingreso: mapaFrecuencia[frecuencia] || 'mensual',
-                ingreso_base: ingreso,
-                moneda_preferida: moneda
-            });
+            // Mostrar estado de carga
+            const submitBtn = btnFinalizar;
+            const originalText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Registrando...';
 
-            if (!usuarioNuevo) {
+            try {
+                // Llamar a la API de registro
+                const respuestaRegistro = await apiRegistroUsuario({
+                    ...datosRegistroPaso1,
+                    frecuencia_ingreso: mapaFrecuencia[frecuencia] || 'mensual',
+                    ingreso_base: ingreso,
+                    moneda_preferida: moneda
+                });
+
+                if (!respuestaRegistro.ok || respuestaRegistro.error) {
+                    mostrarError(incomeForm,
+                        respuestaRegistro.error || 'Este email ya está registrado. Intenta otro.');
+                    debugLog('Registro fallido', respuestaRegistro, 'warn');
+                    return;
+                }
+
+                // Registro exitoso, ahora hacer login automático
+                const respuestaLogin = await apiLoginUsuario(datosRegistroPaso1.email, datosRegistroPaso1.password);
+
+                if (respuestaLogin.ok && respuestaLogin.usuario) {
+                    guardarUsuarioSesion(respuestaLogin.usuario);
+                    localStorage.setItem('selectedCurrency', moneda);
+                    
+                    debugLog(`✅ Registro + login exitoso: ${respuestaLogin.usuario.nombre}`);
+                    console.log('✅ Registro + login exitoso:', respuestaLogin.usuario);
+                    
+                    // Redirigir al dashboard
+                    window.location.href = 'dashboard.html';
+                } else {
+                    mostrarError(incomeForm, 
+                        'Registro completado, pero error en login automático. Por favor inicia sesión.');
+                }
+            } catch (error) {
                 mostrarError(incomeForm,
-                    'Este email ya está registrado. Inicia sesión o usa otro email.');
-                return;
+                    'Error al registrarse. Verifica tu conexión e intenta nuevamente.');
+                debugLog('Error en registro', error, 'error');
+            } finally {
+                // Restaurar botón
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
             }
-
-            // Login automático del usuario recién creado
-            await iniciarSesion(usuarioNuevo.email, usuarioNuevo.password);
-            localStorage.setItem('selectedCurrency', moneda);
-            console.log(`✅ Registro + login: ${usuarioNuevo.nombre}`);
-            window.location.href = 'dashboard.html';
         });
     }
 
