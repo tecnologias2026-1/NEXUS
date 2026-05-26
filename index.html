@@ -411,12 +411,24 @@
 
     <!-- SCRIPTS JAVASCRIPT -->
     
-    <!-- Script de autenticación: Maneja el login, registro y funcionalidad del modal -->
-    <!-- datos.js debe cargarse ANTES de auth.js (auth.js usa iniciarSesion, registrarUsuario) -->
-    <script src="js/datos.js"></script>
+    <!-- ★ CAPA DE CONFIGURACIÓN - DEBE CARGARSE PRIMERO ★ -->
+    <!-- config.js: URL base de API, constantes globales, funciones helper -->
+    <script src="js/config.js"></script>
+    
+    <!-- ★ CLIENTE API - SEGUNDA CARGA ★ -->
+    <!-- api-client.js: Funciones wrapper para todos los endpoints del backend -->
+    <script src="js/api-client.js"></script>
+    
+    <!-- ★ CAPA DE DATOS INTEGRADA CON API ★ -->
+    <!-- datos-api.js: Interfaz de acceso a datos (reemplaza datos.js original) -->
+    <script src="js/datos-api.js"></script>
+    
+    <!-- MÓDULO DE AUTENTICACIÓN -->
+    <!-- auth.js: Maneja login, registro y funcionalidad del modal (usa api-client.js) -->
     <script src="js/auth.js"></script>
     
-    <!-- Script de navegación: Maneja navegación entre formularios y cambio de moneda -->
+    <!-- MÓDULO DE NAVEGACIÓN -->
+    <!-- navigation.js: Maneja navegación entre formularios y cambio de moneda -->
     <script src="js/navigation.js"></script>
 </body>
 

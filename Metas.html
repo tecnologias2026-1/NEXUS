@@ -11,7 +11,7 @@
              script-src 'self' 'unsafe-inline';
              style-src 'self' 'unsafe-inline';
              img-src 'self' data:;
-             connect-src 'self';
+             connect-src 'self' http://localhost http://127.0.0.1;
              form-action 'self';">
   <meta http-equiv="Permissions-Policy"
     content="geolocation=(), camera=(), microphone=(), payment=()">
@@ -1143,7 +1143,12 @@
 
 
   <!-- datos.js: punto central de carga + sesión, debe ir antes que los módulos -->
-  <script src="js/datos.js"></script>
+  <!-- ★ CAPA DE CONFIGURACIÓN E INTEGRACIÓN API ★ -->
+  <script src="js/config.js"></script>
+  <script src="js/api-client.js"></script>
+  <script src="js/datos-api.js"></script>
+  
+  <!-- SCRIPTS DE NEGOCIO -->
   <script src="js/Metas.js" defer></script>
   <script src="js/navigation.js"></script>
 
