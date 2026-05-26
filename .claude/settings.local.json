@@ -10,7 +10,9 @@
       "Bash(git push *)",
       "Bash(git branch *)",
       "Bash(npx skills *)",
-      "Bash(sort -k5 -n -r)"
+      "Bash(sort -k5 -n -r)",
+      "Bash(dir /s /b *.js)",
+      "Bash(findstr /I \"config api-client\")"
     ]
   }
 }
