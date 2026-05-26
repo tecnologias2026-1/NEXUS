@@ -16,23 +16,23 @@
 
 /**
  * URL base de la API Backend
- * Apunta a XAMPP local con el servidor PHP
+ * Apunta al Backend en Railway (producción)
  * @type {string}
  */
-// URL base para conectar el Frontend con el Backend en producción
-const API_URL = 'https://back-nexus-production.up.railway.app';
+const API_BASE_URL = 'https://back-nexus-production.up.railway.app';
 
 /**
  * Timeout global para las peticiones fetch (en milisegundos)
+ * Mayor timeout para conexiones remotas a Railway
  * @type {number}
  */
-const API_TIMEOUT = 30000; // 30 segundos
+const API_TIMEOUT = 60000; // 60 segundos (fue 30s para localhost)
 
 /**
  * Modo de depuración: muestra logs detallados en consola
  * @type {boolean}
  */
-const DEBUG_MODE = true;
+const DEBUG_MODE = true; // Activado para debugging
 
 /**
  * Claves de localStorage para persistencia de datos
