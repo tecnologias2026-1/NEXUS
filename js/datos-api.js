@@ -144,7 +144,7 @@ async function _cargarCategoriasLocales() {
     { id: 7, nombre: 'Salud', tipo: 'gasto', icono: '💊', color: '#EF4444' },
     { id: 8, nombre: 'Otros', tipo: 'gasto', icono: '📦', color: '#6B7280' },
     // Ingresos
-    { id: 9, nombre: 'Salario', tipo: 'ingreso', icono: '💼', color: '#10B981' },
+    { id: 5, nombre: 'Salario', tipo: 'ingreso', icono: '💼', color: '#10B981' },
     { id: 10, nombre: 'Freelancia', tipo: 'ingreso', icono: '💻', color: '#3B82F6' },
     { id: 11, nombre: 'Bonificación', tipo: 'ingreso', icono: '⭐', color: '#F59E0B' },
     { id: 12, nombre: 'Inversión', tipo: 'ingreso', icono: '📈', color: '#EC4899' },
@@ -246,29 +246,27 @@ async function obtenerTransacciones() {
       return [];
     }
 
-    // Intenta cargar desde localStorage primero
-    const guardado = localStorage.getItem(STORAGE_KEYS.TRANSACTIONS);
-    if (guardado) {
-      const data = JSON.parse(guardado);
-      if (Array.isArray(data)) {
-        return data;
-      }
-    }
-
-    // Llamar a la API
+    // Siempre consultar API primero para evitar cache vacío/obsoleto
     const respuesta = await apiListarTransacciones(usuario.id);
     if (respuesta.ok && Array.isArray(respuesta.transacciones)) {
-      // Guardar en cache local
       localStorage.setItem(STORAGE_KEYS.TRANSACTIONS, JSON.stringify(respuesta.transacciones));
       return respuesta.transacciones;
     }
 
     debugLog('Error obteniendo transacciones', respuesta, 'warn');
-    return [];
   } catch (error) {
     debugLog('Error en obtenerTransacciones', error, 'error');
-    return [];
   }
+
+  const guardado = localStorage.getItem(STORAGE_KEYS.TRANSACTIONS);
+  if (guardado) {
+    try {
+      const data = JSON.parse(guardado);
+      if (Array.isArray(data)) return data;
+    } catch { /* continuar */ }
+  }
+
+  return [];
 }
 
 /**
@@ -284,16 +282,28 @@ async function crearTransaccion(transaccion) {
       return null;
     }
 
-    const respuesta = await apiCrearTransaccion({
+    const payload = {
       usuario_id: usuario.id,
-      ...transaccion
-    });
+      categoria_id: Number(transaccion.categoria_id),
+      tipo: transaccion.tipo,
+      nombre: String(transaccion.nombre ?? transaccion.descripcion ?? '').trim(),
+      valor: Number(transaccion.valor ?? transaccion.monto ?? 0),
+      fecha: transaccion.fecha || new Date().toISOString().split('T')[0],
+      recurrente: transaccion.recurrente ? 1 : 0,
+      fijo: transaccion.fijo ? 1 : 0
+    };
 
-    if (respuesta.ok) {
-      // Limpiar cache local para que se recargue
+    const respuesta = await apiCrearTransaccion(payload);
+
+    if (respuesta.ok && respuesta.success !== false) {
       localStorage.removeItem(STORAGE_KEYS.TRANSACTIONS);
       debugLog('Transacción creada exitosamente', respuesta);
-      return respuesta.transaccion || { success: true };
+      return {
+        id: respuesta.transaccion_id,
+        ...payload,
+        recurrente: Boolean(payload.recurrente),
+        fijo: Boolean(payload.fijo)
+      };
     }
 
     debugLog('Error creando transacción', respuesta, 'warn');
@@ -325,6 +335,44 @@ async function eliminarTransaccion(id) {
     debugLog('Error en eliminarTransaccion', error, 'error');
     return false;
   }
+}
+
+/**
+ * Compatibilidad con historial.js: crea transacción y retorna objeto guardado.
+ * @param {Object} nuevaTransaccion
+ * @returns {Promise<Object|null>}
+ */
+async function agregarTransaccionDatos(nuevaTransaccion) {
+  const payload = {
+    tipo: nuevaTransaccion.tipo,
+    categoria_id: Number(nuevaTransaccion.categoria_id),
+    nombre: nuevaTransaccion.nombre ?? nuevaTransaccion.descripcion ?? '',
+    valor: Number(nuevaTransaccion.valor ?? nuevaTransaccion.monto ?? 0),
+    fecha: nuevaTransaccion.fecha || new Date().toISOString().split('T')[0],
+    recurrente: Boolean(nuevaTransaccion.recurrente),
+    fijo: Boolean(nuevaTransaccion.fijo)
+  };
+
+  const resultado = await crearTransaccion(payload);
+  if (!resultado) {
+    throw new Error('No se pudo registrar la transacción en el servidor.');
+  }
+
+  localStorage.removeItem(STORAGE_KEYS.TRANSACTIONS);
+  return resultado;
+}
+
+/**
+ * Compatibilidad con historial.js: elimina transacción por id.
+ * @param {number|string} transaccionId
+ * @returns {Promise<boolean>}
+ */
+async function eliminarTransaccionDatos(transaccionId) {
+  const eliminado = await eliminarTransaccion(transaccionId);
+  if (eliminado) {
+    localStorage.removeItem(STORAGE_KEYS.TRANSACTIONS);
+  }
+  return eliminado;
 }
 
 /**
@@ -430,7 +478,11 @@ async function obtenerMetas() {
       const idsApi = new Set(respuesta.metas.map(m => m.id));
       const metasApi = respuesta.metas.map(m => {
         const extra = overlay[m.id] || {};
-        return _normalizarMetaApi({ ...extra, ...m });
+        return _normalizarMetaApi({
+          ...extra,
+          ...m,
+          monto_ahorrado: m.monto_actual ?? m.monto_ahorrado ?? extra.monto_ahorrado
+        });
       });
 
       const metasLocales = Object.values(overlay).filter(o => o.id && !idsApi.has(o.id));
@@ -497,25 +549,32 @@ async function crearMeta(meta) {
 async function abonarMeta(meta_id, monto_abono) {
   try {
     const respuesta = await apiAbonarMeta({
-      meta_id,
-      monto_abono
+      meta_id: Number(meta_id),
+      monto_abono: Number(monto_abono)
     });
 
-    if (respuesta.ok) {
-      // Limpiar cache local
+    if (respuesta.ok && respuesta.success !== false) {
       localStorage.removeItem(STORAGE_KEYS.GOALS);
-      debugLog('Abono a meta registrado exitosamente');
+
+      const overlay = _obtenerOverlayMetas();
+      const metaId = Number(meta_id);
+      if (overlay[metaId] && respuesta.meta_actualizada) {
+        overlay[metaId].monto_ahorrado = respuesta.meta_actualizada.monto_actual;
+        _guardarOverlayMetas(overlay);
+      }
+
+      debugLog('Abono a meta registrado exitosamente', respuesta);
       return {
         meta_actualizada: respuesta.meta_actualizada,
-        completada: respuesta.completada
+        completada: respuesta.meta_actualizada?.completada ?? respuesta.completada
       };
     }
 
     debugLog('Error abonando meta', respuesta, 'warn');
-    return null;
+    return { error: respuesta.message || respuesta.error || 'Error al abonar meta' };
   } catch (error) {
     debugLog('Error en abonarMeta', error, 'error');
-    return null;
+    return { error: error.message };
   }
 }
 
@@ -888,12 +947,15 @@ async function aportarAMeta(metaId, monto) {
   }
 
   const resultado = await abonarMeta(metaId, montoNumerico);
-  if (resultado) {
+  if (resultado && !resultado.error) {
     localStorage.removeItem(STORAGE_KEYS.GOALS);
     return { exito: true };
   }
 
-  return { exito: false, mensaje: 'No se pudo registrar el aporte.' };
+  return {
+    exito: false,
+    mensaje: resultado?.error || 'No se pudo registrar el aporte.'
+  };
 }
 
 /**

@@ -255,7 +255,10 @@ async function manejarSubmitNuevaTransaccion(evento) {
 
     console.log('✅ Nueva transacción:', nuevaTransaccion);
 
-    await agregarTransaccion(nuevaTransaccion);
+    const guardada = await agregarTransaccion(nuevaTransaccion);
+    if (!guardada) {
+      throw new Error('No se pudo guardar la transacción.');
+    }
 
     // Limpiar formulario
     evento.target.reset();

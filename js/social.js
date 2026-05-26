@@ -80,8 +80,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         btn.addEventListener('click', async () => {
             const item   = btn.closest('.contact-item');
             const nombre = item.querySelector('.contact-name').textContent.trim();
+            const amigoId = Number(item?.dataset?.userId || btn.dataset.userId || 0);
 
-            await crearAmigoNuevo(nombre);
+            await crearAmigoNuevo(nombre, amigoId > 0 ? amigoId : null);
             marcarContactoAgregado(btn);
         });
     });
@@ -148,11 +149,12 @@ document.addEventListener('DOMContentLoaded', async () => {
  * @example
  * await crearAmigoNuevo("Carlos R.");
  */
-async function crearAmigoNuevo(nombre) {
+async function crearAmigoNuevo(nombre, amigoId = null) {
     // Genera valores aleatorios para simular un usuario nuevo en el ranking
     const tendencias = ['up', 'down', 'neutral'];
     const nuevoAmigo = {
         id: Date.now(),
+        amigo_id: amigoId,
         nombre: nombre,
         nivel: Math.floor(Math.random() * 5) + 1,        // entre 1 y 5
         racha: Math.floor(Math.random() * 10),           // entre 0 y 9
@@ -160,8 +162,16 @@ async function crearAmigoNuevo(nombre) {
         tendencia: tendencias[Math.floor(Math.random() * tendencias.length)],
         esUsuarioActual: false
     };
-
-    await agregarAmigo(nuevoAmigo);
+    // Si viene amigo_id real, agregarAmigo() lo envía al backend (amigos/agregar.php).
+    // Si no viene, se guarda localmente para no romper la demo.
+    if (amigoId && typeof agregarAmigo === 'function') {
+        const exito = await agregarAmigo(amigoId);
+        if (!exito) {
+            await agregarAmigoDatos(nuevoAmigo);
+        }
+    } else {
+        await agregarAmigoDatos(nuevoAmigo);
+    }
 
     // Resaltar visualmente al recién agregado en el ranking
     resaltarNuevoAmigo(nuevoAmigo.id);

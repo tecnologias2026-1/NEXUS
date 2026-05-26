@@ -1225,16 +1225,23 @@ async function handleSubmitAporte(e) {
     }
   }
 
-  const resultado = await aportarAMeta(_metaIdAportandoActual, monto);
+  const btnConfirm = document.getElementById('btn-aportar-confirmar');
+  if (btnConfirm) btnConfirm.disabled = true;
 
-  if (!resultado.exito) {
-    mostrarErrorAportar(resultado.mensaje || 'No se pudo registrar el aporte.');
-    return;
+  try {
+    const resultado = await aportarAMeta(_metaIdAportandoActual, monto);
+
+    if (!resultado.exito) {
+      mostrarErrorAportar(resultado.mensaje || 'No se pudo registrar el aporte.');
+      return;
+    }
+
+    cerrarModalAportar();
+    await renderGoals();
+    setStatusMessage(`Aporte de ${formatCurrencyCOP(monto)} registrado correctamente.`);
+  } finally {
+    if (btnConfirm) btnConfirm.disabled = false;
   }
-
-  cerrarModalAportar();
-  await renderGoals();
-  setStatusMessage(`Aporte de ${formatCurrencyCOP(monto)} registrado correctamente.`);
 }
 
 function mostrarErrorAportar(mensaje) {
