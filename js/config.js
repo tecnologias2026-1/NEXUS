@@ -19,7 +19,8 @@
  * Apunta a XAMPP local con el servidor PHP
  * @type {string}
  */
-const API_BASE_URL = "http://localhost/nexus_backend_local/api";
+// URL base para conectar el Frontend con el Backend en producción
+const API_URL = 'https://back-nexus-production.up.railway.app';
 
 /**
  * Timeout global para las peticiones fetch (en milisegundos)
@@ -89,7 +90,8 @@ function debugLog(message, data = null, level = 'log') {
  * // → "http://localhost/nexus_backend_local/api/usuarios/login.php"
  */
 function buildEndpointURL(endpoint) {
-  return `${API_BASE_URL}/${endpoint}`;
+  // Aquí es donde la línea 93 fallaba porque no encontraba "API_BASE_URL"
+  return `${API_BASE_URL}/${endpoint.replace(/^\//, '')}`;
 }
 
 /**
