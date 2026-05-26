@@ -412,19 +412,15 @@
     <!-- SCRIPTS JAVASCRIPT -->
     
     <!-- ★ CAPA DE CONFIGURACIÓN - DEBE CARGARSE PRIMERO ★ -->
-    <!-- config.js: URL base de API, constantes globales, funciones helper -->
+    <!-- config.js: constantes globales y helpers -->
     <script src="js/config.js"></script>
-    
-    <!-- ★ CLIENTE API - SEGUNDA CARGA ★ -->
-    <!-- api-client.js: Funciones wrapper para todos los endpoints del backend -->
-    <script src="js/api-client.js"></script>
-    
-    <!-- ★ CAPA DE DATOS INTEGRADA CON API ★ -->
-    <!-- datos-api.js: Interfaz de acceso a datos (reemplaza datos.js original) -->
-    <script src="js/datos-api.js"></script>
-    
+
+    <!-- ★ CAPA DE DATOS LOCAL (JSON en /data) ★ -->
+    <!-- datos.js: carga JSONs locales + sesión persistida en localStorage -->
+    <script src="js/datos.js"></script>
+
     <!-- MÓDULO DE AUTENTICACIÓN -->
-    <!-- auth.js: Maneja login, registro y funcionalidad del modal (usa api-client.js) -->
+    <!-- auth.js: login y registro contra los JSON locales vía datos.js -->
     <script src="js/auth.js"></script>
     
     <!-- MÓDULO DE NAVEGACIÓN -->

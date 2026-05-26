@@ -2,11 +2,11 @@
  * ============================================================
  * MÓDULO: auth.js
  * ============================================================
- * Responsabilidad: Autenticación contra Backend API
+ * Responsabilidad: Autenticación contra los JSON locales
  *
  * Este módulo se encarga de:
  * - Abrir y cerrar el modal de login/registro
- * - Conectar con los endpoints de autenticación del backend
+ * - Validar credenciales contra data/usuarios.json (vía datos.js)
  * - Registrar usuarios nuevos en flujo de 2 pasos
  * - Mostrar errores claros si las credenciales fallan o el email ya existe
  * - Guardar sesión de usuario en localStorage
@@ -14,7 +14,7 @@
  *
  * Dependencias:
  * - config.js → Configuración global
- * - api-client.js → apiLoginUsuario(), apiRegistroUsuario()
+ * - datos.js → iniciarSesion(), registrarUsuario()
  * ============================================================
  */
 
@@ -106,28 +106,26 @@ document.addEventListener('DOMContentLoaded', () => {
             if (submitBtn) submitBtn.textContent = 'Verificando...';
 
             try {
-                // Llamar a la API de login
-                const respuesta = await apiLoginUsuario(email, password);
+                // Validar credenciales contra usuarios.json (datos.js)
+                const usuario = await iniciarSesion(email, password);
 
-                if (respuesta.ok && respuesta.usuario) {
-                    // Guardar datos de sesión
-                    guardarUsuarioSesion(respuesta.usuario);
-                    localStorage.setItem('selectedCurrency', respuesta.usuario.moneda_preferida || 'COP');
-                    
-                    debugLog(`✅ Login exitoso: ${respuesta.usuario.nombre}`);
-                    console.log('✅ Login exitoso:', respuesta.usuario);
-                    
+                if (usuario) {
+                    localStorage.setItem('selectedCurrency', usuario.moneda_preferida || 'COP');
+
+                    debugLog(`✅ Login exitoso: ${usuario.nombre}`);
+                    console.log('✅ Login exitoso:', usuario);
+
                     // Redirigir al dashboard
                     window.location.href = 'dashboard.html';
                 } else {
                     // Error en autenticación
                     mostrarError(loginFormElement,
-                        respuesta.error || 'Email o contraseña incorrectos. Verifica tus datos.');
-                    debugLog('Login fallido', respuesta, 'warn');
+                        'Email o contraseña incorrectos. Verifica tus datos.');
+                    debugLog('Login fallido', { email }, 'warn');
                 }
             } catch (error) {
                 mostrarError(loginFormElement,
-                    'Error al conectar con el servidor. Intenta nuevamente.');
+                    'Error al iniciar sesión. Intenta nuevamente.');
                 debugLog('Error en login', error, 'error');
             } finally {
                 // Restaurar botón
@@ -220,40 +218,42 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.textContent = 'Registrando...';
 
             try {
-                // Llamar a la API de registro
-                const respuestaRegistro = await apiRegistroUsuario({
+                // Registrar usuario en usuarios.json local (datos.js)
+                const usuarioCreado = await registrarUsuario({
                     ...datosRegistroPaso1,
                     frecuencia_ingreso: mapaFrecuencia[frecuencia] || 'mensual',
                     ingreso_base: ingreso,
                     moneda_preferida: moneda
                 });
 
-                if (!respuestaRegistro.ok || respuestaRegistro.error) {
+                if (!usuarioCreado) {
                     mostrarError(incomeForm,
-                        respuestaRegistro.error || 'Este email ya está registrado. Intenta otro.');
-                    debugLog('Registro fallido', respuestaRegistro, 'warn');
+                        'Este email ya está registrado. Intenta otro.');
+                    debugLog('Registro fallido — email duplicado', datosRegistroPaso1, 'warn');
                     return;
                 }
 
                 // Registro exitoso, ahora hacer login automático
-                const respuestaLogin = await apiLoginUsuario(datosRegistroPaso1.email, datosRegistroPaso1.password);
+                const usuarioLogueado = await iniciarSesion(
+                    datosRegistroPaso1.email,
+                    datosRegistroPaso1.password
+                );
 
-                if (respuestaLogin.ok && respuestaLogin.usuario) {
-                    guardarUsuarioSesion(respuestaLogin.usuario);
+                if (usuarioLogueado) {
                     localStorage.setItem('selectedCurrency', moneda);
-                    
-                    debugLog(`✅ Registro + login exitoso: ${respuestaLogin.usuario.nombre}`);
-                    console.log('✅ Registro + login exitoso:', respuestaLogin.usuario);
-                    
+
+                    debugLog(`✅ Registro + login exitoso: ${usuarioLogueado.nombre}`);
+                    console.log('✅ Registro + login exitoso:', usuarioLogueado);
+
                     // Redirigir al dashboard
                     window.location.href = 'dashboard.html';
                 } else {
-                    mostrarError(incomeForm, 
+                    mostrarError(incomeForm,
                         'Registro completado, pero error en login automático. Por favor inicia sesión.');
                 }
             } catch (error) {
                 mostrarError(incomeForm,
-                    'Error al registrarse. Verifica tu conexión e intenta nuevamente.');
+                    'Error al registrarse. Intenta nuevamente.');
                 debugLog('Error en registro', error, 'error');
             } finally {
                 // Restaurar botón
